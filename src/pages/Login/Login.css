@@ -15,7 +15,7 @@ body {
   gap: 1rem;
   background-color: #f8fbff;
   width: 60vw;
-  height: 70vh;
+  height: 60vh;
   border-radius: 10px;
 }
 
@@ -100,7 +100,7 @@ body {
 
 .divLogo{
   flex: 1;
-  background-color: #245C96;
+  background-color: #164A81;
   height: 100%;
   border-radius: 70px 8px 8px 70px;
   display: flex;
