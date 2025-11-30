@@ -1,0 +1,54 @@
+/* Sidebar geral */
+.sidebar {
+    height: 100vh;
+    background-color: #0C2F52;
+    /* Tom harmônico ao seu #164A81 */
+    color: #fff;
+    border-right: 2px solid #164A81;
+}
+
+/* Logo */
+.logo-img {
+    width: 40px;
+}
+
+.logo-box h5 {
+    color: #fff;
+}
+
+/* Menu */
+.menu li {
+    padding: 12px 5px;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 6px;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.menu li:hover {
+    background-color: #164A81;
+}
+
+/* Card do usuário */
+.user-card {
+    background-color: #fff;
+    color: #000;
+    display: flex;
+}
+
+.user-card i {
+    font-size: 20px;
+}
+
+/* Botão sair */
+.logout-btn {
+    color: #fff;
+    font-size: 18px;
+}
+
+.logout-btn:hover {
+    opacity: 0.7;
+}

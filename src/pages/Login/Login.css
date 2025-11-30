@@ -1,114 +1,30 @@
-body {
-  min-height: 100vh;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.login-bg {
+  width: 100vw;
+  height: 100vh;
   background-image: url('/src/assets/images/background.png');
   background-size: cover;
   background-position: center;
 }
 
-.mainLogin {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  background-color: #f8fbff;
-  width: 60vw;
-  height: 60vh;
-  border-radius: 10px;
-}
-
-.divContent{
-  flex: 1;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  padding: 2rem;
-}
-
-.divCabecalho h2{
-  font-size: 1.7rem;
-  font-weight: 600;
-  color: #444849;
-  margin-bottom: 0.5rem;
-}
-
-.divCabecalho p{
-  font-weight: 400;
-  color: #6A7282;
-  margin-top: 0;
-  font-size: 1.1rem;
-}
-
-.divFormLogin{
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  margin-top: 1rem;
-}
-
-.iptDados{
-  padding: 0.8rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #164A81;
-  color: white;
-}
-
-.iptDados::placeholder {
-  color: white;      /* cor do placeholder */
-  font-size: 1rem;
-  opacity: 1;       /* importante no Firefox */
-}
-
-.divCheckMark{
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.divCheckMark input{
-  width: 16px;
-  height: 16px;
-}
-
-.divEntrar{
-  display: flex;
-  justify-content: center;
-}
-
-.btnBordaAzul{
-  margin-top: 1rem;
-  padding: 0.8rem;
-  font-size: 1rem;
-  border: 3px solid #245C96;
-  border-radius: 5px;
+.login-card {
+  border-radius: 12px;
+  overflow: hidden;
   background-color: white;
-  font-weight: 600;
-  cursor: pointer;
-  width: 40%;
-  transition: 0.3s ease;
+  overflow: hidden;
+  background-color: white;
+  height: 50vh;
 }
 
-.btnBordaAzul:hover{
-  transition: 0.3s ease;
-  transform: scale(1.05);
-}
 
-.divLogo{
-  flex: 1;
+
+.input-custom {
   background-color: #164A81;
-  height: 100%;
-  border-radius: 70px 8px 8px 70px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  color: #fff;
+}
+.input-custom::placeholder {
+  color: #fff;
 }
 
-.div2 img{
-  height: 60%;
-  object-fit: contain;
+.login-img {
+  background-color: #164A81;
 }
