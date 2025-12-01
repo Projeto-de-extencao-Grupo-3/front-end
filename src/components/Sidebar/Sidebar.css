@@ -32,9 +32,19 @@
     background-color: #164A81;
 }
 
+.menu li.ativo {
+    background-color: #e7ebfa;
+    color: black;
+}
+
+.menu li.ativo:hover {
+    background-color: rgb(187, 187, 187);
+    color: black;
+}
+
 /* Card do usuário */
 .user-card {
-    background-color: #fff;
+    background-color: #e7ebfa;
     color: #000;
     display: flex;
 }

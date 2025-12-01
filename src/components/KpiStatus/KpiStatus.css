@@ -1,0 +1,43 @@
+.kpi-card {
+  width: 240px;
+  height: 160px;
+  border-radius: 8px;
+  padding: 25px;
+
+  background: linear-gradient(135deg, var(--cor1), var(--cor2));
+  color: var(--cor-texto);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.10);
+
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0px 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+/* textos */
+.kpi-status {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 22px;
+  margin-bottom: 12px;
+  width: 100px;
+}
+
+.kpi-valor {
+  font-size: 28px;
+  font-weight: 400;
+  margin: 0;
+}
+
+.kpi-descricao {
+  font-size: 16px;
+  margin-top: 12px;
+  font-weight: 300;
+}

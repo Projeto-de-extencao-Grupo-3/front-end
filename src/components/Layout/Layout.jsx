@@ -1,12 +1,10 @@
 import Sidebar from "../Sidebar/Sidebar";
 
-function Layout({ children }) {
+function Layout({ children, ativo }) {
   return (
     <div className="d-flex">
-      {/* Usado para deixar a sidebar fixa sempre a esquerda*/}
-      <Sidebar />
+      <Sidebar ativo={ativo} />
 
-      {/* Aqui é o conteudo que sempre vai ficar a direita */}
       <div className="flex-grow-1 p-4">
         {children}
       </div>
