@@ -1,6 +1,6 @@
 .kpi-card {
-  width: 240px;
-  height: 160px;
+  width: 220px;
+  height: 150px;
   border-radius: 8px;
   padding: 25px;
 
@@ -23,7 +23,7 @@
 
 /* textos */
 .kpi-status {
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 600;
   line-height: 22px;
   margin-bottom: 12px;
@@ -31,13 +31,13 @@
 }
 
 .kpi-valor {
-  font-size: 28px;
+  font-size: 23px;
   font-weight: 400;
   margin: 0;
 }
 
 .kpi-descricao {
-  font-size: 16px;
+  font-size: 15px;
   margin-top: 12px;
   font-weight: 300;
 }

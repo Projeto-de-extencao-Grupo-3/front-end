@@ -2,18 +2,18 @@ import './KpiStatus.css';
 
 const cores = {
   verde: {
-    cor1: "#4CAF50",
-    cor2: "#7CCD7C",
+    cor1: "#52B256",
+    cor2: "#75C178",
     corTexto: "white"
   },
   vermelho: {
-    cor1: "#D6244A",
-    cor2: "#E84561",
+    cor1: "#DD1B42",
+    cor2: "#E44968",
     corTexto: "white"
   },
   amarelo: {
-    cor1: "#FFE57F",
-    cor2: "#FCD44C",
+    cor1: "#FFE26F",
+    cor2: "#FFE689",
     corTexto: "black"
   }
 };
