@@ -25,12 +25,12 @@ function Sidebar({ ativo }) {
       {/* NAV */}
       {/* Checa qual ta ativo para aplicar estilo, !!atenção aos nomes!! */}
       <ul className="menu list-unstyled flex-grow-1">
-        <li className={ativo === "painel" ? "ativo" : ""}>
+        <li className={ativo === "painel" ? "ativo" : ""} onClick={() => navigate("/painelControle")}>
           <i class='bx bxs-layout' style={{ fontSize: "25px" }}></i>  Painel de Controle
         </li>
 
-        <li className={ativo === "financeiro" ? "ativo" : ""}>
-          <i class='bx  bx-chart-bar-columns' style={{ fontSize: "25px" }}></i> Análise Financeira
+        <li className={ativo === "financeiro" ? "ativo" : ""} onClick={() => navigate("/analiseFinanceira")}>
+          <i class='bx  bx-chart-bar-columns' style={{ fontSize: "25px" }} ></i> Análise Financeira
         </li>
 
         <li className={ativo === "clientes" ? "ativo" : ""}>
