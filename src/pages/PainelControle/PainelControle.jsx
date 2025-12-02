@@ -18,7 +18,7 @@ function PainelControle() {
     return (
 
         <Layout ativo={"painel"}>
-            <div className="d-flex flex-column gap-1">
+            <div className="d-flex flex-column">
 
                 {/* CABECALHO */}
                 <div className="d-flex justify-content-between align-items-center mb-4">
@@ -100,7 +100,7 @@ function PainelControle() {
 
                 <h4 className="fw-normal mt-4 mb-3 fs-4 text-muted ">{nomesKpi[kpiAtiva]}</h4>
 
-                <div className="d-flex flex-grow-1 gap-3 justify-content-between flex-wrap">
+                <div className="d-flex flex-grow-1 gap-4 justify-content-between flex-wrap">
                     <ServicoCard cor="verde">
                         <strong>Gael Tur</strong>
 
