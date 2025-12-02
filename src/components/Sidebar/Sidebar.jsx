@@ -5,7 +5,7 @@ function Sidebar({ ativo }) {
     <div className="sidebar col-12 col-md-4 col-lg-2 d-flex flex-column p-3">
       {/* LOGO */}
       <div className="d-flex align-items-center mb-4 logo-box">
-        <img src="/src/assets/images/logo.svg" className="logo-img" alt="Logo" />
+        <img src="/src/assets/images/logoEscura.svg" className="logo-img" alt="Logo" />
 
         <div className="ms-2">
           <h5 className="m-0 fw-bold">GROTrack</h5>

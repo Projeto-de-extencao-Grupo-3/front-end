@@ -1,19 +1,30 @@
 .kpi-card {
   width: 220px;
-  height: 150px;
+  height: 140px;
   border-radius: 8px;
   padding: 25px;
-
   background: linear-gradient(135deg, var(--cor1), var(--cor2));
   color: var(--cor-texto);
-
+  flex: 1 1 220px;
+  min-width: 220px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.10);
-
-
+  cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kpi-card.ativo {
+  border: 3px solid;
+  border-color: var(--cor-borda);
+  transform: scale(1.1);
+  box-shadow: 0px 12px 26px rgba(0, 0, 0, 0.22);
+}
+
+.kpi-card.ativo:hover {
+  transform: translateY(-3px) scale(1.1);
+  
 }
 
 .kpi-card:hover {
