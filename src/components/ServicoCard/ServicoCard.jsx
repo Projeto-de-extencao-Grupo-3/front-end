@@ -1,28 +1,20 @@
 import './ServicoCard.css';
 
 const cores = {
-  verde: {
-    cor: "#52B256",
-  },
-  vermelho: {
-    cor: "#DD1B42",
-  },
-  amarelo: {
-    cor: "#FFE26F",
-  }
+  verde: { cor: "#52B256" },
+  vermelho: { cor: "#DD1B42" },
+  amarelo: { cor: "#ebc429ff" }
 };
 
-function ServicoCard({cor}) {
+function ServicoCard({ cor, children }) {
   const estilo = cores[cor];
 
   return (
     <div
-      className={"servico-card"}
-      style={{
-        '--cor': estilo.cor,
-      }}
+      className="servico-card"
+      style={{ '--cor': estilo.cor }}
     >
-      <h1>oi</h1>
+      {children}
     </div>
   );
 }

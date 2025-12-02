@@ -1,7 +1,13 @@
 import "./Sidebar.css";
+import { useNavigate } from 'react-router-dom';
 
 function Sidebar({ ativo }) {
+
+  const navigate = useNavigate();
+
+
   return (
+    
     <div className="sidebar col-12 col-md-4 col-lg-2 d-flex flex-column p-3">
       {/* LOGO */}
       <div className="d-flex align-items-center mb-4 logo-box">
@@ -62,8 +68,8 @@ function Sidebar({ ativo }) {
       </div>
 
       {/* SAIR */}
-      <button className="logout-btn btn w-100 text-start">
-        <i className="me-2">↩</i> Sair
+      <button className="logout-btn btn w-100 text-start" onClick={() => navigate("/")}>
+        <i className="me-2" >↩</i> Sair
       </button>
     </div>
   );

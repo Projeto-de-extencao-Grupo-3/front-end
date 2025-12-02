@@ -100,8 +100,81 @@ function PainelControle() {
 
                 <h4 className="fw-normal mt-4 mb-3 fs-4 text-muted ">{nomesKpi[kpiAtiva]}</h4>
 
-                <ServicoCard cor="vermelho"/>
+                <div className="d-flex flex-grow-1 gap-3 justify-content-between flex-wrap">
+                    <ServicoCard cor="verde">
+                        <strong>Gael Tur</strong>
 
+                        <strong>OS#0001</strong>
+                        <div><i class='bx bxs-bus' ></i> Marcopolo G8 - 1200</div>
+                        <div><strong>Placa:</strong> ABC-1234</div>
+
+                        <hr />
+
+                        <div><strong>Dias restantes para Entrada:</strong> 13 Dias</div>
+                        <div><strong>Data Agendada:</strong> 13/01/2025</div>
+
+                        <div className="d-flex gap-2 mt-3">
+                            <button className="btn btn-success flex-grow-1">Fazer Entrada</button>
+                            <button className="btn btn-outline-dark flex-grow-1">Cancelar</button>
+                        </div>
+                    </ServicoCard>
+
+                    <ServicoCard cor="vermelho">
+                        <strong>Gael Tur</strong>
+
+                        <strong>OS#0001</strong>
+                        <div><i class='bx bxs-bus' ></i> Marcopolo G8 - 1200</div>
+                        <div><strong>Placa:</strong> ABC-1234</div>
+
+                        <hr />
+
+                        <div><strong>Dias restantes para Entrada:</strong> 13 Dias</div>
+                        <div><strong>Data Agendada:</strong> 13/01/2025</div>
+
+                        <div className="d-flex gap-2 mt-3">
+                            {/* usar classe btn-status se quiser a cor padrão do estilo de layout (verde,vermelho e etc) */}
+                            <button className="btn-status btn flex-grow-1">Fazer Entrada</button>
+                            <button className="btn btn-outline-dark flex-grow-1">Cancelar</button>
+                        </div>
+                    </ServicoCard>
+
+                    <ServicoCard cor="amarelo">
+                        <strong>Gael Tur</strong>
+
+                        <strong>OS#0001</strong>
+                        <div><i class='bx bxs-bus' ></i> Marcopolo G8 - 1200</div>
+                        <div><strong>Placa:</strong> ABC-1234</div>
+
+                        <hr />
+
+                        <div><strong>Dias restantes para Entrada:</strong> 13 Dias</div>
+                        <div><strong>Data Agendada:</strong> 13/01/2025</div>
+
+                        <div className="d-flex gap-2 mt-3">
+                            {/* usar classe btn-status se quiser a cor padrão do estilo de layout (verde,vermelho e etc) */}
+                            <button className="btn-status btn flex-grow-1">Fazer Entrada</button>
+                            <button className="btn btn-outline-dark flex-grow-1">Cancelar</button>
+                        </div>
+                    </ServicoCard>
+                    <ServicoCard cor="amarelo">
+                        <strong>Gael Tur</strong>
+
+                        <strong>OS#0001</strong>
+                        <div><i class='bx bxs-bus' ></i> Marcopolo G8 - 1200</div>
+                        <div><strong>Placa:</strong> ABC-1234</div>
+
+                        <hr />
+
+                        <div><strong>Dias restantes para Entrada:</strong> 13 Dias</div>
+                        <div><strong>Data Agendada:</strong> 13/01/2025</div>
+
+                        <div className="d-flex gap-2 mt-3">
+                            {/* usar classe btn-status se quiser a cor padrão do estilo de layout (verde,vermelho e etc) */}
+                            <button className="btn-status btn flex-grow-1">Fazer Entrada</button>
+                            <button className="btn btn-outline-dark flex-grow-1">Cancelar</button>
+                        </div>
+                    </ServicoCard>
+                </div>
             </div>
 
         </Layout>

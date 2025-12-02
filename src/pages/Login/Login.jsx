@@ -1,6 +1,9 @@
 import './Login.css';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
+  const navigate = useNavigate();
+
   return (
     <div className="login-bg d-flex justify-content-center align-items-center">
       <div className="container">
@@ -28,7 +31,7 @@ function Login() {
                     </label>
                   </div>
 
-                  <button className="btn btn-outline-primary mt-4 px-4">Entrar</button>
+                  <button className="btn btn-outline-primary mt-4 px-4" onClick={() => navigate("/painelControle")}>Entrar</button>
                 </div>
               </div>
 
