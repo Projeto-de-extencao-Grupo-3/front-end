@@ -104,13 +104,14 @@ function PainelControle() {
 
                 <h4 className="fw-normal mt-4 mb-3 fs-4 text-muted ">{nomesKpi[kpiAtiva]}</h4>
 
+                {/* ENTRADA */}
                 {kpiAtiva === 'entrada' && (
-                    <div className="d-flex flex-grow-1 gap-4  flex-wrap">
+                    <div className="d-flex flex-wrap gap-5 justify-content-start">
                         <ServicoCard cor="verde">
-                            <strong>Cometa Transportes</strong>
+                            <strong>Viação Águia Branca</strong>
 
-                            <strong>OS#0047</strong>
-                            <div><i class='bx bxs-bus'></i> Comil Invictus DD</div>
+                            <strong>OS#0034</strong>
+                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px"}}></i> Marcopolo Paradiso 1800 DD G7</div>
                             <div><strong>Placa:</strong> RST-9087</div>
 
                             <hr />
@@ -127,9 +128,9 @@ function PainelControle() {
                         <ServicoCard cor="verde">
                             <strong>Cometa Transportes</strong>
 
-                            <strong>OS#0047</strong>
-                            <div><i class='bx bxs-bus'></i> Comil Invictus DD</div>
-                            <div><strong>Placa:</strong> RST-9087</div>
+                            <strong>OS#0057</strong>
+                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px"}}></i> Comil Invictus DD</div>
+                            <div><strong>Placa:</strong> BRA-9812</div>
 
                             <hr />
 
@@ -146,18 +147,23 @@ function PainelControle() {
 
                 )}
 
+
+                {/* AGUARDANDO ORCMENTO */}
                 {kpiAtiva === 'orcamento' && (
-                    <div className="d-flex flex-grow-1 gap-4  flex-wrap">
+                    <div className="d-flex flex-wrap gap-5 justify-content-start">
                         <ServicoCard cor="vermelho">
-                            <strong className="d-flex align-items-center"><i class='bxr  bx-alert-triangle' style={{ fontSize: "20px" }}></i> Cometa Transportes</strong>
+                            <strong className="d-flex align-items-center gap-2">
+                                <i className='bx bxs-alert-triangle' style={{ fontSize: "25px", color: "red" }}></i>
+                                Viação Gontijo
+                            </strong>
 
                             <strong>OS#0047</strong>
-                            <div><i class='bx bxs-bus'></i> Comil Invictus DD</div>
-                            <div><strong>Placa:</strong> RST-9087</div>
+                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px"}}></i> Caio Induscar Apache VIP V</div>
+                            <div><strong>Placa:</strong> LHS-7045</div>
 
                             <hr />
 
-                            <div><strong>Dias em espera:</strong> 20 Dias</div>
+                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">20 Dias</b></div>
 
                             <div className="d-flex gap-2 mt-3">
                                 <button className="btn btn-status flex-grow-1">Fazer orçamento</button>
@@ -166,15 +172,18 @@ function PainelControle() {
 
 
                         <ServicoCard cor="amarelo">
-                            <strong>Catarinense</strong>
+                            <strong className="d-flex align-items-center gap-2">
+                                <i className='bx bxs-alert-triangle' style={{ fontSize: "25px", color: "#ebc429ff" }}></i>
+                                Catarinense
+                            </strong>
 
                             <strong>OS#0031</strong>
-                            <div><i class='bx bxs-bus'></i> Irizar i6 - 1400</div>
+                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px"}}></i> Irizar i6 - 1400</div>
                             <div><strong>Placa:</strong> JAS-3321</div>
 
                             <hr />
 
-                            <div><strong>Dias em espera:</strong> 6 Dias</div>
+                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">6 Dias</b></div>
 
                             <div className="d-flex gap-2 mt-3">
                                 <button className="btn btn-status flex-grow-1">Fazer orçamento</button>
@@ -182,17 +191,17 @@ function PainelControle() {
 
                         </ServicoCard>
 
-                        
+
                         <ServicoCard cor="verde">
                             <strong>Sussantur</strong>
 
                             <strong>OS#0037</strong>
-                            <div><i class='bx bxs-bus'></i> Marcopolo G8 - 1500</div>
+                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px"}}></i> Marcopolo G8 - 1500</div>
                             <div><strong>Placa:</strong> DAS-1323</div>
 
                             <hr />
 
-                            <div><strong>Dias em espera:</strong> 3 Dias</div>
+                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">3 Dias</b></div>
 
                             <div className="d-flex gap-2 mt-3">
                                 <button className="btn btn-status flex-grow-1">Fazer orçamento</button>
@@ -204,12 +213,12 @@ function PainelControle() {
                             <strong>Cometa Transportes</strong>
 
                             <strong>OS#0047</strong>
-                            <div><i class='bx bxs-bus'></i> Comil Invictus DD</div>
+                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px"}}></i> Comil Invictus DD</div>
                             <div><strong>Placa:</strong> RST-9087</div>
 
                             <hr />
 
-                            <div><strong>Dias em espera:</strong> 2 Dias</div>
+                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">2 Dias</b></div>
 
                             <div className="d-flex gap-2 mt-3">
                                 <button className="btn btn-status flex-grow-1">Fazer orçamento</button>

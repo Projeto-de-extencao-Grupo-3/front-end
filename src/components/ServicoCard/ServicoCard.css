@@ -1,9 +1,15 @@
+.cor-fonte{
+  color:var(--cor);
+}
+
 .servico-card {
   width: 520px;
   height: 277px;
   border-radius: 12px;
   padding: 12px;
-  border-left: 4px solid var(--cor);
+  border-style: solid;
+  border-color: var(--cor);
+  border-width: var(--borda);
   justify-content: center;
   background-color: #f5f4f4;
   display: flex;

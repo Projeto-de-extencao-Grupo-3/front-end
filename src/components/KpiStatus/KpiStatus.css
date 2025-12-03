@@ -1,11 +1,14 @@
 .kpi-card {
-  width: 220px;
+  width: 100%;
+  overflow: hidden;
   height: 140px;
   border-radius: 8px;
   padding: 25px;
   background: linear-gradient(135deg, var(--cor1), var(--cor2));
   color: var(--cor-texto);
-  flex: 1 1 220px;
+  flex: 0 1 260px;
+  min-width: 260px;
+
   min-width: 220px;
   display: flex;
   flex-direction: column;
@@ -23,8 +26,8 @@
 }
 
 .kpi-card.ativo:hover {
-  transform: translateY(-3px) scale(1.1);
-  
+  transform: translateY(-3px) scale(1.07);
+
 }
 
 .kpi-card:hover {
@@ -34,11 +37,10 @@
 
 /* textos */
 .kpi-status {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 600;
   line-height: 22px;
   margin-bottom: 12px;
-  width: 100px;
 }
 
 .kpi-valor {

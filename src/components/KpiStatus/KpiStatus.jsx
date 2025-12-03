@@ -18,10 +18,16 @@ const cores = {
     cor2: "#FFE689",
     corBorda:"#D5AA00",
     corTexto: "black"
+  },
+  azul: {
+    cor1: "#14304B",
+    cor2: "#455A71",
+    corBorda:"#465B71",
+    corTexto: "white"
   }
 };
 
-function KpiStatus({ status, valor, descricao, cor, ativo, onClick }) {
+function KpiStatus({ status, valor, descricao = "", cor, ativo = false, onClick = () => {} }) {
   const estilo = cores[cor];
 
   return (
