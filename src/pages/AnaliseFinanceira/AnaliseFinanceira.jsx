@@ -36,28 +36,29 @@ function AnaliseFinanceira() {
 
                         <KpiStatus
                             cor="azul"
-                            status="Total de serviços a receber"
-                            valor="R$ 17.000,00 (5 serviços)"
+                            status="Total a receber dos serviços"
+                            valor="R$42.700,00 (5 serviços)"
                         />
 
-                        <p className="texto-raia">Serviços aguardando pagamento</p>
+                        <p className="texto-raia">Pagamento com pendência</p>
 
                         <ServicoCard cor="amarelo">
                             <strong className="d-flex align-items-center gap-2">
                                 <i className='bx bxs-alert-triangle' style={{ fontSize: "25px", color: "#ebc429ff" }}></i>
-                                Viação Gontijo
+                                Auto Viação 1001
                             </strong>
 
-                            <strong>OS#0047</strong>
+                            <strong>OS#3114</strong>
                             <div className="d-flex align-items-center gap-1">
                                 <i className='bx bxs-bus' style={{ fontSize: "22px" }}></i>
-                                Caio Induscar Apache VIP V
+                                Busscar Vissta Buss 400
                             </div>
-                            <div><strong>Placa:</strong> LHS-7045</div>
+                            <div><strong>Placa:</strong> LKP-8821</div>
 
                             <hr />
 
-                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">20 Dias</b></div>
+                            <div><strong>Total do serviço:</strong> R$ 6.750</div>
+                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">6 Dias</b></div>
 
                             <div className="d-flex gap-2 mt-3">
                                 <button className="btn btn-status flex-grow-1">Analisar</button>
@@ -67,19 +68,20 @@ function AnaliseFinanceira() {
                         <ServicoCard cor="verde">
                             <strong className="d-flex align-items-center gap-2">
                                 <i className='bx bxs-check-circle' style={{ fontSize: "25px", color: "green" }}></i>
-                                Viação Gontijo
+                                Real Expresso
                             </strong>
 
-                            <strong>OS#0047</strong>
+                            <strong>OS#3149</strong>
                             <div className="d-flex align-items-center gap-1">
                                 <i className='bx bxs-bus' style={{ fontSize: "22px" }}></i>
-                                Caio Induscar Apache VIP V
+                                Irizar i6S
                             </div>
-                            <div><strong>Placa:</strong> LHS-7045</div>
+                            <div><strong>Placa:</strong> REA-3030</div>
 
                             <hr />
 
-                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">20 Dias</b></div>
+                            <div><strong>Total do serviço:</strong> R$ 7.150</div>
+                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">3 Dias</b></div>
 
                             <div className="d-flex gap-2 mt-3">
                                 <button className="btn btn-status flex-grow-1">Analisar</button>
@@ -94,27 +96,28 @@ function AnaliseFinanceira() {
                         <KpiStatus
                             cor="vermelho"
                             status="Serviços com nota fiscal pendente"
-                            valor="5 Serviços"
+                            valor="2 Serviços"
                         />
 
-                        <p className="texto-raia">Serviços finalizados mas sem emissão de NF</p>
+                        <p className="texto-raia">Nota fiscal com pendência</p>
 
-                        <ServicoCard cor="verde">
+                        <ServicoCard cor="vermelho">
                             <strong className="d-flex align-items-center gap-2">
-                                <i className='bx bxs-check-circle' style={{ fontSize: "25px", color: "green" }}></i>
-                                Viação Gontijo
+                                <i className='bx bxs-alert-triangle' style={{ fontSize: "25px", color: "red" }}></i>
+                                Expresso Guanabara
                             </strong>
 
-                            <strong>OS#0047</strong>
+                            <strong>OS#3135</strong>
                             <div className="d-flex align-items-center gap-1">
                                 <i className='bx bxs-bus' style={{ fontSize: "22px" }}></i>
-                                Caio Induscar Apache VIP V
+                                Marcopolo Paradiso New G7 1200
                             </div>
-                            <div><strong>Placa:</strong> LHS-7045</div>
+                            <div><strong>Placa:</strong> OCP-9102</div>
 
                             <hr />
 
-                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">20 Dias</b></div>
+                            <div><strong>Total do serviço:</strong> R$ 14.900</div>
+                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">21 Dias</b></div>
 
                             <div className="d-flex gap-2 mt-3">
                                 <button className="btn btn-status flex-grow-1">Analisar</button>
@@ -124,19 +127,20 @@ function AnaliseFinanceira() {
                         <ServicoCard cor="verde">
                             <strong className="d-flex align-items-center gap-2">
                                 <i className='bx bxs-check-circle' style={{ fontSize: "25px", color: "green" }}></i>
-                                Viação Gontijo
+                                GaelTur
                             </strong>
 
-                            <strong>OS#0047</strong>
+                            <strong>OS#3165</strong>
                             <div className="d-flex align-items-center gap-1">
                                 <i className='bx bxs-bus' style={{ fontSize: "22px" }}></i>
-                                Caio Induscar Apache VIP V
+                                Comil Campione 3.25
                             </div>
-                            <div><strong>Placa:</strong> LHS-7045</div>
+                            <div><strong>Placa:</strong> KJH-4567</div>
 
                             <hr />
 
-                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">20 Dias</b></div>
+                            <div><strong>Total do serviço:</strong> R$3.800</div>
+                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">2 Dias</b></div>
 
                             <div className="d-flex gap-2 mt-3">
                                 <button className="btn btn-status flex-grow-1">Analisar</button>
@@ -151,27 +155,28 @@ function AnaliseFinanceira() {
                         <KpiStatus
                             cor="verde"
                             status="Serviços com pagamento realizado"
-                            valor="3 Serviços"
+                            valor="1 Serviços"
                         />
 
-                        <p className="texto-raia">Serviços já pagos e concluídos</p>
+                        <p className="texto-raia">Concluídos sem pendência</p>
 
                         <ServicoCard cor="verde">
                             <strong className="d-flex align-items-center gap-2">
                                 <i className='bx bxs-check-circle' style={{ fontSize: "25px", color: "green" }}></i>
-                                Viação Gontijo
+                                Nilson Turismos
                             </strong>
 
-                            <strong>OS#0047</strong>
+                            <strong>OS#3178</strong>
                             <div className="d-flex align-items-center gap-1">
                                 <i className='bx bxs-bus' style={{ fontSize: "22px" }}></i>
-                                Caio Induscar Apache VIP V
+                                Marcopolo Paradiso G7 1600 LD
                             </div>
-                            <div><strong>Placa:</strong> LHS-7045</div>
+                            <div><strong>Placa:</strong> BRL-9988</div>
 
                             <hr />
 
-                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">20 Dias</b></div>
+                            <div><strong>Total do serviço:</strong> R$ 10.100</div>
+                            <div><strong>Data de finalização: </strong>12/09/2025</div>
 
                             <div className="d-flex gap-2 mt-3">
                                 <button className="btn btn-status flex-grow-1">Analisar</button>
