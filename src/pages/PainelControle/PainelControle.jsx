@@ -74,7 +74,7 @@ function PainelControle() {
                     <KpiStatus
                         cor="vermelho"
                         status="Aguardando Orçamento"
-                        valor="2 veículos"
+                        valor="4 veículos"
                         descricao="Pendentes"
                         ativo={kpiAtiva === "orcamento"}
                         onClick={() => setKpiAtiva("orcamento")}
@@ -83,7 +83,7 @@ function PainelControle() {
                     <KpiStatus
                         cor="vermelho"
                         status="Aguardando Autorização"
-                        valor="4 veículos"
+                        valor="0 veículos"
                         descricao="Para aprovar"
                         ativo={kpiAtiva === "autorizacao"}
                         onClick={() => setKpiAtiva("autorizacao")}
@@ -92,7 +92,7 @@ function PainelControle() {
                     <KpiStatus
                         cor="amarelo"
                         status="Aguardando Vaga"
-                        valor="10 veículos"
+                        valor="0 veículos"
                         descricao="Aprovados"
                         ativo={kpiAtiva === "vaga"}
                         onClick={() => setKpiAtiva("vaga")}
