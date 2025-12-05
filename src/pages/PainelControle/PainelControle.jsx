@@ -101,7 +101,7 @@ function PainelControle() {
                     <KpiStatus
                         cor="verde"
                         status="Em produção"
-                        valor="5 veículos"
+                        valor="0 veículos"
                         descricao="Em andamento"
                         ativo={kpiAtiva === "producao"}
                         onClick={() => setKpiAtiva("producao")}
@@ -110,7 +110,7 @@ function PainelControle() {
                     <KpiStatus
                         cor="verde"
                         status="Finalizados"
-                        valor="1 veículos"
+                        valor="0 veículos"
                         descricao="Últimos 30 dias"
                         ativo={kpiAtiva === "finalizados"}
                         onClick={() => setKpiAtiva("finalizados")}
