@@ -1,10 +1,15 @@
 import KpiStatus from "../../components/KpiStatus/KpiStatus";
 import Layout from "../../components/Layout/Layout";
 import ServicoCard from "../../components/ServicoCard/ServicoCard";
+import ModalEntradaVeiculo from "../../components/ModalEntradaVeiculo/ModalEntradaVeiculo";
+import ModalAgendarEntrada from "../../components/ModalAgendarEntrada/ModalAgendarEntrada";
 import { useState } from "react";
 
 function PainelControle() {
     const [kpiAtiva, setKpiAtiva] = useState("entrada");
+    const [mostrarModalEntrada, setMostrarModalEntrada] = useState(false);
+    const [mostrarModalAgendar, setMostrarModalAgendar] = useState(false);
+
 
     const nomesKpi = {
         entrada: "Aguardando Entrada",
@@ -34,13 +39,23 @@ function PainelControle() {
                     </div>
 
                     <div className="d-flex gap-3">
-                        <button className="btn btn-outline-dark d-flex align-items-center gap-1">
+                        <button className="btn btn-outline-dark d-flex align-items-center gap-1"  onClick={() => setMostrarModalAgendar(true)}>
                             Agendar Entrada <i className='bx bx-calendar'></i>
                         </button>
 
-                        <button className="btn btn-dark d-flex align-items-center gap-1">
+                        <ModalAgendarEntrada
+                            isOpen={mostrarModalAgendar}
+                            onClose={() => setMostrarModalAgendar(false)}
+                        />
+
+                        <button className="btn btn-dark d-flex align-items-center gap-1" onClick={() => setMostrarModalEntrada(true)}>
                             Nova entrada de Veículo +
                         </button>
+
+                        <ModalEntradaVeiculo
+                            isOpen={mostrarModalEntrada}
+                            onClose={() => setMostrarModalEntrada(false)}
+                        />
                     </div>
 
                 </div>
@@ -111,7 +126,7 @@ function PainelControle() {
                             <strong>Viação Águia Branca</strong>
 
                             <strong>OS#0034</strong>
-                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px"}}></i> Marcopolo Paradiso 1800 DD G7</div>
+                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px" }}></i> Marcopolo Paradiso 1800 DD G7</div>
                             <div><strong>Placa:</strong> RST-9087</div>
 
                             <hr />
@@ -129,7 +144,7 @@ function PainelControle() {
                             <strong>Cometa Transportes</strong>
 
                             <strong>OS#0057</strong>
-                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px"}}></i> Comil Invictus DD</div>
+                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px" }}></i> Comil Invictus DD</div>
                             <div><strong>Placa:</strong> BRA-9812</div>
 
                             <hr />
@@ -158,7 +173,7 @@ function PainelControle() {
                             </strong>
 
                             <strong>OS#0047</strong>
-                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px"}}></i> Caio Induscar Apache VIP V</div>
+                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px" }}></i> Caio Induscar Apache VIP V</div>
                             <div><strong>Placa:</strong> LHS-7045</div>
 
                             <hr />
@@ -178,7 +193,7 @@ function PainelControle() {
                             </strong>
 
                             <strong>OS#0031</strong>
-                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px"}}></i> Irizar i6 - 1400</div>
+                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px" }}></i> Irizar i6 - 1400</div>
                             <div><strong>Placa:</strong> JAS-3321</div>
 
                             <hr />
@@ -196,7 +211,7 @@ function PainelControle() {
                             <strong>Sussantur</strong>
 
                             <strong>OS#0037</strong>
-                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px"}}></i> Marcopolo G8 - 1500</div>
+                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px" }}></i> Marcopolo G8 - 1500</div>
                             <div><strong>Placa:</strong> DAS-1323</div>
 
                             <hr />
@@ -213,7 +228,7 @@ function PainelControle() {
                             <strong>Cometa Transportes</strong>
 
                             <strong>OS#0047</strong>
-                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px"}}></i> Comil Invictus DD</div>
+                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px" }}></i> Comil Invictus DD</div>
                             <div><strong>Placa:</strong> RST-9087</div>
 
                             <hr />
