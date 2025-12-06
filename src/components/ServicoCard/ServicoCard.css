@@ -4,7 +4,6 @@
 
 .servico-card {
   width: 520px;
-  height: 277px;
   border-radius: 12px;
   padding: 12px;
   border-style: solid;
@@ -16,6 +15,7 @@
   flex-direction: column;
   gap: 6px;
   transition: 0.2s ease;
+  font-size: 24px;
 }
 
 .servico-card .btn-status {

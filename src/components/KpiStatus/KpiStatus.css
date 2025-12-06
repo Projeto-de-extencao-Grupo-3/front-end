@@ -1,9 +1,9 @@
 .kpi-card {
   width: 100%;
   overflow: hidden;
-  height: 140px;
+  /* height: 140px; */
   border-radius: 8px;
-  padding: 25px;
+  padding: 16px;
   background: linear-gradient(135deg, var(--cor1), var(--cor2));
   color: var(--cor-texto);
   flex: 0 1 260px;
@@ -37,14 +37,14 @@
 
 /* textos */
 .kpi-status {
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 600;
   line-height: 22px;
   margin-bottom: 12px;
 }
 
 .kpi-valor {
-  font-size: 23px;
+  font-size: 24px;
   font-weight: 400;
   margin: 0;
 }
