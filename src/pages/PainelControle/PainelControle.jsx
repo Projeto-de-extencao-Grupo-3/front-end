@@ -39,7 +39,7 @@ function PainelControle() {
                     </div>
 
                     <div className="d-flex gap-3">
-                        <button className="btn btn-outline-dark d-flex align-items-center gap-1"  onClick={() => setMostrarModalAgendar(true)}>
+                        <button className="btn btn-outline-dark d-flex align-items-center gap-1" onClick={() => setMostrarModalAgendar(true)}>
                             Agendar Entrada <i className='bx bx-calendar'></i>
                         </button>
 
@@ -81,16 +81,16 @@ function PainelControle() {
                     />
 
                     <KpiStatus
-                        cor="vermelho"
+                        cor="amarelo"
                         status="Aguardando Autorização"
-                        valor="0 veículos"
+                        valor="3 veículos"
                         descricao="Para aprovar"
                         ativo={kpiAtiva === "autorizacao"}
                         onClick={() => setKpiAtiva("autorizacao")}
                     />
 
                     <KpiStatus
-                        cor="amarelo"
+                        cor="verde"
                         status="Aguardando Vaga"
                         valor="0 veículos"
                         descricao="Aprovados"
@@ -239,9 +239,75 @@ function PainelControle() {
                                 <button className="btn btn-status flex-grow-1">Fazer orçamento</button>
                             </div>
                         </ServicoCard>
-                    </div>
 
+
+                    </div>
                 )}
+
+                {/* AGUARDANDO AUTORIZACAO */}
+                {kpiAtiva === 'autorizacao' && (
+                    <div className="d-flex flex-wrap gap-5 justify-content-start">
+                        <ServicoCard cor="verde">
+                            <strong className="d-flex align-items-center gap-2">
+                                Viação Gontijo
+                            </strong>
+
+                            <strong>OS#0047</strong>
+                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px" }}></i> Caio Induscar Apache VIP V</div>
+                            <div><strong>Placa:</strong> LHS-7045</div>
+
+                            <hr />
+
+                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">20 Dias</b></div>
+
+                            <div className="d-flex gap-2 mt-3">
+                                <button className="btn btn-status flex-grow-1">Fazer orçamento</button>
+                            </div>
+                        </ServicoCard>
+
+
+                        <ServicoCard cor="amarelo">
+                            <strong className="d-flex align-items-center gap-2">
+                                <i className='bx bxs-alert-triangle' style={{ fontSize: "25px", color: "#ebc429ff" }}></i>
+                                Catarinense
+                            </strong>
+
+                            <strong>OS#0031</strong>
+                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px" }}></i> Irizar i6 - 1400</div>
+                            <div><strong>Placa:</strong> JAS-3321</div>
+
+                            <hr />
+
+                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">6 Dias</b></div>
+
+                            <div className="d-flex gap-2 mt-3">
+                                <button className="btn btn-status flex-grow-1">Fazer orçamento</button>
+                            </div>
+
+                        </ServicoCard>
+
+
+                        <ServicoCard cor="verde">
+                            <strong>Sussantur</strong>
+
+                            <strong>OS#0037</strong>
+                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px" }}></i> Marcopolo G8 - 1500</div>
+                            <div><strong>Placa:</strong> DAS-1323</div>
+
+                            <hr />
+
+                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">3 Dias</b></div>
+
+                            <div className="d-flex gap-2 mt-3">
+                                <button className="btn btn-status flex-grow-1">Fazer orçamento</button>
+                            </div>
+
+                        </ServicoCard>
+
+
+                    </div>
+                )}
+
             </div>
 
         </Layout >
