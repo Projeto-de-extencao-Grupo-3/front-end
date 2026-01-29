@@ -1,8 +1,32 @@
 import './Login.css';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import api from '../../service/api';
 
 function Login() {
   const navigate = useNavigate();
+
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+  const [erro, setErro] = useState('');
+
+  
+  async function handleLogin() {
+    try {
+      const response = await api.post('/oficinas/login', {
+        email,
+        senha
+      });
+
+        // salva o token
+      localStorage.setItem('token', response.data.token);
+      console.log("vamo ve se salva o token mesmo", token)
+
+    } catch (error) {
+      setErro('Email ou senha inválidos');
+    }
+  }
+
 
   return (
     <div className="login-bg d-flex justify-content-center align-items-center">
@@ -20,10 +44,15 @@ function Login() {
 
                 <div className="mt-4">
                   <div className='d-flex flex-column gap-4'>
-                    <input type="text" className="form-control input-custom" placeholder="Email:" />
+                    <input type="text" className="form-control input-custom" placeholder="Email:" value={email}
+                      onChange={e => setEmail(e.target.value)} />
 
-                    <input type="password" className="form-control input-custom" placeholder="Senha:" />
+                    <input type="password" className="form-control input-custom" placeholder="Senha:" value={senha}
+                      onChange={e => setSenha(e.target.value)}/>
                   </div>
+
+                    {erro && <p className="text-danger mt-3">{erro}</p>}
+
                   <div className="form-check mt-3">
                     <input type="checkbox" className="form-check-input" id="manter" />
                     <label className="form-check-label" htmlFor="manter">
@@ -31,7 +60,12 @@ function Login() {
                     </label>
                   </div>
 
-                  <button className="btn btn-outline-primary mt-4 px-4" onClick={() => navigate("/painelControle")}>Entrar</button>
+                  <button
+                    className="btn btn-outline-primary mt-4 px-4"
+                    onClick={handleLogin}
+                  >
+                    Entrar
+                  </button>
                 </div>
               </div>
 
