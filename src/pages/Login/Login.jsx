@@ -14,14 +14,17 @@ function Login() {
   async function handleLogin() {
     try {
       const response = await api.post('/oficinas/login', {
-        email,
+        cnpj: email,
         senha
       });
 
         // salva o token
-      localStorage.setItem('token', response.data.token);
-      console.log("vamo ve se salva o token mesmo", token)
-
+      localStorage.setItem('TOKEN', response.data.token);
+      console.log("vamo ve se salva o token mesmo", response.data.token)
+      
+      if (response.data.token != null) {
+        navigate("/painelControle")
+      }
     } catch (error) {
       setErro('Email ou senha inválidos');
     }
