@@ -8,7 +8,7 @@ function Sidebar({ ativo }) {
 
   return (
     
-    <div className="sidebar col-12 col-md-4 col-lg-2 d-flex flex-column p-3">
+    <div className="sidebar col-12 col-md-4 col-lg-2 d-flex flex-column p-3" style={{ height: "100vh", position: "sticky", top: 0, overflowY: "auto" }}>
       {/* LOGO */}
       <div className="d-flex align-items-center mb-4 logo-box">
         <img src="/src/assets/images/logoEscura.svg" className="logo-img" alt="Logo" />
