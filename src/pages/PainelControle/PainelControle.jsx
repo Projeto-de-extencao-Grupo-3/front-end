@@ -9,6 +9,7 @@ function PainelControle() {
     const [kpiAtiva, setKpiAtiva] = useState("entrada");
     const [mostrarModalEntrada, setMostrarModalEntrada] = useState(false);
     const [mostrarModalAgendar, setMostrarModalAgendar] = useState(false);
+    const [zoom, setZoom] = useState(1);
 
 
     const nomesKpi = {
@@ -24,6 +25,24 @@ function PainelControle() {
         console.log('Exibindo veículos aguardando orçamento');
     }
 
+    function zoomIn() {
+        setZoom((prev) => {
+            if (prev >= 1.3) return prev;
+            const novo = prev + 0.1;
+            document.body.style.zoom = novo;
+            return novo;
+        });
+    }
+
+    function zoomOut() {
+        setZoom((prev) => {
+            if (prev == 1) return prev;
+            const novo = prev - 0.1;
+            document.body.style.zoom = novo;
+            return novo;
+        });
+    }
+
     return (
 
         <Layout ativo={"painel"}>
@@ -37,6 +56,12 @@ function PainelControle() {
                             Visão geral da situação da sua oficina
                         </span>
                     </div>
+                    
+                    <div className="d-flex gap-3">
+                    <button onClick={zoomIn}>Zoom +</button>
+                    <button onClick={zoomOut}>Zoom -</button>
+                    </div>
+
 
                     <div className="d-flex gap-3">
                         <button className="btn btn-outline-dark d-flex align-items-center gap-1" onClick={() => setMostrarModalAgendar(true)}>
