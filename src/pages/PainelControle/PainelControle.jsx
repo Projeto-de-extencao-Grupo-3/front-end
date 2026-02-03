@@ -26,18 +26,18 @@ function PainelControle() {
     }
 
     function zoomIn() {
-        setZoom((prev) => {
-            if (prev >= 1.3) return prev;
-            const novo = prev + 0.1;
+        setZoom((atual) => {
+            if (atual >= 1.3) return atual;
+            const novo = atual + 0.1;
             document.body.style.zoom = novo;
             return novo;
         });
     }
 
     function zoomOut() {
-        setZoom((prev) => {
-            if (prev == 1) return prev;
-            const novo = prev - 0.1;
+        setZoom((atual) => {
+            if (atual == 1) return atual;
+            const novo = atual - 0.1;
             document.body.style.zoom = novo;
             return novo;
         });
@@ -56,7 +56,7 @@ function PainelControle() {
                             Visão geral da situação da sua oficina
                         </span>
                     </div>
-                    
+
                     <div className="d-flex gap-3">
                     <button onClick={zoomIn}>Zoom +</button>
                     <button onClick={zoomOut}>Zoom -</button>
