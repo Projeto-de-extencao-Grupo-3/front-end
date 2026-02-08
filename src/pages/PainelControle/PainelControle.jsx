@@ -4,6 +4,7 @@ import ServicoCard from "../../components/ServicoCard/ServicoCard";
 import ModalEntradaVeiculo from "../../components/ModalEntradaVeiculo/ModalEntradaVeiculo";
 import ModalAgendarEntrada from "../../components/ModalAgendarEntrada/ModalAgendarEntrada";
 import { useState } from "react";
+import StepperFluxo from "../../components/StepperFluxo/StepperFluxo";
 
 function PainelControle() {
     const [kpiAtiva, setKpiAtiva] = useState("entrada");
@@ -58,8 +59,8 @@ function PainelControle() {
                     </div>
 
                     <div className="d-flex gap-3">
-                    <button onClick={zoomIn}>Zoom +</button>
-                    <button onClick={zoomOut}>Zoom -</button>
+                        <button onClick={zoomIn}>Zoom +</button>
+                        <button onClick={zoomOut}>Zoom -</button>
                     </div>
 
 

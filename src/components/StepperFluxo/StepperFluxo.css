@@ -1,0 +1,82 @@
+.stepper-container {
+  display: flex;
+  align-items: flex-start; 
+  width: 100%;
+  padding: 16px;      
+  border: 3px solid #868686;
+  border-radius: 10px;
+  background-color: #FDFDFD;
+}
+
+
+.stepper-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+/* linha das etapas */
+.stepper-line {
+  position: absolute;
+  top: 25px;              /* metade do circulo */
+  left: -50%;
+  width: 100%;
+  height: 3px;
+  z-index: 0;
+}
+
+.line-concluida {
+  background-color: #164A81;
+}
+
+.line-pendente {
+  background-color: #dee2e6;
+}
+
+.stepper-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 3px solid #dee2e6;
+  background: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 1;
+}
+
+/* icone */
+.stepper-circle i {
+  font-size: 24px;
+}
+
+.stepper-label {
+  margin-top: 10px;
+  font-size: 16px;
+  text-align: center;
+  color: #495057;
+  line-height: 1.2;
+  max-width: 120px;
+}
+
+/* estados */
+.stepper-circle.concluido {
+  background-color: #164A81;
+  border-color: #164A81;
+  color: white;
+}
+
+.stepper-circle.ativo {
+  border-color: #164A81;
+  color: #164A81;
+}
+
+.stepper-circle.pendente {
+  color: #6c757d;
+}
+
+
