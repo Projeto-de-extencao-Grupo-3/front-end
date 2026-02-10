@@ -2,6 +2,10 @@
       flex: 0 1 auto;
 }
 
+.analise-financeira .servico-card {
+      width: auto;
+}
+
 .texto-raia {
   font-size: 18px;
   font-weight: 600;
