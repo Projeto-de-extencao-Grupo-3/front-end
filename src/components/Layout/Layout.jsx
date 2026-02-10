@@ -1,4 +1,5 @@
 import Sidebar from "../Sidebar/Sidebar";
+import ZoomButtons from "../ZoomButtons/ZoomButtons";
 
 function Layout({ children, ativo }) {
   return (
@@ -7,6 +8,7 @@ function Layout({ children, ativo }) {
 
       <div className="flex-grow-1 p-4">
         {children}
+        <ZoomButtons />
       </div>
     </div>
   );

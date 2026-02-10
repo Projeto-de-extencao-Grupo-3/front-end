@@ -4,7 +4,7 @@ import ServicoCard from "../../components/ServicoCard/ServicoCard";
 import ModalEntradaVeiculo from "../../components/ModalEntradaVeiculo/ModalEntradaVeiculo";
 import ModalAgendarEntrada from "../../components/ModalAgendarEntrada/ModalAgendarEntrada";
 import { useState } from "react";
-import StepperFluxo from "../../components/StepperFluxo/StepperFluxo";
+import ZoomButtons from "../../components/ZoomButtons/ZoomButtons";
 
 function PainelControle() {
     const [kpiAtiva, setKpiAtiva] = useState("entrada");
@@ -26,23 +26,7 @@ function PainelControle() {
         console.log('Exibindo veículos aguardando orçamento');
     }
 
-    function zoomIn() {
-        setZoom((atual) => {
-            if (atual >= 1.3) return atual;
-            const novo = atual + 0.1;
-            document.body.style.zoom = novo;
-            return novo;
-        });
-    }
 
-    function zoomOut() {
-        setZoom((atual) => {
-            if (atual == 1) return atual;
-            const novo = atual - 0.1;
-            document.body.style.zoom = novo;
-            return novo;
-        });
-    }
 
     return (
 
@@ -56,11 +40,6 @@ function PainelControle() {
                         <span className="fs-5 text-muted">
                             Visão geral da situação da sua oficina
                         </span>
-                    </div>
-
-                    <div className="d-flex gap-3">
-                        <button onClick={zoomIn}>Zoom +</button>
-                        <button onClick={zoomOut}>Zoom -</button>
                     </div>
 
 

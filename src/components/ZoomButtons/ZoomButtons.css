@@ -1,0 +1,65 @@
+.zoom-fab {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 9999;
+}
+
+/* container dos + e - */
+.zoom-actions {
+    display: flex;
+    gap: 8px;
+    animation: slideIn 0.25s ease-out;
+}
+
+/* botão principal (lupa) */
+.zoom-main {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: none;
+    background-color: #0E2A47;
+    color: white;
+    font-size: 36px;
+    cursor: pointer;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.659);
+    transition: all 0.2s ease;
+}
+
+.zoom-main:hover {
+    background-color: #0c3560;
+    transform: scale(1.05);
+    transition: all 0.2s ease;
+}
+
+/* botões + e - */
+.zoom-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    background: #fff;
+    color: #111;
+    font-size: 36px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* animação lateral */
+@keyframes slideIn {
+    from {
+        transform: translateX(16px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
