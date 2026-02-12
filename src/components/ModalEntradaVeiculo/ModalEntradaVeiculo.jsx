@@ -1,12 +1,25 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import './ModalEntradaVeiculo.css';
+import { useNavigate } from "react-router-dom";
 
 function ModalEntradaVeiculo({ isOpen, onClose }) {
-
+    const navigate = useNavigate()
+    const fileInputRef = useRef(null)
     const [etapa, setEtapa] = useState("opcoes");
 
     const handleVeiculoCadastrado = () => {
         setEtapa("foto");
+    };
+
+    const handleUploadImag = () => {
+        fileInputRef.current.click();
+    }
+
+    const handleArquivoSelecionado = (e) => {
+        const arquivo = e.target.files[0];
+        if (arquivo) {
+            console.log("Arquivo selecionado:", arquivo.name);
+        }
     };
 
     const handleCancelar = () => {
@@ -40,15 +53,20 @@ function ModalEntradaVeiculo({ isOpen, onClose }) {
                             {/* etapa 1 - opcoes de entrada */}
                             {etapa === "opcoes" && (
                                 <>
-                                    <button
-                                        className="botao-principal w-100 botao-opcao mb-3"
-                                        onClick={handleVeiculoCadastrado}
-                                    >
+                                    <input
+                                        type="file"
+                                        ref={fileInputRef}
+                                        onChange={handleArquivoSelecionado}
+                                        style={{ display: 'none' }}
+                                        accept="image/*"
+                                    />
+
+                                    <button className="botao-principal w-100 botao-opcao mb-3" onClick={handleVeiculoCadastrado} >
                                         <i className='bx bx-camera me-2'></i>
                                         Carro já é cadastrado
                                     </button>
 
-                                    <button className="botao-secundario w-100 botao-opcao mb-3">
+                                    <button className="botao-secundario w-100 botao-opcao mb-3" onClick={() => navigate("/painelControle/entrada")}>
                                         <i className='bx bx-hourglass me-2'></i>
                                         Carro não é cadastrado
                                     </button>
@@ -71,11 +89,21 @@ function ModalEntradaVeiculo({ isOpen, onClose }) {
                                             a foto da placa do carro
                                         </p>
 
-                                        <div className="foto-caixa d-flex flex-column 
-                                            align-items-center justify-content-center">
-                                            <i className='bx bx-camera bx-sm mb-2'></i>
-                                            <span className="fw-semibold">Foto da Placa</span>
-                                        </div>
+                                        <input
+                                            type="file"
+                                            ref={fileInputRef}
+                                            onChange={handleArquivoSelecionado}
+                                            style={{ display: 'none' }}
+                                            accept="image/*"
+                                        />
+
+                                        <button className="botao-principal w-100 botao-opcao mb-3" onClick={handleUploadImag} >
+                                            <div className="foto-caixa d-flex flex-column 
+                                                align-items-center justify-content-center">
+                                                <i className='bx bx-camera bx-sm mb-2'></i>
+                                                <span className="fw-semibold">Foto da Placa</span>
+                                            </div>
+                                        </button>
                                     </div>
 
                                     <button

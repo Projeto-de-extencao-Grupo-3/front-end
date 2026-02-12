@@ -14,7 +14,7 @@ function Login() {
   async function handleLogin() {
     try {
       const response = await api.post('/oficinas/login', {
-        cnpj: email,
+        email,
         senha
       });
 
