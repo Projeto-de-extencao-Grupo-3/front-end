@@ -14,13 +14,12 @@ function Login() {
   async function handleLogin() {
     try {
       const response = await api.post('/oficinas/login', {
-        cnpj: email,
+        email,
         senha
       });
-
+      localStorage.setItem("token", response.data.token); 
         // salva o token
-      localStorage.setItem('TOKEN', response.data.token);
-      console.log("vamo ve se salva o token mesmo", response.data.token)
+      sessionStorage.setItem('ID_OFICINA_USUARIO', response.data.id_oficina);
       
       if (response.data.token != null) {
         navigate("/painelControle")
