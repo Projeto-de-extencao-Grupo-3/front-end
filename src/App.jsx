@@ -15,6 +15,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/* Roteamento de telas, aqui chama a função da tela e o path é o caminho que vai ser acessado */}
+        <Route path="/" element={<Login />} />
         <Route path="/ResumoOrcamentoteste" element={<TesteOrcamento />} />
         <Route path="/teste" element={<Teste />} />
         <Route path="/painelControle" element={<PainelControle />} />
