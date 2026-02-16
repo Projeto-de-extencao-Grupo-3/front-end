@@ -19,6 +19,9 @@ function ModalEntradaVeiculo({ isOpen, onClose }) {
         const arquivo = e.target.files[0];
         if (arquivo) {
             console.log("Arquivo selecionado:", arquivo.name);
+            navigate("/painelControle/entradaCamera", { 
+                state: { arquivoCapturado: arquivo } 
+        });
         }
     };
 
