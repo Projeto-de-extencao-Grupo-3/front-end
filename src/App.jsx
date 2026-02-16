@@ -7,6 +7,7 @@ import PainelControle from './pages/PainelControle/PainelControle.jsx';
 import AnaliseFinanceira from './pages/AnaliseFinanceira/AnaliseFinanceira.jsx';
 import EntradaVeiculo from './pages/PainelControle/Entrada/EntradaVeiculo.jsx';
 import Teste from './pages/Teste.jsx';
+import TesteOrcamento from './pages/testeOrcamento.jsx';
 
 function App() {
 
@@ -14,7 +15,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/* Roteamento de telas, aqui chama a função da tela e o path é o caminho que vai ser acessado */}
-        <Route path="/" element={<Login />} />
+        <Route path="/ResumoOrcamentoteste" element={<TesteOrcamento />} />
         <Route path="/teste" element={<Teste />} />
         <Route path="/painelControle" element={<PainelControle />} />
         <Route path="/painelControle/entrada" element={<EntradaVeiculo />} />

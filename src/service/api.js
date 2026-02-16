@@ -15,4 +15,7 @@ api.interceptors.request.use(config => {
   return config;
 });
 
+export const buscarServicos = () => api.get("/servicos");
+export const buscarItens = () => api.get("/itens");
+
 export default api;
