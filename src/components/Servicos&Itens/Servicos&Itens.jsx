@@ -1,11 +1,10 @@
-import "./Resumo.css";
+import "./Servicos&Itens.css";
 import { useState, useEffect } from "react";
 import { buscarServicos, buscarItens } from "../../service/api";
 import Servicos from "./Abas/Servicos";
 import Itens from "./Abas/Itens";
-import { useLocation } from "react-router-dom";
 
-function Resumo() {
+function ServicosEItens() {
     const [abaAtiva, setAbaAtiva] = useState("servicos");
     const [paginaAtual, setPaginaAtual] = useState("analise");
 
@@ -139,4 +138,4 @@ function Resumo() {
     );
 }
 
-export default Resumo;
+export default ServicosEItens;

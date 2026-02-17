@@ -1,5 +1,5 @@
 import Layout from "../components/Layout/Layout";
-import Resumo from "../components/ResumoOrcamento/Resumo";
+import ServicosEItens from "../components/Servicos&Itens/Servicos&Itens";
 import StepperFluxo from "../components/StepperFluxo/StepperFluxo";
 
 function TesteOrcamento() {
@@ -7,7 +7,7 @@ function TesteOrcamento() {
 
     return (
         <Layout ativo={"painel"}>
-            <Resumo />
+            <ServicosEItens />
         </Layout>
     );
 }
