@@ -1,0 +1,51 @@
+.tabela {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.titles {
+    width: 100%;
+    background-color: #e3e3e3;
+    height: 35px;
+    border-radius: 8px;
+}
+
+.config-titles {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    padding: 0 12px;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+}
+
+.title{
+    width: 100px;
+}
+
+.dados {
+    width: 100%;
+    height: 35px;
+    border-radius: 8px;
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+    flex-direction: column;
+}
+
+.config-dados {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    padding: 0 12px;
+    justify-content: space-between;
+    align-items: center;
+    border: solid 2px #e3e3e3;
+    border-radius: 8px;
+}
+
+.dado{
+    width: 100px;
+}

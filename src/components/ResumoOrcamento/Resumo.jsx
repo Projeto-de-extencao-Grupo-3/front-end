@@ -1,15 +1,54 @@
 import "./Resumo.css";
 import { useState, useEffect } from "react";
 import { buscarServicos, buscarItens } from "../../service/api";
-import Servicos from "./Servicos";
-import Itens from "./Itens";
+import Servicos from "./Abas/Servicos";
+import Itens from "./Abas/Itens";
 import { useLocation } from "react-router-dom";
 
 function Resumo() {
     const [abaAtiva, setAbaAtiva] = useState("servicos");
-    const location = useLocation();
     const [paginaAtual, setPaginaAtual] = useState("analise");
-    const [dados, setDados] = useState([]);
+
+    const ticket = {
+        id: 1,
+        cliente: "João",
+        servicos: [
+            {
+                id: 1,
+                tipo: "Pintura",
+                parte: "Para-Choque",
+                lado: "Dianteiro",
+                preco: 400.00
+            },
+            {
+                id: 2,
+                tipo: "Funilaria",
+                parte: "Para-Choque",
+                lado: "Dianteiro",
+                preco: 200.00
+            }
+        ],
+        itens: [
+            {
+                id: 1,
+                codigo: "00024",
+                item: "Tinta Azul-Fiap",
+                visibilidade: "Privado",
+                quantidade: 8,
+                preco: 30.00,
+                status: "Concluido"
+            },
+            {
+                id: 2,
+                codigo: "00025",
+                item: "Primer",
+                visibilidade: "Privado",
+                quantidade: 10,
+                preco: 30.00,
+                status: "Pendente"
+            }
+        ]
+    };
 
     useEffect(() => {
         const carregarDados = async () => {
@@ -51,8 +90,7 @@ function Resumo() {
 
             {/* Parte superior do resumo */}
             <div className="bar-menu">
-                <div className={`bar-options ${
-                    paginaAtual === "analise" ? "full" : ""}`}>
+                <div className={`bar-options ${paginaAtual === "analise" ? "full" : ""}`}>
                     <button
                         className={`buttons ${abaAtiva === "servicos" ? "selecionado" : ""}`}
                         onClick={() => setAbaAtiva("servicos")}
@@ -90,11 +128,11 @@ function Resumo() {
 
             {/* Parte dos tickets */}
 
-            <div>
+            <div className="conteudo">
                 {abaAtiva === "servicos" ? (
-                    <Servicos dados={dados} />
+                    <Servicos dados={ticket.servicos} />
                 ) : (
-                    <Itens dados={dados} />
+                    <Itens dados={ticket.itens} />
                 )}
             </div>
         </div>
