@@ -7,6 +7,8 @@ import PainelControle from './pages/PainelControle/PainelControle.jsx';
 import AnaliseFinanceira from './pages/AnaliseFinanceira/AnaliseFinanceira.jsx';
 import EntradaVeiculo from './pages/PainelControle/Entrada/EntradaVeiculo.jsx';
 import EntradaVeiculoCamera from './pages/PainelControle/Entrada/EntradaVeiculoCamera.jsx';
+import GestaoFuncionarios from './pages/Funcionarios/GestaoFuncionarios.jsx';
+import GestaoClientes from './pages/Clientes/GestaoClientes.jsx';
 import Teste from './pages/Teste.jsx';
 import TesteOrcamento from './pages/TesteOrcamento.jsx';
 
@@ -22,6 +24,8 @@ function App() {
         <Route path="/painelControle" element={<PainelControle />} />
         <Route path="/painelControle/entrada" element={<EntradaVeiculo />} />
         <Route path="/painelControle/entradaCamera" element={<EntradaVeiculoCamera />} />
+        <Route path="/clientes" element={<GestaoClientes />} />
+        <Route path="/funcionarios" element={<GestaoFuncionarios />} />
         <Route path="/analiseFinanceira" element={<AnaliseFinanceira />} />
       </Routes>
 

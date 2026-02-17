@@ -1,0 +1,10 @@
+.header-funcionarios{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.add_funcionario{
+    width: 22vw;
+}

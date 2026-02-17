@@ -33,7 +33,7 @@ function Sidebar({ ativo }) {
           <i class='bx  bx-chart-bar-columns' style={{ fontSize: "25px" }} ></i> Análise Financeira
         </li>
 
-        <li className={ativo === "clientes" ? "ativo" : ""}>
+        <li className={ativo === "clientes" ? "ativo" : ""} onClick={() => navigate("/clientes")}>
           <i class='bx bxs-group' style={{ fontSize: "25px" }}></i> Clientes
         </li>
 
@@ -45,7 +45,7 @@ function Sidebar({ ativo }) {
           <i class='bx bxs-package' style={{ fontSize: "25px" }}></i> Estoque
         </li>
 
-        <li className={ativo === "funcionarios" ? "ativo" : ""}>
+        <li className={ativo === "funcionarios" ? "ativo" : ""} onClick={() => navigate("/funcionarios")}>
           <i class='bx bxs-briefcase-alt-2' style={{ fontSize: "25px" }}></i> Funcionários
         </li>
 

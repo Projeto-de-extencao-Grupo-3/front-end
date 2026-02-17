@@ -40,7 +40,7 @@ function EntradaVeiculoCamera() {
             });
 
             // Preenche o campo de placa com o retorno da API
-            setPlaca(response.data.placa);
+            //setPlaca(response.data.placa);
             console.log("Placa reconhecida:", response.data.data);
             localStorage.setItem('TOKEN', response.data.token);
         } catch (error) {

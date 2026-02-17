@@ -1,0 +1,13 @@
+.header-clientes{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.form-control{
+    border: 1px solid black
+}
+.add_client{
+    width: 18vw;
+}
