@@ -19,9 +19,10 @@ function Login() {
       });
 
         // salva o token
-      localStorage.setItem('TOKEN', response.data.token);
+      localStorage.setItem("token", response.data.token);
       console.log("vamo ve se salva o token mesmo", response.data.token)
-      
+      sessionStorage.setItem('ID_OFICINA_USUARIO', response.data.id_oficina);
+
       if (response.data.token != null) {
         navigate("/painelControle")
       }

@@ -1,17 +1,29 @@
-import KpiStatus from "../../components/KpiStatus/KpiStatus";
-import Layout from "../../components/Layout/Layout";
 import ServicoCard from "../../components/ServicoCard/ServicoCard";
 import ModalEntradaVeiculo from "../../components/ModalEntradaVeiculo/ModalEntradaVeiculo";
 import ModalAgendarEntrada from "../../components/ModalAgendarEntrada/ModalAgendarEntrada";
-import { useState } from "react";
-import ZoomButtons from "../../components/ZoomButtons/ZoomButtons";
+import { useState, useEffect } from "react";
+import api from "../../service/api";
+import Layout from "../../components/Layout/Layout";
+import KpiStatus from "../../components/KpiStatus/KpiStatus";
 
 function PainelControle() {
     const [kpiAtiva, setKpiAtiva] = useState("entrada");
     const [mostrarModalEntrada, setMostrarModalEntrada] = useState(false);
     const [mostrarModalAgendar, setMostrarModalAgendar] = useState(false);
-    const [zoom, setZoom] = useState(1);
 
+
+    const [servicos, setServicos] = useState([]);
+
+    useEffect(() => {
+        api.get("/ordens")
+            .then((response) => {
+                setServicos(response.data);
+                console.log("Serviços carregados:", response.data);
+            })
+            .catch((error) => {
+                console.error("Erro ao buscar serviços:", error);
+            });
+    }, []);
 
     const nomesKpi = {
         entrada: "Aguardando Entrada",
@@ -27,6 +39,22 @@ function PainelControle() {
     }
 
 
+    function diferencaDiasEntreDatas(data1, data2) {
+        if (data2 == null) {
+            data2 = new Date().toString();
+        }
+
+        if (data1 == null) {
+            data1 = new Date().toString();
+        }
+
+        const dateObj1 = new Date(data1);
+        const dateObj2 = new Date(data2);
+
+        const umDiaEmMs = 1000 * 60 * 60 * 24;
+
+        return Math.floor((dateObj1 - dateObj2) / umDiaEmMs);
+    }
 
     return (
 
@@ -66,12 +94,12 @@ function PainelControle() {
                 </div>
 
                 {/* KPIS */}
-                <div className="d-flex flex-grow-1 gap-3 justify-content-between flex-wrap">
+                <div className="d-flex gap-3">
                     <KpiStatus
                         cor="verde"
                         status="Aguardando Entrada"
-                        valor="2 veículos"
-                        descricao="Agendados"
+                        valor="0 veículos"
+                        descricao="Últimos 30 dias"
                         ativo={kpiAtiva === "entrada"}
                         onClick={() => setKpiAtiva("entrada")}
                     />
@@ -127,42 +155,32 @@ function PainelControle() {
                 {/* ENTRADA */}
                 {kpiAtiva === 'entrada' && (
                     <div className="d-flex flex-wrap gap-5 justify-content-start">
-                        <ServicoCard cor="verde">
-                            <strong>Viação Águia Branca</strong>
+                        {servicos.filter(item => item.status === "EM_PRODUCAO").map((servico) => (
+                            <ServicoCard cor="verde" key={servico.id_ordem_servico}>
+                                <strong>{servico.cliente.nome}</strong>
 
-                            <strong>OS#0034</strong>
-                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px" }}></i> Marcopolo Paradiso 1800 DD G7</div>
-                            <div><strong>Placa:</strong> RST-9087</div>
+                                <strong>OS#{servico.id_ordem_servico}</strong>
+                                <div className="d-flex align-items-center gap-1">
+                                    <i className='bx bxs-bus' style={{ fontSize: "22px" }}></i>
+                                    {servico.veiculo?.modelo || "Modelo não informado"} ({servico.veiculo?.ano_modelo || "Ano não informado"})
+                                </div>
+                                <div><strong>Placa:</strong> {servico.veiculo?.placa || "Placa não informada"}</div>
 
-                            <hr />
+                                <hr />
 
-                            <div><strong>Dias restantes para Entrada:</strong> 27 Dias</div>
-                            <div><strong>Data Agendada:</strong> 31/01/2025</div>
+                                <div><strong>Dias restantes para Entrada:</strong> {diferencaDiasEntreDatas(servico.entrada.data_entrada_prevista, null)} Dias</div>
+                                <div><strong>Data Agendada:</strong> {servico.entrada.data_entrada_prevista}</div>
 
-                            <div className="d-flex gap-2 mt-3">
-                                <button className="btn btn-success flex-grow-1">Fazer Entrada</button>
-                                <button className="btn btn-outline-dark flex-grow-1">Cancelar</button>
-                            </div>
-                        </ServicoCard>
-
-                        <ServicoCard cor="verde">
-                            <strong>Cometa Transportes</strong>
-
-                            <strong>OS#0057</strong>
-                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px" }}></i> Comil Invictus DD</div>
-                            <div><strong>Placa:</strong> BRA-9812</div>
-
-                            <hr />
-
-                            <div><strong>Dias restantes para Entrada:</strong> 27 Dias</div>
-                            <div><strong>Data Agendada:</strong> 31/01/2025</div>
-
-                            <div className="d-flex gap-2 mt-3">
-                                <button className="btn btn-success flex-grow-1">Fazer Entrada</button>
-                                <button className="btn btn-outline-dark flex-grow-1">Cancelar</button>
-                            </div>
-
-                        </ServicoCard>
+                                <div className="d-flex gap-2 mt-3">
+                                    <button className="btn btn-success flex-grow-1">
+                                        Fazer Entrada
+                                    </button>
+                                    <button className="btn btn-outline-dark flex-grow-1">
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </ServicoCard>
+                        ))}
                     </div>
 
                 )}
@@ -171,81 +189,22 @@ function PainelControle() {
                 {/* AGUARDANDO ORCMENTO */}
                 {kpiAtiva === 'orcamento' && (
                     <div className="d-flex flex-wrap gap-5 justify-content-start">
-                        <ServicoCard cor="vermelho">
-                            <strong className="d-flex align-items-center gap-2">
-                                <i className='bx bxs-alert-triangle' style={{ fontSize: "25px", color: "red" }}></i>
-                                Viação Gontijo
-                            </strong>
-
-                            <strong>OS#0047</strong>
-                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px" }}></i> Caio Induscar Apache VIP V</div>
-                            <div><strong>Placa:</strong> LHS-7045</div>
-
-                            <hr />
-
-                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">20 Dias</b></div>
-
-                            <div className="d-flex gap-2 mt-3">
-                                <button className="btn btn-status flex-grow-1">Fazer orçamento</button>
-                            </div>
-                        </ServicoCard>
-
-
-                        <ServicoCard cor="amarelo">
-                            <strong className="d-flex align-items-center gap-2">
-                                <i className='bx bxs-alert-triangle' style={{ fontSize: "25px", color: "#ebc429ff" }}></i>
-                                Catarinense
-                            </strong>
-
-                            <strong>OS#0031</strong>
-                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px" }}></i> Irizar i6 - 1400</div>
-                            <div><strong>Placa:</strong> JAS-3321</div>
-
-                            <hr />
-
-                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">6 Dias</b></div>
-
-                            <div className="d-flex gap-2 mt-3">
-                                <button className="btn btn-status flex-grow-1">Fazer orçamento</button>
-                            </div>
-
-                        </ServicoCard>
-
-
-                        <ServicoCard cor="verde">
-                            <strong>Sussantur</strong>
-
-                            <strong>OS#0037</strong>
-                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px" }}></i> Marcopolo G8 - 1500</div>
-                            <div><strong>Placa:</strong> DAS-1323</div>
-
-                            <hr />
-
-                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">3 Dias</b></div>
-
-                            <div className="d-flex gap-2 mt-3">
-                                <button className="btn btn-status flex-grow-1">Fazer orçamento</button>
-                            </div>
-
-                        </ServicoCard>
-
-                        <ServicoCard cor="verde">
-                            <strong>Cometa Transportes</strong>
-
-                            <strong>OS#0047</strong>
-                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px" }}></i> Comil Invictus DD</div>
-                            <div><strong>Placa:</strong> RST-9087</div>
-
-                            <hr />
-
-                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">2 Dias</b></div>
-
-                            <div className="d-flex gap-2 mt-3">
-                                <button className="btn btn-status flex-grow-1">Fazer orçamento</button>
-                            </div>
-                        </ServicoCard>
-
-
+                        {servicos.map((servico) => (
+                            <ServicoCard cor="vermelho">
+                                <strong className="d-flex align-items-center gap-2">
+                                    <i className='bx bxs-alert-triangle' style={{ fontSize: "25px", color: "red" }}></i>
+                                    {servico.cliente.nome}
+                                </strong>
+                                <strong>OS#{servico.id_ordem_servico}</strong>
+                                <div className="d-flex align-items-center gap-1"><i className='bx bxs-bus' style={{ fontSize: "22px" }}></i> Caio Induscar Apache VIP V</div>
+                                <div><strong>Placa:</strong> {servico.veiculo?.placa || "Placa não informada"}</div>
+                                <hr />
+                                <div><strong>Dias em espera:</strong> <b className="cor-fonte">{diferencaDiasEntreDatas(null, servico.entrada.data_entrada_efetiva)}</b></div>
+                                <div className="d-flex gap-2 mt-3">
+                                    <button className="btn btn-status flex-grow-1">Fazer orçamento</button>
+                                </div>
+                            </ServicoCard>
+                        ))}
                     </div>
                 )}
 
