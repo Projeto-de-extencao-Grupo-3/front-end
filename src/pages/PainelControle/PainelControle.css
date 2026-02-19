@@ -1,0 +1,37 @@
+.btn-status-verde {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    font-weight: bolder;
+}
+
+.btn-status-verde:hover {
+    background-color: #218838;    
+    color: white;
+}
+
+.btn-status-amarelo {
+    background-color: #ffc107;
+    color: #212529;
+    border: none;
+    font-weight: bolder;
+
+}
+
+.btn-status-amarelo:hover {
+    background-color: #efb507;
+    color: #212529;
+}
+
+.btn-status-vermelho {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    font-weight: bolder;
+
+}
+
+.btn-status-vermelho:hover {
+    background-color: #c82333;
+    color: white;
+}

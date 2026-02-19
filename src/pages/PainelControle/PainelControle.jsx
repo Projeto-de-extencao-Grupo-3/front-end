@@ -1,31 +1,28 @@
-import ServicoCard from "../../components/ServicoCard/ServicoCard";
-import ModalEntradaVeiculo from "../../components/ModalEntradaVeiculo/ModalEntradaVeiculo";
-import ModalAgendarEntrada from "../../components/ModalAgendarEntrada/ModalAgendarEntrada";
 import { useState, useEffect } from "react";
 import api from "../../service/api";
 import Layout from "../../components/Layout/Layout";
 import KpiStatus from "../../components/KpiStatus/KpiStatus";
+import ServicoCard from "../../components/ServicoCard/ServicoCard";
+import ModalEntradaVeiculo from "../../components/ModalEntradaVeiculo/ModalEntradaVeiculo";
+import ModalAgendarEntrada from "../../components/ModalAgendarEntrada/ModalAgendarEntrada";
+import "./PainelControle.css";
 
 function PainelControle() {
     const [kpiAtiva, setKpiAtiva] = useState("entrada");
+    const [servicos, setServicos] = useState(null);
     const [mostrarModalEntrada, setMostrarModalEntrada] = useState(false);
     const [mostrarModalAgendar, setMostrarModalAgendar] = useState(false);
 
+    const chavesStatus = {
+        entrada: "AGUARDANDO_ENTRADA",
+        orcamento: "AGUARDANDO_ORCAMENTO",
+        autorizacao: "AGUARDANDO_AUTORIZACAO",
+        vaga: "AGUARDANDO_VAGA",
+        producao: "EM_PRODUCAO",
+        finalizados: "FINALIZADO"
+    };
 
-    const [servicos, setServicos] = useState([]);
-
-    useEffect(() => {
-        api.get("/ordens")
-            .then((response) => {
-                setServicos(response.data);
-                console.log("Serviços carregados:", response.data);
-            })
-            .catch((error) => {
-                console.error("Erro ao buscar serviços:", error);
-            });
-    }, []);
-
-    const nomesKpi = {
+    const nomesExibicao = {
         entrada: "Aguardando Entrada",
         orcamento: "Aguardando Orçamento",
         autorizacao: "Aguardando Autorização",
@@ -34,249 +31,152 @@ function PainelControle() {
         finalizados: "Finalizados"
     };
 
-    if (kpiAtiva === 'orcamento') {
-        console.log('Exibindo veículos aguardando orçamento');
+    useEffect(() => {
+        api.get("/painel-controle")
+            .then((res) => {
+                setServicos(res.data);
+                console.log("Dados do painel de controle:", res.data);
+            })
+            .catch((err) => console.error("Erro na API:", err));
+    }, []);
+
+    function calcularDias(data1, data2) {
+        const d1 = data1 ? new Date(data1) : new Date();
+        const d2 = data2 ? new Date(data2) : new Date();
+        return Math.abs(Math.floor((d1 - d2) / (1000 * 60 * 60 * 24)));
     }
 
-
-    function diferencaDiasEntreDatas(data1, data2) {
-        if (data2 == null) {
-            data2 = new Date().toString();
-        }
-
-        if (data1 == null) {
-            data1 = new Date().toString();
-        }
-
-        const dateObj1 = new Date(data1);
-        const dateObj2 = new Date(data2);
-
-        const umDiaEmMs = 1000 * 60 * 60 * 24;
-
-        return Math.floor((dateObj1 - dateObj2) / umDiaEmMs);
-    }
+    const chaveBack = chavesStatus[kpiAtiva];
+    const listaOrdens = servicos?.[chaveBack]?.ordens_de_servico || [];
 
     return (
-
-        <Layout ativo={"painel"}>
+        <Layout ativo="painel">
             <div className="d-flex flex-column">
-
-                {/* CABECALHO */}
                 <div className="d-flex justify-content-between align-items-center mb-4">
-                    <div className="d-flex flex-column">
+                    <div>
                         <h2 className="m-0">Painel de Controle</h2>
-                        <span className="fs-5 text-muted">
-                            Visão geral da situação da sua oficina
-                        </span>
+                        <span className="text-muted">Visão geral da situação da sua oficina</span>
                     </div>
-
-
                     <div className="d-flex gap-3">
-                        <button className="btn btn-outline-dark d-flex align-items-center gap-1" onClick={() => setMostrarModalAgendar(true)}>
+                        <button className="btn btn-outline-dark" onClick={() => setMostrarModalAgendar(true)}>
                             Agendar Entrada <i className='bx bx-calendar'></i>
                         </button>
-
-                        <ModalAgendarEntrada
-                            isOpen={mostrarModalAgendar}
-                            onClose={() => setMostrarModalAgendar(false)}
-                        />
-
-                        <button className="btn btn-dark d-flex align-items-center gap-1" onClick={() => setMostrarModalEntrada(true)}>
+                        <button className="btn btn-dark" onClick={() => setMostrarModalEntrada(true)}>
                             Nova entrada de Veículo +
                         </button>
-
-                        <ModalEntradaVeiculo
-                            isOpen={mostrarModalEntrada}
-                            onClose={() => setMostrarModalEntrada(false)}
-                        />
                     </div>
-
                 </div>
 
-                {/* KPIS */}
+                <ModalAgendarEntrada isOpen={mostrarModalAgendar} onClose={() => setMostrarModalAgendar(false)} />
+                <ModalEntradaVeiculo isOpen={mostrarModalEntrada} onClose={() => setMostrarModalEntrada(false)} />
+
+                {/* KPIS - paremetros de cores*/}
                 <div className="d-flex gap-3">
-                    <KpiStatus
-                        cor="verde"
-                        status="Aguardando Entrada"
-                        valor="0 veículos"
-                        descricao="Últimos 30 dias"
-                        ativo={kpiAtiva === "entrada"}
-                        onClick={() => setKpiAtiva("entrada")}
-                    />
+                    {Object.keys(chavesStatus).map((id) => {
+                        const qtd = servicos?.[chavesStatus[id]]?.quantidade_ordens || 0;
+                        let corKpi = "verde";
 
-                    <KpiStatus
-                        cor="vermelho"
-                        status="Aguardando Orçamento"
-                        valor="4 veículos"
-                        descricao="Pendentes"
-                        ativo={kpiAtiva === "orcamento"}
-                        onClick={() => setKpiAtiva("orcamento")}
-                    />
+                        // Parametrização para KPIs de espera
+                        if (id !== "producao" && id !== "finalizados") {
+                            if (qtd > 10) corKpi = "vermelho";
+                            else if (qtd > 5) corKpi = "amarelo";
+                        }
 
-                    <KpiStatus
-                        cor="amarelo"
-                        status="Aguardando Autorização"
-                        valor="3 veículos"
-                        descricao="Para aprovar"
-                        ativo={kpiAtiva === "autorizacao"}
-                        onClick={() => setKpiAtiva("autorizacao")}
-                    />
-
-                    <KpiStatus
-                        cor="verde"
-                        status="Aguardando Vaga"
-                        valor="0 veículos"
-                        descricao="Aprovados"
-                        ativo={kpiAtiva === "vaga"}
-                        onClick={() => setKpiAtiva("vaga")}
-                    />
-
-                    <KpiStatus
-                        cor="verde"
-                        status="Em produção"
-                        valor="0 veículos"
-                        descricao="Em andamento"
-                        ativo={kpiAtiva === "producao"}
-                        onClick={() => setKpiAtiva("producao")}
-                    />
-
-                    <KpiStatus
-                        cor="verde"
-                        status="Finalizados"
-                        valor="0 veículos"
-                        descricao="Últimos 30 dias"
-                        ativo={kpiAtiva === "finalizados"}
-                        onClick={() => setKpiAtiva("finalizados")}
-                    />
+                        return (
+                            <KpiStatus
+                                key={id}
+                                cor={corKpi}
+                                status={nomesExibicao[id]}
+                                valor={`${qtd} veículos`}
+                                ativo={kpiAtiva === id}
+                                onClick={() => setKpiAtiva(id)}
+                            />
+                        );
+                    })}
                 </div>
 
-                <h4 className="fw-normal mt-4 mb-3 fs-4 text-muted ">{nomesKpi[kpiAtiva]}</h4>
+                <h4 className="fw-normal mt-4 mb-3 text-muted">{nomesExibicao[kpiAtiva]}</h4>
 
-                {/* ENTRADA */}
-                {kpiAtiva === 'entrada' && (
-                    <div className="d-flex flex-wrap gap-5 justify-content-start">
-                        {servicos.filter(item => item.status === "EM_PRODUCAO").map((servico) => (
-                            <ServicoCard cor="verde" key={servico.id_ordem_servico}>
-                                <strong>{servico.cliente.nome}</strong>
+                <div className="d-flex flex-wrap gap-4 justify-content-start">
+                    {listaOrdens.length === 0 && <p className="text-muted">Nenhum serviço encontrado.</p>}
 
-                                <strong>OS#{servico.id_ordem_servico}</strong>
-                                <div className="d-flex align-items-center gap-1">
-                                    <i className='bx bxs-bus' style={{ fontSize: "22px" }}></i>
-                                    {servico.veiculo?.modelo || "Modelo não informado"} ({servico.veiculo?.ano_modelo || "Ano não informado"})
+                    {listaOrdens.map((os) => {
+                        // --- logica parametro cards ---
+                        let corCard = "verde";
+                        let icone = null;
+
+                        const checkEntrada = kpiAtiva === "entrada";
+                        const diasAtraso = checkEntrada 
+                            ? calcularDias(os.entrada?.data_entrada_prevista, null)
+                            : calcularDias(null, os.entrada?.data_entrada_efetiva);
+
+                        if (kpiAtiva !== "producao" && kpiAtiva !== "finalizados") {
+                            if (diasAtraso > 10) {
+                                corCard = "vermelho";
+                                icone = <i className='bx bx-alert-triangle text-danger fs-3'></i>;
+                            } else if (diasAtraso > 5) {
+                                corCard = "amarelo";
+                                icone = <i className='bx bx-alert-triangle text-warning fs-3'></i>;
+                            }
+                        }
+
+                        if (kpiAtiva === "finalizados") {
+                            icone = <i className='bx bxs-check-circle text-success fs-4'></i>;
+                        }
+
+                        return (
+                            <ServicoCard key={os.id_ordem_servico} cor={corCard}>
+                                <div className="d-flex align-items-center gap-2">
+                                    {icone} 
+                                    <strong className="fs-5">{os.cliente?.nome}</strong>
                                 </div>
-                                <div><strong>Placa:</strong> {servico.veiculo?.placa || "Placa não informada"}</div>
 
-                                <hr />
+                                <strong className="d-block mt-1">OS#{os.id_ordem_servico}</strong>
 
-                                <div><strong>Dias restantes para Entrada:</strong> {diferencaDiasEntreDatas(servico.entrada.data_entrada_prevista, null)} Dias</div>
-                                <div><strong>Data Agendada:</strong> {servico.entrada.data_entrada_prevista}</div>
+                                <div className="d-flex align-items-center gap-1 mt-2">
+                                    <i className='bx bxs-bus text-muted'></i> 
+                                    <span>{os.veiculo?.modelo}</span>
+                                </div>
+                                <div><b>Placa:</b> {os.veiculo?.placa}</div>
 
-                                <div className="d-flex gap-2 mt-3">
-                                    <button className="btn btn-success flex-grow-1">
-                                        Fazer Entrada
+                                <hr className="my-2" />
+
+                                <div className="mb-3 small">
+                                    {checkEntrada ? (
+                                        <>
+                                            <div><b>Dias restantes para Entrada:</b> {diasAtraso} Dias</div>
+                                            <div><b>Data Agendada:</b> {os.entrada?.data_entrada_prevista}</div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div><b>Total do Serviço Orçado:</b> R${os.valor_total.toLocaleString('pt-BR')}</div>
+                                            {kpiAtiva === "finalizados" 
+                                                ? <div><b>Duração do Serviço:</b> 6 Dias</div>
+                                                : <div><b>Dias em espera:</b> {diasAtraso} Dias</div>
+                                            }
+                                        </>
+                                    )}
+                                </div>
+
+
+                                {/* logica plotar botoes de acordo com status */}
+                                <div className="d-flex gap-2">
+                                    <button className={`btn w-100  fs-5 btn-status-${corCard}`}>
+                                        {kpiAtiva === "entrada" && "Fazer Entrada"}
+                                        {kpiAtiva === "orcamento" && "Fazer Orçamento"}
+                                        {kpiAtiva === "autorizacao" && "Autorizar"}
+                                        {kpiAtiva === "vaga" && "Enviar para Produção"}
+                                        {kpiAtiva === "producao" && "Verificar Andamento"}
+                                        {kpiAtiva === "finalizados" && "Analisar Ordem de Serviço"}
                                     </button>
-                                    <button className="btn btn-outline-dark flex-grow-1">
-                                        Cancelar
-                                    </button>
+                                    {checkEntrada && <button className="btn btn-outline-secondary px-3">Cancelar</button>}
                                 </div>
                             </ServicoCard>
-                        ))}
-                    </div>
-
-                )}
-
-
-                {/* AGUARDANDO ORCMENTO */}
-                {kpiAtiva === 'orcamento' && (
-                    <div className="d-flex flex-wrap gap-5 justify-content-start">
-                        {servicos.map((servico) => (
-                            <ServicoCard cor="vermelho">
-                                <strong className="d-flex align-items-center gap-2">
-                                    <i className='bx bxs-alert-triangle' style={{ fontSize: "25px", color: "red" }}></i>
-                                    {servico.cliente.nome}
-                                </strong>
-                                <strong>OS#{servico.id_ordem_servico}</strong>
-                                <div className="d-flex align-items-center gap-1"><i className='bx bxs-bus' style={{ fontSize: "22px" }}></i> Caio Induscar Apache VIP V</div>
-                                <div><strong>Placa:</strong> {servico.veiculo?.placa || "Placa não informada"}</div>
-                                <hr />
-                                <div><strong>Dias em espera:</strong> <b className="cor-fonte">{diferencaDiasEntreDatas(null, servico.entrada.data_entrada_efetiva)}</b></div>
-                                <div className="d-flex gap-2 mt-3">
-                                    <button className="btn btn-status flex-grow-1">Fazer orçamento</button>
-                                </div>
-                            </ServicoCard>
-                        ))}
-                    </div>
-                )}
-
-                {/* AGUARDANDO AUTORIZACAO */}
-                {kpiAtiva === 'autorizacao' && (
-                    <div className="d-flex flex-wrap gap-5 justify-content-start">
-                        <ServicoCard cor="verde">
-                            <strong className="d-flex align-items-center gap-2">
-                                Viação Gontijo
-                            </strong>
-
-                            <strong>OS#0047</strong>
-                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px" }}></i> Caio Induscar Apache VIP V</div>
-                            <div><strong>Placa:</strong> LHS-7045</div>
-
-                            <hr />
-
-                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">20 Dias</b></div>
-
-                            <div className="d-flex gap-2 mt-3">
-                                <button className="btn btn-status flex-grow-1">Fazer orçamento</button>
-                            </div>
-                        </ServicoCard>
-
-
-                        <ServicoCard cor="amarelo">
-                            <strong className="d-flex align-items-center gap-2">
-                                <i className='bx bxs-alert-triangle' style={{ fontSize: "25px", color: "#ebc429ff" }}></i>
-                                Catarinense
-                            </strong>
-
-                            <strong>OS#0031</strong>
-                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px" }}></i> Irizar i6 - 1400</div>
-                            <div><strong>Placa:</strong> JAS-3321</div>
-
-                            <hr />
-
-                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">6 Dias</b></div>
-
-                            <div className="d-flex gap-2 mt-3">
-                                <button className="btn btn-status flex-grow-1">Fazer orçamento</button>
-                            </div>
-
-                        </ServicoCard>
-
-
-                        <ServicoCard cor="verde">
-                            <strong>Sussantur</strong>
-
-                            <strong>OS#0037</strong>
-                            <div className="d-flex align-items-center gap-1"><i class='bx bxs-bus' style={{ fontSize: "22px" }}></i> Marcopolo G8 - 1500</div>
-                            <div><strong>Placa:</strong> DAS-1323</div>
-
-                            <hr />
-
-                            <div><strong>Dias em espera:</strong> <b className="cor-fonte">3 Dias</b></div>
-
-                            <div className="d-flex gap-2 mt-3">
-                                <button className="btn btn-status flex-grow-1">Fazer orçamento</button>
-                            </div>
-
-                        </ServicoCard>
-
-
-                    </div>
-                )}
-
+                        );
+                    })}
+                </div>
             </div>
-
-        </Layout >
-
-
+        </Layout>
     );
 }
 
