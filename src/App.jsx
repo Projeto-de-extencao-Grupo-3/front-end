@@ -11,6 +11,7 @@ import GestaoFuncionarios from './pages/Funcionarios/GestaoFuncionarios.jsx';
 import GestaoClientes from './pages/Clientes/GestaoClientes.jsx';
 import Teste from './pages/Teste.jsx';
 import TesteOrcamento from './pages/TesteOrcamento.jsx';
+import TesteModal from './components/ModalNovoItem/TesteModal.jsx';
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
         <Route path="/clientes" element={<GestaoClientes />} />
         <Route path="/funcionarios" element={<GestaoFuncionarios />} />
         <Route path="/analiseFinanceira" element={<AnaliseFinanceira />} />
+        <Route path="/TesteModal" element={<TesteModal />} />
       </Routes>
 
     </BrowserRouter>

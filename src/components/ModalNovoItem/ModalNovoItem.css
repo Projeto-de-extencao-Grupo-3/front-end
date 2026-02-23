@@ -1,0 +1,40 @@
+.modal-estoque {
+    border-radius: 14px;
+    padding: 10px 18px;
+}
+
+.titulo-modal {
+    font-size: 22px;
+}
+
+.subtitulo-modal {
+    font-size: 20px;
+    color: #6c757d;
+    margin-bottom: 15px;
+    margin-top: -15px;
+}
+
+.input-padrao {
+    background: #e5e5e5;
+    border: none;
+    height: 45px;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.input-group-text {
+    background: #e5e5e5;
+    border: none;
+    border-radius: 8px 0 0 8px;
+}
+
+.botao-confirmar {
+    height: 45px;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: 0.2s ease;
+}
+
+.botao-confirmar:hover {
+    transform: scale(1.02);
+}
