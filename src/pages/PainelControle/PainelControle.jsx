@@ -79,7 +79,7 @@ function PainelControle() {
                         // Parametrização para KPIs de espera
                         if (id !== "producao" && id !== "finalizados") {
                             if (qtd > 10) corKpi = "vermelho";
-                            else if (qtd > 5) corKpi = "amarelo";
+                            else if (qtd >= 3) corKpi = "amarelo";
                         }
 
                         return (
@@ -106,7 +106,7 @@ function PainelControle() {
                         let icone = null;
 
                         const checkEntrada = kpiAtiva === "entrada";
-                        const diasAtraso = checkEntrada 
+                        const diasAtraso = checkEntrada
                             ? calcularDias(os.entrada?.data_entrada_prevista, null)
                             : calcularDias(null, os.entrada?.data_entrada_efetiva);
 
@@ -127,14 +127,14 @@ function PainelControle() {
                         return (
                             <ServicoCard key={os.id_ordem_servico} cor={corCard}>
                                 <div className="d-flex align-items-center gap-2">
-                                    {icone} 
+                                    {icone}
                                     <strong className="fs-5">{os.cliente?.nome}</strong>
                                 </div>
 
                                 <strong className="d-block mt-1">OS#{os.id_ordem_servico}</strong>
 
                                 <div className="d-flex align-items-center gap-1 mt-2">
-                                    <i className='bx bxs-bus text-muted'></i> 
+                                    <i className='bx bxs-bus text-muted'></i>
                                     <span>{os.veiculo?.modelo}</span>
                                 </div>
                                 <div><b>Placa:</b> {os.veiculo?.placa}</div>
@@ -150,7 +150,7 @@ function PainelControle() {
                                     ) : (
                                         <>
                                             <div><b>Total do Serviço Orçado:</b> R${os.valor_total.toLocaleString('pt-BR')}</div>
-                                            {kpiAtiva === "finalizados" 
+                                            {kpiAtiva === "finalizados"
                                                 ? <div><b>Duração do Serviço:</b> 6 Dias</div>
                                                 : <div><b>Dias em espera:</b> {diasAtraso} Dias</div>
                                             }
@@ -161,15 +161,66 @@ function PainelControle() {
 
                                 {/* logica plotar botoes de acordo com status */}
                                 <div className="d-flex gap-2">
-                                    <button className={`btn w-100  fs-5 btn-status-${corCard}`}>
-                                        {kpiAtiva === "entrada" && "Fazer Entrada"}
-                                        {kpiAtiva === "orcamento" && "Fazer Orçamento"}
-                                        {kpiAtiva === "autorizacao" && "Autorizar"}
-                                        {kpiAtiva === "vaga" && "Enviar para Produção"}
-                                        {kpiAtiva === "producao" && "Verificar Andamento"}
-                                        {kpiAtiva === "finalizados" && "Analisar Ordem de Serviço"}
-                                    </button>
-                                    {checkEntrada && <button className="btn btn-outline-secondary px-3">Cancelar</button>}
+                                    {/* BOTAO PARA ENTRADA */}
+                                    {kpiAtiva === "entrada" && (
+                                        <button
+                                            className={`btn w-100 fs-5 btn-status-${corCard}`}
+                                        >
+                                            Fazer Entrada
+                                        </button>
+                                    )}
+
+                                    {/* BOTAO PARA ORÇAMENTO*/}
+                                    {kpiAtiva === "orcamento" && (
+                                        <button
+                                            className={`btn w-100 fs-5 btn-status-${corCard}`}
+                                        >
+                                            Fazer Orçamento
+                                        </button>
+                                    )}
+
+                                    {/* BOTAO PARA AUTORIZAÇÃO*/}
+                                    {kpiAtiva === "autorizacao" && (
+                                        <button
+                                            className={`btn w-100 fs-5 btn-status-${corCard}`}
+                                        >
+                                            Autorizar
+                                        </button>
+                                    )}
+
+                                    {/* BOTAO PARA VAGA */}
+                                    {kpiAtiva === "vaga" && (
+                                        <button
+                                            className={`btn w-100 fs-5 btn-status-${corCard}`}
+                                        >
+                                            Enviar para Produção
+                                        </button>
+                                    )}
+
+                                    {/* BOTAO PARA PRODUÇÃO */}
+                                    {kpiAtiva === "producao" && (
+                                        <button
+                                            className={`btn w-100 fs-5 btn-status-${corCard}`}
+                                        >
+                                            Verificar Andamento
+                                        </button>
+                                    )}
+
+                                    {/* BOTAO PARA FINALIZADOS */}
+                                    {kpiAtiva === "finalizados" && (
+                                        <button
+                                            className={`btn w-100 fs-5 btn-status-${corCard}`}
+                                        >
+                                            Analisar Ordem de Serviço
+                                        </button>
+                                    )}
+
+                                    {/* BOTÃO CANCELAR (Aparece apenas na Entrada) */}
+                                    {checkEntrada && (
+                                        <button className="btn btn-outline-secondary px-3">
+                                            Cancelar
+                                        </button>
+                                    )}
                                 </div>
                             </ServicoCard>
                         );
