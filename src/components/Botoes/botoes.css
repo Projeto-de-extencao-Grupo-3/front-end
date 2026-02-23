@@ -1,0 +1,71 @@
+.botoes {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+
+}
+
+.botao {
+    border: none;
+    color: white;
+    height: 100%;
+    background-color: transparent;
+    margin-top: 3px
+}
+
+.button {
+    border-radius: 8px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container1 {
+    background-color: #4cb04f;
+}
+
+.container2 {
+    background-color: #3b80ca;
+}
+
+.container3 {
+    background-color: black;
+
+}
+
+.container4 {
+    background-color: white;
+    border: black solid 1px;
+
+    .botao {
+        color: black;
+    }
+
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.container1:hover {
+    background-color: #339537;
+}
+
+.container2:hover {
+    background-color: #2969ad;
+}
+
+.container3:hover {
+    background-color: rgb(67, 67, 67);
+}
+
+.container4:hover {
+    background-color: rgb(247, 247, 247);
+}

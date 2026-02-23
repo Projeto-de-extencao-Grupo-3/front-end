@@ -1,9 +1,10 @@
 import "./ResumoDoOrcamento.css";
-import { useState, useEffect } from "react";
-import { buscarServicos, buscarItens } from "../../service/api";
+import { useState } from "react";
 import resumoIcon from "../../assets/icons/resumo icon.png";
 
+
 function ResumoDoOrcamento() {
+    const [paginaAtual, setPaginaAtual] = useState("analisar");
     return (
         <div className="resumo-orcamento">
 
@@ -19,17 +20,41 @@ function ResumoDoOrcamento() {
                 <div className="box-chaves">
                     <span className="chaveTexto">Total em Serviços:</span>
                     <span className="chaveTexto">Total em Peças:</span>
-                    <span className="chaveTexto">Saída Estoque:</span>
-                    <span className="chaveTexto">Pagamento:</span>
-                    <span className="chaveTexto">Nota Fiscal:</span>
+
+                    {paginaAtual === "produzir" || paginaAtual === "finalizar" || paginaAtual === "analisar" ?
+                        <span className="chaveTexto">Saída Estoque:</span>
+                        : null
+                    }
+
+                    {paginaAtual === "analisar" ?
+                        <span className="chaveTexto">Pagamento:</span>
+                        : null
+                    }
+
+                    {paginaAtual === "analisar" ?
+                        <span className="chaveTexto">Nota Fiscal:</span>
+                        : null
+                    }
                 </div>
 
                 <div className="box-valores">
                     <span className="valoresTexto">R$3.000,00</span>
                     <span className="valoresTexto">R$150,00</span>
-                    <span className="valoresTexto">0/1 Itens</span>
-                    <span className="valoresTexto">Pendente</span>
-                    <span className="valoresTexto">Pendente</span>
+
+                    {paginaAtual === "produzir" || paginaAtual === "finalizar" || paginaAtual === "analisar" ?
+                        <span className="valoresTexto">0/1 Itens</span>
+                        : null
+                    }
+
+                    {paginaAtual === "analisar" ?
+                        <span className="valoresTexto">Pendente</span>
+                        : null
+                    }
+
+                    {paginaAtual === "analisar" ?
+                        <span className="valoresTexto">Pendente</span>
+                        : null
+                    }
                 </div>
             </div>
 

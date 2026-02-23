@@ -1,0 +1,12 @@
+.painelteste{
+    display: flex;
+    height: 100%;
+    gap: 10px;
+}
+
+.teste2{
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    height: 100%;
+}
