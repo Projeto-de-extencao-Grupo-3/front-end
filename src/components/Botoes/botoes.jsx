@@ -8,15 +8,17 @@ import checkIcon from "../../assets/icons/checkIcon.png"
 import CalendarIcon from "../../assets/icons/CalendarIcon.png"
 import PlayIcon from "../../assets/icons/PlayIcon.png"
 import SaveIcon from "../../assets/icons/SaveIcon.png"
+import { useNavigate } from "react-router-dom";
 
 
-function botoes() {
-    const [paginaAtual, setPaginaAtual] = useState("finalizar");
+function botoes({ status }) {
+
+    const navigate = useNavigate()
 
     return (
         <div className="botoes">
 
-            {paginaAtual === "analisar1" ?
+            {status === "analisar1" ?
                 <div className="button container1">
                     <div
                         className="icon"
@@ -26,17 +28,17 @@ function botoes() {
                 </div>
                 : null}
 
-            {paginaAtual === "produzir" ?
+            {status === "produzir" ?
                 <div className="button container1">
                     <div
                         className="icon"
                         style={{ backgroundImage: `url(${checkIcon})` }}
                     ></div>
-                    <button className="botao">Finalizar serviço</button>
+                    <button className="botao" onClick={() => navigate("/painelControle/finalizado")}>Finalizar serviço</button>
                 </div>
                 : null}
 
-            {paginaAtual === "analisar2" ?
+            {status === "analisar2" ?
                 <div className="button container1">
                     <div
                         className="icon"
@@ -46,7 +48,7 @@ function botoes() {
                 </div>
                 : null}
 
-            {paginaAtual === "analisar1" || paginaAtual === "analisar2" || paginaAtual === "analisar3" ?
+            {status === "analisar1" || status === "analisar2" || status === "analisar3" ?
                 <div className="button container2">
                     <div
                         className="icon"
@@ -56,7 +58,7 @@ function botoes() {
                 </div>
                 : null}
 
-            {paginaAtual === "analisar1" || paginaAtual === "analisar2" || paginaAtual === "analisar3" ?
+            {status === "analisar1" || status === "analisar2" || status === "analisar3" ?
                 <div className="button container3">
                     <div
                         className="icon"
@@ -66,27 +68,27 @@ function botoes() {
                 </div>
                 : null}
 
-            {paginaAtual === "aguardar" ?
+            {status === "aguardar" ?
                 <div className="button container3">
                     <div
                         className="icon"
                         style={{ backgroundImage: `url(${PlayIcon})` }}
                     ></div>
-                    <button className="botao">Iniciar serviço</button>
+                    <button className="botao" onClick={() => navigate("/painelControle/producao")}>Iniciar serviço</button>
                 </div>
                 : null}
 
-            {paginaAtual === "autorizar" || paginaAtual === "aprovar" ?
+            {status === "autorizar" || status === "aprovar" ?
                 <div className="button container3">
                     <div
                         className="icon"
                         style={{ backgroundImage: `url(${SaveIcon})` }}
                     ></div>
-                    <button className="botao">Autorizar orçamento</button>
+                    <button className="botao" onClick={() => navigate("/painelControle/aguardandoVaga")}>Autorizar orçamento</button>
                 </div>
                 : null}
 
-            {paginaAtual === "aguardar" || paginaAtual === "produzir" || paginaAtual === "aprovar" ?
+            {status === "aguardar" || status === "produzir" || status === "aprovar" ?
                 <div className="button container4">
                     <div
                         className="icon"
@@ -96,7 +98,7 @@ function botoes() {
                 </div>
                 : null}
 
-            {paginaAtual === "produzir" ?
+            {status === "produzir" ?
                 <div className="button container4">
                     <div
                         className="icon"
@@ -106,7 +108,7 @@ function botoes() {
                 </div>
                 : null}
 
-            {paginaAtual === "orcar" ?
+            {status === "orcar" ?
                 <div className="button container3">
                     <div
                         className="icon"
@@ -117,7 +119,7 @@ function botoes() {
                 : null}
 
             <div className="button container4">
-                <button className="botao">Voltar para o Painel</button>
+                <button className="botao" onClick={() => navigate("/painelControle")}>Voltar para o Painel</button>
             </div>
 
         </div>

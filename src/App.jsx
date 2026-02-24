@@ -7,6 +7,10 @@ import PainelControle from './pages/PainelControle/PainelControle.jsx';
 import AnaliseFinanceira from './pages/AnaliseFinanceira/AnaliseFinanceira.jsx';
 import EntradaVeiculo from './pages/PainelControle/Entrada/EntradaVeiculo.jsx';
 import EntradaVeiculoCamera from './pages/PainelControle/Entrada/EntradaVeiculoCamera.jsx';
+import AguardandoVaga from './pages/PainelControle/AguardandoVaga/AguardandoVaga.jsx';
+import Producao from './pages/PainelControle/Producao/Producao.jsx';
+import Finalizado from './pages/PainelControle/Finalizado/Finalizado.jsx';
+import AutorizacaoVeiculo from './pages/PainelControle/Autorizacao/AutorizacaoVeiculo.jsx';
 import GestaoFuncionarios from './pages/Funcionarios/GestaoFuncionarios.jsx';
 import GestaoClientes from './pages/Clientes/GestaoClientes.jsx';
 import Teste from './pages/Teste.jsx';
@@ -25,6 +29,10 @@ function App() {
         <Route path="/painelControle" element={<PainelControle />} />
         <Route path="/painelControle/entrada" element={<EntradaVeiculo />} />
         <Route path="/painelControle/entradaCamera" element={<EntradaVeiculoCamera />} />
+        <Route path="/painelControle/autorizacao" element={<AutorizacaoVeiculo />} />
+        <Route path="/painelControle/aguardandoVaga" element={<AguardandoVaga />} />
+        <Route path="/painelControle/producao" element={<Producao />} />
+        <Route path="/painelControle/finalizado" element={<Finalizado />} />
         <Route path="/clientes" element={<GestaoClientes />} />
         <Route path="/funcionarios" element={<GestaoFuncionarios />} />
         <Route path="/analiseFinanceira" element={<AnaliseFinanceira />} />
