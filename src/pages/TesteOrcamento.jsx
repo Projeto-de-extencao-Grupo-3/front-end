@@ -3,7 +3,7 @@ import ResumoOrcamento from "../components/Resumo/ResumoDoOrcamento";
 import Botoes from "../components/Botoes/botoes";
 import "./testeorcamento.css";
 
-function TesteOrcamento({ status }) {
+function TesteOrcamento( {status }) {
 
 
     return (

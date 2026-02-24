@@ -12,6 +12,7 @@ import Producao from './pages/PainelControle/Producao/Producao.jsx';
 import Finalizado from './pages/PainelControle/Finalizado/Finalizado.jsx';
 import AutorizacaoVeiculo from './pages/PainelControle/Autorizacao/AutorizacaoVeiculo.jsx';
 import GestaoFuncionarios from './pages/Funcionarios/GestaoFuncionarios.jsx';
+import ControleEstoque from './pages/Estoque/ControleEstoque.jsx';
 import GestaoClientes from './pages/Clientes/GestaoClientes.jsx';
 import Teste from './pages/Teste.jsx';
 import TesteOrcamento from './pages/TesteOrcamento.jsx';
@@ -34,6 +35,7 @@ function App() {
         <Route path="/painelControle/producao" element={<Producao />} />
         <Route path="/painelControle/finalizado" element={<Finalizado />} />
         <Route path="/clientes" element={<GestaoClientes />} />
+        <Route path="/estoque" element={<ControleEstoque />} />
         <Route path="/funcionarios" element={<GestaoFuncionarios />} />
         <Route path="/analiseFinanceira" element={<AnaliseFinanceira />} />
         <Route path="/TesteModal" element={<TesteModal />} />

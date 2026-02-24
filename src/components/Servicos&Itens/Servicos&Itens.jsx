@@ -5,8 +5,8 @@ import Servicos from "./Abas/Servicos";
 import Itens from "./Abas/Itens";
 
 function ServicosEItens() {
+    const [paginaAtual, setPaginaAtual] = useState("analisar");
     const [abaAtiva, setAbaAtiva] = useState("servicos");
-    const [paginaAtual, setPaginaAtual] = useState("analise");
 
     const ticket = {
         id: 1,

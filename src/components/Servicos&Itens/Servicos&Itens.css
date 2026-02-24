@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     width: 70%;
+    margin-top: 20px;
     height: 60%;
     padding: 16px;
     border: 1px solid #ababab;
@@ -20,20 +21,20 @@
 .bar-options {
     display: flex;
     width: 75%;
-    height: 35px;
+    height: 45px;
     border-radius: 8px;
     padding: 4px;
     background-color: #e3e3e3;
 
     .buttons {
         display: 1;
-        font-size: 16px;
+        font-size: 28px;
         width: 50%;
         border: none;
         border-radius: 6px;
         background-color: transparent;
     }
-
+    
     .selecionado {
         border: none;
         color: black;
@@ -90,5 +91,5 @@
 .conteudo {
     display: flex;
     width: 100%;
-    height: 90%;
+    height: 100%;
 }

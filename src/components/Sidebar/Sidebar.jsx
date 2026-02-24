@@ -41,7 +41,7 @@ function Sidebar({ ativo }) {
           <i class='bx bxs-spanner' style={{ fontSize: "25px" }}></i> Serviços
         </li>
 
-        <li className={ativo === "estoque" ? "ativo" : ""}>
+        <li className={ativo === "estoque" ? "ativo" : ""} onClick={() => navigate("/estoque")}>
           <i class='bx bxs-package' style={{ fontSize: "25px" }}></i> Estoque
         </li>
 
