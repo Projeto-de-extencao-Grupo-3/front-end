@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import "./Tabela.css";
+import "./TabelaEstoque.css";
 
 function TabelaEstoque() {
     // Exemplo de dados baseados na sua imagem
-    const [clientes, setClientes] = useState([
-        { id: '00001', nome: 'Balde Vermelho', quantidade: '20 unid', fornecedor: 'Tubarão de tintas', status: 'Ativo' },
-        { id: '00002', nome: 'Massinha', quantidade: '8 unid', fornecedor: 'Tubarão de tintas', status: 'Ativo' },
-        { id: '00003', nome: 'Lixa', quantidade: '10 unid', fornecedor: 'Tubarão de tintas', status: 'Inativo' },
+    const [itens, setItens] = useState([
+        { id: '00001', nome: 'Balde Vermelho', quantidade: '20 unid', fornecedor: 'Tubarão de tintas', status: 'Crítico' },
+        { id: '00002', nome: 'Massinha', quantidade: '8 unid', fornecedor: 'Tubarão de tintas', status: 'Baixo' },
+        { id: '00003', nome: 'Lixa', quantidade: '10 unid', fornecedor: 'Tubarão de tintas', status: 'OK' },
     ]);
 
     return (
@@ -23,15 +23,14 @@ function TabelaEstoque() {
                     </tr>
                 </thead>
                 <tbody>
-                    {clientes.map((cliente) => (
-                        <tr key={cliente.id} className={cliente.status === 'Inativo' ? 'linha-inativa' : ''}>
+                    {itens.map((cliente) => (
+                        <tr key={cliente.id} className={cliente.status === 'Critico' ? 'B' : ''}>
                             <td className="px-4">
                                 <span className="badge-codigo">{cliente.id}</span>
                             </td>
                             <td className="fw-bold">{cliente.nome}</td>
-                            <td>{cliente.documento}</td>
-                            <td>{cliente.telefone}</td>
-                            <td className="text-truncate" style={{ maxWidth: '150px' }}>{cliente.endereco}</td>
+                            <td>{cliente.quantidade}</td>
+                            <td>{cliente.fornecedor}</td>
                             <td className="text-center">
                                 <span className={`badge-status ${cliente.status.toLowerCase()}`}>
                                     {cliente.status}

@@ -4,8 +4,8 @@ import { buscarServicos, buscarItens } from "../../service/api";
 import Servicos from "./Abas/Servicos";
 import Itens from "./Abas/Itens";
 
-function ServicosEItens() {
-    const [paginaAtual, setPaginaAtual] = useState("analisar");
+function ServicosEItens({ pagina }) {
+    const paginaAtual = pagina || "analisar";
     const [abaAtiva, setAbaAtiva] = useState("servicos");
 
     const ticket = {

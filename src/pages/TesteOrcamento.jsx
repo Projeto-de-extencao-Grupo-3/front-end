@@ -8,7 +8,7 @@ function TesteOrcamento( {status }) {
 
     return (
         <div className="painelteste">
-            <ServicosEItens />
+            <ServicosEItens pagina={status} />
             <div className="teste2">
                 <ResumoOrcamento />
                 <Botoes status={status}/>

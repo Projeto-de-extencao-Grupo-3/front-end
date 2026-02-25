@@ -1,8 +1,8 @@
 import { useState } from "react";
 import Layout from "../../components/Layout/Layout.jsx";
-import Tabela from "../../components/Layout/Tabela.jsx";
-import ModalAdicionar from "../../components/ModalClientesFuncionarios/ModalAdicionar.jsx";
+import TabelaEstoque from "../../components/Layout/TabelaEstoque.jsx";
 import "./ControleEstoque.css";
+import ModalNovoItem from "../../components/ModalNovoItem/ModalNovoItem.jsx";
 
 function ControleEstoque() {
     
@@ -25,10 +25,10 @@ function ControleEstoque() {
                     <button className="add_client btn btn-dark d-flex align-items-center" onClick={() => setMostrarModalAdicionar(true)}>
                         Adicionar novo item +
                     </button>
-                    <ModalAdicionar isOpen={mostrarModalAdicionar} onClose={() => setMostrarModalAdicionar(false)} />
+                    <ModalNovoItem isOpen={mostrarModalAdicionar} onClose={() => setMostrarModalAdicionar(false)} />
                 </div>
             </div>
-            <Tabela></Tabela>
+            <TabelaEstoque />
         </Layout>
     );
 }
