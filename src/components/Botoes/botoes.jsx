@@ -11,14 +11,14 @@ import SaveIcon from "../../assets/icons/SaveIcon.png"
 import { useNavigate } from "react-router-dom";
 
 
-function botoes({ status }) {
-
+function botoes({ pagina }) {
+    console.log("Página atual nos botões:", pagina);
     const navigate = useNavigate()
 
     return (
         <div className="botoes">
 
-            {status === "analisar1" ?
+            {pagina === "analisar1" ?
                 <div className="button container1">
                     <div
                         className="icon"
@@ -28,7 +28,7 @@ function botoes({ status }) {
                 </div>
                 : null}
 
-            {status === "produzir" ?
+            {pagina === "produzir" ?
                 <div className="button container1">
                     <div
                         className="icon"
@@ -38,7 +38,7 @@ function botoes({ status }) {
                 </div>
                 : null}
 
-            {status === "analisar2" ?
+            {pagina === "analisar2" ?
                 <div className="button container1">
                     <div
                         className="icon"
@@ -48,7 +48,7 @@ function botoes({ status }) {
                 </div>
                 : null}
 
-            {status === "analisar1" || status === "analisar2" || status === "analisar3" ?
+            {pagina === "analisar1" || pagina === "analisar2" || pagina === "analisar3" ?
                 <div className="button container2">
                     <div
                         className="icon"
@@ -58,7 +58,7 @@ function botoes({ status }) {
                 </div>
                 : null}
 
-            {status === "analisar1" || status === "analisar2" || status === "analisar3" ?
+            {pagina === "analisar1" || pagina === "analisar2" || pagina === "analisar3" ?
                 <div className="button container3">
                     <div
                         className="icon"
@@ -68,7 +68,7 @@ function botoes({ status }) {
                 </div>
                 : null}
 
-            {status === "aguardar" ?
+            {pagina === "aguardar" ?
                 <div className="button container3">
                     <div
                         className="icon"
@@ -78,7 +78,7 @@ function botoes({ status }) {
                 </div>
                 : null}
 
-            {status === "autorizar" || status === "aprovar" ?
+            {pagina === "autorizar" || pagina === "aprovar" ?
                 <div className="button container3">
                     <div
                         className="icon"
@@ -88,7 +88,7 @@ function botoes({ status }) {
                 </div>
                 : null}
 
-            {status === "aguardar" || status === "produzir" || status === "aprovar" ?
+            {pagina === "aguardar" || pagina === "produzir" || pagina === "aprovar" ?
                 <div className="button container4">
                     <div
                         className="icon"
@@ -98,7 +98,7 @@ function botoes({ status }) {
                 </div>
                 : null}
 
-            {status === "produzir" ?
+            {pagina === "produzir" ?
                 <div className="button container4">
                     <div
                         className="icon"
@@ -108,7 +108,7 @@ function botoes({ status }) {
                 </div>
                 : null}
 
-            {status === "orcar" ?
+            {pagina === "orcar" ?
                 <div className="button container3">
                     <div
                         className="icon"

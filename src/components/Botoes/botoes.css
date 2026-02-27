@@ -4,7 +4,6 @@
     flex-direction: column;
     gap: 10px;
     margin-top: 10px;
-
 }
 
 .botao {
@@ -38,7 +37,7 @@
 
 .container4 {
     background-color: white;
-    border: black solid 1px;
+    border: #7e7e7e solid 0.5px;
 
     .botao {
         color: black;

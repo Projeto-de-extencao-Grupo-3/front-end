@@ -5,8 +5,10 @@ import Servicos from "./Abas/Servicos";
 import Itens from "./Abas/Itens";
 
 function ServicosEItens({ pagina }) {
-    const paginaAtual = pagina || "analisar";
-    const [abaAtiva, setAbaAtiva] = useState("servicos");
+    console.log("Página atual no ServicosEItens:", pagina);
+    const abaAtiva = "servicos";
+
+    console.log("Página atual:", pagina);
 
     const ticket = {
         id: 1,
@@ -81,7 +83,7 @@ function ServicosEItens({ pagina }) {
     return (
         <div className="resumo-container">
             {/* Progesso */}
-            {paginaAtual === "finalizado" || paginaAtual === "producao" ?
+            {pagina === "finalizar" || pagina === "produzir" ?
                 <div>Teste</div>
                 : null
             }
@@ -89,7 +91,7 @@ function ServicosEItens({ pagina }) {
 
             {/* Parte superior do resumo */}
             <div className="bar-menu">
-                <div className={`bar-options ${paginaAtual === "analise" ? "full" : ""}`}>
+                <div className={`bar-options ${pagina === "analisar" ? "full" : ""}`}>
                     <button
                         className={`buttons ${abaAtiva === "servicos" ? "selecionado" : ""}`}
                         onClick={() => setAbaAtiva("servicos")}
@@ -105,10 +107,10 @@ function ServicosEItens({ pagina }) {
                     </button>
                 </div>
 
-                {paginaAtual != "analise" ?
+                {pagina != "analisar" ?
                     <div className="options-action">
                         {
-                            paginaAtual === "orcamento" ?
+                            pagina === "orcamento" ?
                                 <button className="add">
                                     {abaAtiva === "servicos"
                                         ? "Adicionar Serviço"

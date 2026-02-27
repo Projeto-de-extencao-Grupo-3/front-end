@@ -1,10 +1,9 @@
 import "./ResumoDoOrcamento.css";
-import { useState } from "react";
 import resumoIcon from "../../assets/icons/resumo icon.png";
 
 
-function ResumoDoOrcamento() {
-    const [paginaAtual, setPaginaAtual] = useState("analisar");
+function ResumoDoOrcamento( { pagina }) {
+    console.log("Página atual no Resumo:", pagina);
     return (
         <div className="resumo-orcamento">
 
@@ -21,17 +20,17 @@ function ResumoDoOrcamento() {
                     <span className="chaveTexto">Total em Serviços:</span>
                     <span className="chaveTexto">Total em Peças:</span>
 
-                    {paginaAtual === "produzir" || paginaAtual === "finalizar" || paginaAtual === "analisar" ?
+                    {pagina === "produzir" || pagina === "finalizar" || pagina === "analisar" ?
                         <span className="chaveTexto">Saída Estoque:</span>
                         : null
                     }
 
-                    {paginaAtual === "analisar" ?
+                    {pagina === "analisar" ?
                         <span className="chaveTexto">Pagamento:</span>
                         : null
                     }
 
-                    {paginaAtual === "analisar" ?
+                    {pagina === "analisar" ?
                         <span className="chaveTexto">Nota Fiscal:</span>
                         : null
                     }
@@ -41,17 +40,17 @@ function ResumoDoOrcamento() {
                     <span className="valoresTexto">R$3.000,00</span>
                     <span className="valoresTexto">R$150,00</span>
 
-                    {paginaAtual === "produzir" || paginaAtual === "finalizar" || paginaAtual === "analisar" ?
+                    {pagina === "produzir" || pagina === "finalizar" || pagina === "analisar" ?
                         <span className="valoresTexto">0/1 Itens</span>
                         : null
                     }
 
-                    {paginaAtual === "analisar" ?
+                    {pagina === "analisar" ?
                         <span className="valoresTexto">Pendente</span>
                         : null
                     }
 
-                    {paginaAtual === "analisar" ?
+                    {pagina === "analisar" ?
                         <span className="valoresTexto">Pendente</span>
                         : null
                     }

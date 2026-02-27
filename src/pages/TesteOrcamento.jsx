@@ -1,19 +1,22 @@
 import ServicosEItens from "../components/Servicos&Itens/Servicos&Itens";
 import ResumoOrcamento from "../components/Resumo/ResumoDoOrcamento";
 import Botoes from "../components/Botoes/botoes";
-import "./testeorcamento.css";
+import "./componentesInferiores.css";
+import Layout from "../components/Layout/Layout";
 
 function TesteOrcamento( {status }) {
 
 
     return (
-        <div className="painelteste">
-            <ServicosEItens pagina={status} />
-            <div className="teste2">
-                <ResumoOrcamento />
-                <Botoes status={status}/>
+        <Layout ativo={"painel"}>
+            <div className="painelteste">
+                <ServicosEItens pagina={status} />
+                <div className="teste2">
+                    <ResumoOrcamento />
+                    <Botoes status={status}/>
+                </div>
             </div>
-        </div>
+        </Layout>
     );
 }
 
