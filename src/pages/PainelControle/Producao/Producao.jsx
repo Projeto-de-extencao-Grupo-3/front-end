@@ -2,10 +2,16 @@ import { useNavigate } from "react-router-dom";
 import Layout from "../../../components/Layout/Layout";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import "./Producao.css";
-import TesteOrcamento from "../../TesteOrcamento";
+
+import ServicosEItens from "../../../components/Servicos&Itens/Servicos&Itens";
+import ResumoOrcamento from "../../../components/Resumo/ResumoDoOrcamento";
+import Botoes from "../../../components/Botoes/botoes";
+import "../../ComponentesInferiores.css";
 
 function Producao() {
     const navigate = useNavigate();
+    const paginaAtual = "produzir";
+
 
     return (
         <Layout ativo={"painel"}>
@@ -24,7 +30,13 @@ function Producao() {
                     { id: "finalizado", label: "Finalizado", icon: "bx bx-check-circle", status: "pendente" },
                 ]}
             />
-            <TesteOrcamento status="produzir" />
+            <div className="componentesInferiores">
+                <ServicosEItens pagina={paginaAtual} />
+                <div className="componentesDireita">
+                    <ResumoOrcamento pagina={paginaAtual} />
+                    <Botoes pagina={paginaAtual} />
+                </div>
+            </div>
 
         </Layout>
     );

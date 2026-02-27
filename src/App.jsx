@@ -15,7 +15,6 @@ import GestaoFuncionarios from './pages/Funcionarios/GestaoFuncionarios.jsx';
 import ControleEstoque from './pages/Estoque/ControleEstoque.jsx';
 import GestaoClientes from './pages/Clientes/GestaoClientes.jsx';
 import Teste from './pages/Teste.jsx';
-import TesteOrcamento from './pages/TesteOrcamento.jsx';
 import TesteModal from './components/ModalNovoItem/TesteModal.jsx';
 
 function App() {
@@ -25,7 +24,6 @@ function App() {
       <Routes>
         {/* Roteamento de telas, aqui chama a função da tela e o path é o caminho que vai ser acessado */}
         <Route path="/" element={<Login />} />
-        <Route path="/ResumoOrcamentoteste" element={<TesteOrcamento />} />
         <Route path="/teste" element={<Teste />} />
         <Route path="/painelControle" element={<PainelControle />} />
         <Route path="/painelControle/entrada" element={<EntradaVeiculo />} />
