@@ -6,7 +6,7 @@ import Itens from "./Abas/Itens";
 
 function ServicosEItens({ pagina }) {
     console.log("Página atual no ServicosEItens:", pagina);
-    const abaAtiva = "servicos";
+    const [abaAtiva, setAbaAtiva] = useState("servicos");
 
     console.log("Página atual:", pagina);
 
@@ -84,7 +84,24 @@ function ServicosEItens({ pagina }) {
         <div className="resumo-container">
             {/* Progesso */}
             {pagina === "finalizar" || pagina === "produzir" ?
-                <div>Teste</div>
+                <div className="progresso-servico">
+                    <div className="progresso-titulo">
+                        <strong>Progresso do Serviço:</strong> Concluído!
+                    </div>
+
+                    <div className="linha-container">
+                        <div className="bolinha esquerda" />
+                        <div className="linha" />
+                        <div className="bolinha direita" />
+                    </div>
+
+                    <div className="datas">
+                        <span>18/01/2000</span>
+                        <span>31/02/2012</span>
+                        {/* <span>{dataInicio}</span>
+                        <span>{dataFim}</span> */}
+                    </div>
+                </div>
                 : null
             }
 

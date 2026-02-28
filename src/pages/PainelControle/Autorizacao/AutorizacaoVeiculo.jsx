@@ -15,8 +15,8 @@ function AutorizacaoVeiculo() {
     return (
         <Layout ativo={"painel"}>
             <div>
-                <h1>Aprovação de Orçamento</h1>
-                <p>Crie e gerencie o orçamento dos serviços</p>
+                <h1 className="titulo-principal">Aprovação de Orçamento</h1>
+                <p className="subtitulo-principal">Crie e gerencie o orçamento dos serviços</p>
             </div>
             <StepperFluxo
                 etapas={[

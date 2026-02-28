@@ -16,8 +16,8 @@ function Finalizado() {
     return (
         <Layout ativo={"painel"}>
             <div>
-                <h1>Em Produção</h1>
-                <p>Acompanhe o Andamento do serviço deste veículo</p>
+                <h1 className="titulo-principal">Em Produção</h1>
+                <p className="subtitulo-principal">Acompanhe o Andamento do serviço deste veículo</p>
             </div>
             <StepperFluxo
                 etapas={[

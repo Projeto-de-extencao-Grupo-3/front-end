@@ -10,3 +10,14 @@
     width: 30%;
     height: 100%;
 }
+
+.titulo-principal{
+    font-size: 32px;
+    margin: 0px;
+
+}
+
+.subtitulo-principal{
+    font-size: 16px;
+    margin-bottom: 5px;
+}

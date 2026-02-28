@@ -8,6 +8,7 @@ import ResumoOrcamento from "../../../components/Resumo/ResumoDoOrcamento";
 import Botoes from "../../../components/Botoes/botoes";
 import "../../ComponentesInferiores.css";
 
+
 function AguardandoVaga() {
     const navigate = useNavigate();
     const paginaAtual = "aguardar";
@@ -16,8 +17,8 @@ function AguardandoVaga() {
     return (
         <Layout ativo={"painel"}>
             <div>
-                <h1>Aguardando Vaga</h1>
-                <p>Direcione a Ordem de Serviço aprovada para a linha de Produção</p>
+                <h1 className="titulo-principal">Aguardando Vaga</h1>
+                <p className="subtitulo-principal">Direcione a Ordem de Serviço aprovada para a linha de Produção</p>
             </div>
             <StepperFluxo
                 etapas={[
