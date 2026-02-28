@@ -16,7 +16,7 @@ function AguardandoVaga() {
 
     return (
         <Layout ativo={"painel"}>
-            <div>
+            <div className="titulos-principais">
                 <h1 className="titulo-principal">Aguardando Vaga</h1>
                 <p className="subtitulo-principal">Direcione a Ordem de Serviço aprovada para a linha de Produção</p>
             </div>

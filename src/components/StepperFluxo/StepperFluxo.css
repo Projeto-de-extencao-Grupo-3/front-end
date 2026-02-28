@@ -1,13 +1,11 @@
 .stepper-container {
   display: flex;
-  align-items: flex-start; 
   width: 100%;
   padding: 16px;      
   border: 1px solid #ababab;
   border-radius: 10px;
   background-color: #f7f7f7;
 }
-
 
 .stepper-item {
   position: relative;
