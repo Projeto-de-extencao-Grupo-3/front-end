@@ -1,0 +1,113 @@
+.fundo-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.caixa-modal {
+    width: 500px;
+    height: 650px;
+    background: #f4f4f4;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    overflow-y: auto;
+}
+
+/* TITULO */
+.titulo-modal {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+}
+
+/* SEÇÕES */
+.secao {
+    border: 1px solid #cfcfcf;
+    border-radius: 6px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.cabecalho-secao h2 {
+    font-size: 1.2rem;
+    margin: 0;
+    padding: 0;
+    font-weight: 500;
+    border-bottom: 1px solid #cfcfcf;
+}
+
+/* LINHAS */
+.linha-dupla {
+    display: flex;
+    gap: 1rem;
+}
+
+.linha-unica {
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+/* CAMPOS */
+.campo {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-top: 10px;
+}
+
+label {
+    font-size: 0.9rem;
+    margin: 0;
+    padding: 0;
+}
+
+input {
+    height: 2.2rem;
+    border-radius: 6px;
+    border: none;
+    background: #ddd;
+    padding-left: 0.6rem;
+    font-size: 0.9rem;
+}
+
+/* RADIO */
+.radio-grupo {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+}
+
+.checkBox{
+    width: 12px;
+    height: 12px;
+}
+
+.radio-grupo span{
+    margin-top: 3px;
+}
+
+/* BOTÃO */
+.botao-fechar {
+    height: 2.5rem;
+    border-radius: 6px;
+    border: 1px solid #bdbdbd;
+    background: #efefef;
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 3px 0 0 0;
+    transition: 0.5s;
+}
+
+.botao-fechar:hover {
+    background: #e5e5e5;
+}   

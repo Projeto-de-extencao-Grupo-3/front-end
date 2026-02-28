@@ -16,6 +16,7 @@ import ControleEstoque from './pages/Estoque/ControleEstoque.jsx';
 import GestaoClientes from './pages/Clientes/GestaoClientes.jsx';
 import Teste from './pages/Teste.jsx';
 import TesteModal from './components/ModalNovoItem/TesteModal.jsx';
+import MeusModais from './components/Modais/meusModais.jsx';  
 
 function App() {
 
@@ -37,6 +38,7 @@ function App() {
         <Route path="/funcionarios" element={<GestaoFuncionarios />} />
         <Route path="/analiseFinanceira" element={<AnaliseFinanceira />} />
         <Route path="/TesteModal" element={<TesteModal />} />
+        <Route path="/MeusModais" element={<MeusModais />} />
       </Routes>
 
     </BrowserRouter>
