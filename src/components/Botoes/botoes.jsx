@@ -10,7 +10,7 @@ import PlayIcon from "../../assets/icons/PlayIcon.png"
 import SaveIcon from "../../assets/icons/SaveIcon.png"
 import ConfirmacaoAutorizacao from "../Modais/Confirmacoes/ConfirmacaoAutorizacao";
 import { useNavigate } from "react-router-dom";
-
+import VeiculoEEmpresa from "../Modais/Veiculo&Empresa/veiculo&empresa.jsx";
 
 function Botoes({ pagina }) {
     console.log("Página atual nos botões:", pagina);
@@ -18,6 +18,7 @@ function Botoes({ pagina }) {
 
     // Estado para controlar abertura do modal
     const [showModal, setShowModal] = useState(false);
+    const [modalAberto, setModalAberto] = useState(false);
 
     return (
         <div className="botoes">
@@ -58,7 +59,7 @@ function Botoes({ pagina }) {
                         className="icon"
                         style={{ backgroundImage: `url(${iconPag})` }}
                     ></div>
-                    <button className="botao">Ver dados do veículo</button>
+                    <button className="botao" onClick={() => setModalAberto(true)}>Ver dados do veículo</button>
                 </div>
                 : null}
 
@@ -129,6 +130,11 @@ function Botoes({ pagina }) {
             {showModal && (
                 <ConfirmacaoAutorizacao onClose={() => setShowModal(false)} />
             )}
+
+            {modalAberto && (
+                <VeiculoEEmpresa aberto={() => setModalAberto(false)} />
+            )}
+
 
         </div>
     );

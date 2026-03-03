@@ -1,24 +1,28 @@
 .fundo-modal {
     position: fixed;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
     background: rgba(0, 0, 0, 0.55);
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 9999;
 }
 
 .caixa-modal {
     width: 500px;
-    height: 650px;
+    max-height: 90vh;
     background: #f4f4f4;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
     padding: 1.5rem;
     overflow-y: auto;
+    gap: 0.3rem;
 }
 
-/* TITULO */
 .titulo-modal {
     font-size: 1.3rem;
     font-weight: bold;
@@ -26,7 +30,6 @@
     padding: 0;
 }
 
-/* SEÇÕES */
 .secao {
     border: 1px solid #cfcfcf;
     border-radius: 6px;
@@ -43,7 +46,6 @@
     border-bottom: 1px solid #cfcfcf;
 }
 
-/* LINHAS */
 .linha-dupla {
     display: flex;
     gap: 1rem;
@@ -56,7 +58,6 @@
     margin-top: 10px;
 }
 
-/* CAMPOS */
 .campo {
     display: flex;
     flex-direction: column;
@@ -70,16 +71,19 @@ label {
     padding: 0;
 }
 
-input {
+.valor-campo {
     height: 2.2rem;
     border-radius: 6px;
     border: none;
     background: #ddd;
     padding-left: 0.6rem;
     font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    color: #111;
+    user-select: text;
 }
 
-/* RADIO */
 .radio-grupo {
     display: flex;
     align-items: center;
@@ -87,16 +91,15 @@ input {
     font-size: 0.9rem;
 }
 
-.checkBox{
+.checkBox {
     width: 12px;
     height: 12px;
 }
 
-.radio-grupo span{
+.radio-grupo span {
     margin-top: 3px;
 }
 
-/* BOTÃO */
 .botao-fechar {
     height: 2.5rem;
     border-radius: 6px;
@@ -110,4 +113,4 @@ input {
 
 .botao-fechar:hover {
     background: #e5e5e5;
-}   
+}

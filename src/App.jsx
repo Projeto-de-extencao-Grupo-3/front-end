@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import './App.css'
-import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login/Login.jsx";
 import PainelControle from './pages/PainelControle/PainelControle.jsx';
@@ -18,7 +17,6 @@ import Teste from './pages/Teste.jsx';
 import TesteModal from './components/ModalNovoItem/TesteModal.jsx';
 import TesteModalEditar from './components/ModalEditarItem/TesteModalEditar.jsx';
 
-import MeusModais from './components/Modais/meusModais.jsx';  
 import EtapaOrcamento from './pages/PainelControle/Orcamento/EtapaOrcamento.jsx';
 
 function App() {
@@ -43,8 +41,6 @@ function App() {
         <Route path="/analiseFinanceira" element={<AnaliseFinanceira />} />
         <Route path="/TesteModal" element={<TesteModal />} />
         <Route path="/TesteModalEditar" element={<TesteModalEditar />} />
-
-        <Route path="/MeusModais" element={<MeusModais />} />
       </Routes>
 
     </BrowserRouter>
