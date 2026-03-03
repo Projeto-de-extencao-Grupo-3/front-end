@@ -19,6 +19,7 @@ import TesteModal from './components/ModalNovoItem/TesteModal.jsx';
 import TesteModalEditar from './components/ModalEditarItem/TesteModalEditar.jsx';
 
 import MeusModais from './components/Modais/meusModais.jsx';  
+import EtapaOrcamento from './pages/PainelControle/Orcamento/EtapaOrcamento.jsx';
 
 function App() {
 
@@ -35,6 +36,7 @@ function App() {
         <Route path="/painelControle/aguardandoVaga" element={<AguardandoVaga />} />
         <Route path="/painelControle/producao" element={<Producao />} />
         <Route path="/painelControle/finalizado" element={<Finalizado />} />
+        <Route path="/painelControle/orcamento" element={<EtapaOrcamento />} />
         <Route path="/clientes" element={<GestaoClientes />} />
         <Route path="/estoque" element={<ControleEstoque />} />
         <Route path="/funcionarios" element={<GestaoFuncionarios />} />

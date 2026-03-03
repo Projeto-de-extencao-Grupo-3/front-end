@@ -24,8 +24,8 @@ function EntradaVeiculo() {
             </div>
             <StepperFluxo
                 etapas={[
-                    { id: "entrada", label: "Entrada", icon: "bx bx-file", status: "concluido" },
-                    { id: "orcamento", label: "Aguardando Orçamento", icon: "bx bx-time", status: "ativo" },
+                    { id: "entrada", label: "Entrada", icon: "bx bx-file", status: "ativo" },
+                    { id: "orcamento", label: "Aguardando Orçamento", icon: "bx bx-wallet-note", status: "pendente" },
                     { id: "autorizacao", label: "Aguardando Autorização", icon: "bx bx-lock", status: "pendente" },
                     { id: "autorizado", label: "Autorizado", icon: "bx bx-check", status: "pendente" },
                     { id: "vaga", label: "Aguardando Vaga", icon: "bx bx-car", status: "pendente" },
