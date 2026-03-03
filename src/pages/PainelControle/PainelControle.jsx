@@ -52,10 +52,13 @@ function PainelControle() {
     return (
         <Layout ativo="painel">
             <div className="d-flex flex-column">
+                {/* CABECALHO */}
                 <div className="d-flex justify-content-between align-items-center mb-4">
-                    <div>
+                    <div className="d-flex flex-column">
                         <h2 className="m-0">Painel de Controle</h2>
-                        <span className="text-muted">Visão geral da situação da sua oficina</span>
+                        <span className="fs-5 text-muted">
+                            Visão geral da situação de sua oficina
+                        </span>
                     </div>
                     <div className="d-flex gap-3">
                         <button className="btn btn-outline-dark" onClick={() => setMostrarModalAgendar(true)}>

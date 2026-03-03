@@ -14,10 +14,14 @@ function EtapaOrcamento() {
 
     return (
         <Layout ativo={"painel"}>
+
+            {/* CABECALHO */}
             <div className="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h2 className="m-0">Painel de Controle</h2>
-                    <span className="text-muted">Visão geral da situação da sua oficina</span>
+                <div className="d-flex flex-column">
+                    <h2 className="m-0">Orçamento de Serviço</h2>
+                    <span className="fs-5 text-muted">
+                        Crie e gerencie o orçamento dos serviços
+                    </span>
                 </div>
             </div>
 
