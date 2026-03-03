@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import ResumoDoOrcamento from "../../Resumo/ResumoDoOrcamento";
 import OrdemServicoCard from "../../ServicoCard/OrdemServicoCard";
 import "./ConfirmacaoAutorizacao.css"; 
+import TempoEstimado from "../TempoEstimado";
 
 function ConfirmacaoAutorizacao({ onClose, onConfirm }) {
     const navigate = useNavigate();
@@ -9,11 +10,9 @@ function ConfirmacaoAutorizacao({ onClose, onConfirm }) {
     return (
         <div className="modal-overlay">
             <div className="modal-content">
-                <h2>Deseja realmente aprovar este orçamento</h2>
+                <h2>Deseja realmente aprovar este orçamento?</h2>
                 <OrdemServicoCard placa={"ABC-1234"} />
-                <div>
-                    <p>Tempo estimado: 14 dias</p>
-                </div>
+                <TempoEstimado dias={14}/>
                 <ResumoDoOrcamento/>
                 <div className="confirmacao-buttons">
                     <button className="btn-confirmar" onClick={() => {
