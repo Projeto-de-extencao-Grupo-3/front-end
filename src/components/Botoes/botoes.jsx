@@ -8,12 +8,16 @@ import checkIcon from "../../assets/icons/checkIcon.png"
 import CalendarIcon from "../../assets/icons/CalendarIcon.png"
 import PlayIcon from "../../assets/icons/PlayIcon.png"
 import SaveIcon from "../../assets/icons/SaveIcon.png"
+import ConfirmacaoAutorizacao from "../Modais/Confirmacoes/ConfirmacaoAutorizacao";
 import { useNavigate } from "react-router-dom";
 
 
-function botoes({ pagina }) {
+function Botoes({ pagina }) {
     console.log("Página atual nos botões:", pagina);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+
+    // Estado para controlar abertura do modal
+    const [showModal, setShowModal] = useState(false);
 
     return (
         <div className="botoes">
@@ -24,7 +28,7 @@ function botoes({ pagina }) {
                         className="icon"
                         style={{ backgroundImage: `url(${iconSifrao})` }}
                     ></div>
-                    <button className="botao">Concluir pagamamento</button>
+                    <button className="botao">Concluir pagamento</button>
                 </div>
                 : null}
 
@@ -84,7 +88,7 @@ function botoes({ pagina }) {
                         className="icon"
                         style={{ backgroundImage: `url(${SaveIcon})` }}
                     ></div>
-                    <button className="botao" onClick={() => navigate("/painelControle/aguardandoVaga")}>Autorizar orçamento</button>
+                    <button className="botao" onClick={() => setShowModal(true)}>Autorizar orçamento</button>
                 </div>
                 : null}
 
@@ -122,8 +126,12 @@ function botoes({ pagina }) {
                 <button className="botao" onClick={() => navigate("/painelControle")}>Voltar para o Painel</button>
             </div>
 
+            {showModal && (
+                <ConfirmacaoAutorizacao onClose={() => setShowModal(false)} />
+            )}
+
         </div>
     );
 }
 
-export default botoes;
+export default Botoes;

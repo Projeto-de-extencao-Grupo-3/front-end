@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from 'react'
 import Layout from "../../../components/Layout/Layout";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import "./Finalizado.css";
 
+import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
 import ServicosEItens from "../../../components/Servicos&Itens/Servicos&Itens";
 import ResumoOrcamento from "../../../components/Resumo/ResumoDoOrcamento";
 import Botoes from "../../../components/Botoes/botoes";
@@ -10,6 +12,7 @@ import "../../componentesInferiores.css";
 
 function Finalizado() {
     const navigate = useNavigate();
+    const [placa, setPlaca] = useState('');
     const paginaAtual = "finalizar";
 
 
@@ -30,6 +33,9 @@ function Finalizado() {
                     { id: "finalizado", label: "Finalizado", icon: "bx bx-check-circle", status: "ativo" },
                 ]}
             />
+            <div> 
+                <OrdemServicoCard placa={placa}/>
+            </div>
             <div className="componentesInferiores">
                 <ServicosEItens pagina={paginaAtual} />
                 <div className="componentesDireita">
