@@ -5,6 +5,7 @@ import Layout from "../../../components/Layout/Layout";
 import InformacoesCard from "../../../components/ServicoCard/InformacoesCard";
 import ItemContador from "../../../components/ServicoCard/ItemContador";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
+import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
 import "./EntradaVeiculo.css";
 
 function EntradaVeiculoCamera() {
@@ -32,16 +33,18 @@ function EntradaVeiculoCamera() {
     async function send_to_python_api(arquivo) {
         setLoading(true);
         const formData = new FormData();
-        formData.append('file', arquivo); 
+        formData.append('file', arquivo);
 
         try {
             const response = await api.post('/recognize', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
 
+            const data = response.data.data;
             // Preenche o campo de placa com o retorno da API
             //setPlaca(response.data.placa);
-            console.log("Placa reconhecida:", response.data.data);
+            console.log("Placa reconhecida:", data);
+            setPlaca(data.plate);
             localStorage.setItem('TOKEN', response.data.token);
         } catch (error) {
             console.error("Erro ao processar imagem:", error);
@@ -68,6 +71,9 @@ function EntradaVeiculoCamera() {
                     { id: "finalizado", label: "Finalizado", icon: "bx bx-check-circle", status: "pendente" },
                 ]}
             />
+             <div> 
+                <OrdemServicoCard placa={placa}/>
+            </div>
             <div className="section1">
                 <InformacoesCard titulo="Informações do Veículo" icone="bx bx-bus">
                     <div className="itens-grid">
@@ -102,7 +108,7 @@ function EntradaVeiculoCamera() {
                 <button className="btn-primario" onClick={() => navigate("/")}>Finalizar entrada</button>
             </div>
 
-        </Layout>
+        </Layout >
     );
 }
 
