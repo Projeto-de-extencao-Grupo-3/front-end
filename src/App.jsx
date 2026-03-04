@@ -17,7 +17,7 @@ import GestaoClientes from './pages/Clientes/GestaoClientes.jsx';
 import Teste from './pages/Teste.jsx';
 import TesteModal from './components/ModalNovoItem/TesteModal.jsx';
 import TesteModalEditar from './components/ModalEditarItem/TesteModalEditar.jsx';
-
+import TesteModalQtd from './components/ModalQtdItem/TesteModalQtd.jsx';
 import MeusModais from './components/Modais/meusModais.jsx';  
 import EtapaOrcamento from './pages/PainelControle/Orcamento/EtapaOrcamento.jsx';
 
@@ -43,7 +43,7 @@ function App() {
         <Route path="/analiseFinanceira" element={<AnaliseFinanceira />} />
         <Route path="/TesteModal" element={<TesteModal />} />
         <Route path="/TesteModalEditar" element={<TesteModalEditar />} />
-
+        <Route path="/TesteModalQtd" element={<TesteModalQtd />} />
         <Route path="/MeusModais" element={<MeusModais />} />
       </Routes>
 

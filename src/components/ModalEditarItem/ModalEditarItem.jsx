@@ -61,7 +61,7 @@ function ModalEditarItem({ isOpen, onClose }) {
                             </p>
 
                             {/* Nome */}
-                            <label className="form-label fw-semibold">Item</label>
+                            <label className="form-label">Item</label>
                             <input
                                 type="text"
                                 className="form-control input-padrao mb-3"
@@ -72,7 +72,7 @@ function ModalEditarItem({ isOpen, onClose }) {
                             />
 
                             {/* Fornecedor */}
-                            <label className="form-label fw-semibold">Fornecedor</label>
+                            <label className="form-label">Fornecedor</label>
                             <input
                                 type="text"
                                 className="form-control input-padrao mb-3"
@@ -83,7 +83,7 @@ function ModalEditarItem({ isOpen, onClose }) {
                             />
 
                             {/* Visibilidade */}
-                            <label className="form-label fw-semibold">
+                            <label className="form-label">
                                 Visibilidade em Orçamento/Ordem de Serviço
                             </label>
 
