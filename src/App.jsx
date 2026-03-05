@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import './App.css'
-import './App.css'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login/Login.jsx";
 import PainelControle from './pages/PainelControle/PainelControle.jsx';

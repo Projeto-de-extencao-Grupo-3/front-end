@@ -20,30 +20,30 @@ function VeiculoEEmpresa({ aberto, aoFechar }) {
                     <div className="linha-dupla">
                         <div className="campo">
                             <label>Marca*</label>
-                            <input type="text" defaultValue="Marcopolo" />
+                            <div className="valor-campo">Marcopolo</div>
                         </div>
 
                         <div className="campo">
                             <label>Modelo*</label>
-                            <input type="text" defaultValue="G8" />
+                            <div className="valor-campo">G8</div>
                         </div>
                     </div>
 
                     <div className="linha-dupla">
                         <div className="campo">
                             <label>Placa*</label>
-                            <input type="text" defaultValue="ABC-1234" />
+                            <div className="valor-campo">ABC-1234</div>
                         </div>
 
                         <div className="campo">
                             <label>Prefixo*</label>
-                            <input type="text" defaultValue="1200" />
+                            <div className="valor-campo">1200</div>
                         </div>
                     </div>
 
                     <div className="campo">
                         <label>Ano/Modelo*</label>
-                        <input type="text" placeholder="Ex: 2020" />
+                        <div className="valor-campo">2020</div>
                     </div>
                 </div>
 
@@ -56,37 +56,37 @@ function VeiculoEEmpresa({ aberto, aoFechar }) {
                     <div className="linha-dupla">
                         <div className="campo">
                             <label>CPF/CNPJ*</label>
-                            <input type="text" defaultValue="94065670000130" />
+                            <div className="valor-campo">94065670000130</div>
                         </div>
 
                         <div className="campo">
                             <label>Nome/Razão Social*</label>
-                            <input type="text" defaultValue="Sussantur Turismo LTDA" />
+                            <div className="valor-campo">Sussantur Turismo LTDA</div>
                         </div>
                     </div>
 
                     <div className="linha-dupla">
                         <div className="campo">
                             <label>Telefone*</label>
-                            <input type="text" defaultValue="(11) 91234-3210" />
+                            <div className="valor-campo">(11) 91234-3210</div>
                         </div>
 
                         <div className="campo">
                             <label>Email*</label>
-                            <input type="email" defaultValue="cliente@mail.com" />
+                            <div className="valor-campo">cliente@mail.com</div>
                         </div>
                     </div>
 
                     <div className="linha-unica">
                         <span>Tipo de Cliente</span>
                         <div className="radio-grupo">
-                            <input  className="checkBox" type="radio" />
+                            <input className="checkBox" type="radio" readOnly />
                             <span>Empresa</span>
                         </div>
                     </div>
                 </div>
 
-                <button className="botao-fechar" onClick={aoFechar}>
+                <button className="botao-fechar" onClick={aberto}>
                     Fechar
                 </button>
 
