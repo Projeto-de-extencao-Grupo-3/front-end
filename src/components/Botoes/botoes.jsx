@@ -119,7 +119,7 @@ function Botoes({ pagina }) {
                         className="icon"
                         style={{ backgroundImage: `url(${SaveIcon})` }}
                     ></div>
-                    <button className="botao">Finalizar orçamento</button>
+                    <button className="botao" onClick={() => navigate("/painelControle/autorizacao")}>Finalizar orçamento</button>
                 </div>
                 : null}
 

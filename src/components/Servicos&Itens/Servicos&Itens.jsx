@@ -4,11 +4,13 @@ import { buscarServicos, buscarItens } from "../../service/api";
 import Servicos from "./Abas/Servicos";
 import Itens from "./Abas/Itens";
 import ModalAdicionarServico from "../ModalAdicionarServico/ModalAdicionarServico";
+import ModalAdicionarItem from "../ModalAdicionarItem/ModalAdicionarItem";
 
 function ServicosEItens({ pagina }) {
     console.log("Página atual no ServicosEItens:", pagina);
     const [abaAtiva, setAbaAtiva] = useState("servicos");
     const [mostrarModalServico, setMostrarModalServico] = useState(false);
+    const [mostrarModalItem, setMostrarModalItem] = useState(false);
 
 
     console.log("Página atual:", pagina);
@@ -127,24 +129,26 @@ function ServicosEItens({ pagina }) {
                     </button>
                 </div>
 
-                {pagina != "analisar" ?
+                {pagina != "analisar" ? (
                     <div className="options-action">
-                        {
-                            pagina === "orcamento" ?
+                        {pagina === "orcamento" ? (
+                            /* segrega em 2 botoes diferentes cada um com seu modal */
+                            abaAtiva === "servicos" ? (
                                 <button className="add" onClick={() => setMostrarModalServico(true)}>
-                                    {abaAtiva === "servicos"
-                                        ? "Adicionar Serviço"
-                                        : "Adicionar Item"}
+                                    Adicionar Serviço
                                 </button>
-                                :
-                                <button className="imprimir">
-                                    Imprimir
+                            ) : (
+                                <button className="add" onClick={() => setMostrarModalItem(true)}>
+                                    Adicionar Item
                                 </button>
-                        }
+                            )
+                        ) : (
+                            <button className="imprimir">
+                                Imprimir
+                            </button>
+                        )}
                     </div>
-                    : null
-                    // Aqui em cima
-                }
+                ) : null}
             </div>
 
             {/* Parte dos tickets */}
@@ -161,6 +165,12 @@ function ServicosEItens({ pagina }) {
             <ModalAdicionarServico
                 isOpen={mostrarModalServico}
                 onClose={() => setMostrarModalServico(false)}
+            />
+            {/* modal orcamento add item */}
+            <ModalAdicionarItem
+                isOpen={mostrarModalItem}
+                onClose={() => setMostrarModalItem(false)}
+                placa={ticket.placa}
             />
         </div>
 

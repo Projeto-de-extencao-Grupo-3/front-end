@@ -31,7 +31,7 @@ function ModalAdicionarServico({ isOpen, onClose, placa }) {
                             <div className="card-info-servico text-start">
 
                                 <div className="titulo-servico">
-                                    <i className='bx bx-wrench'></i>
+                                    <i className='bx bx-spanner' style={{fontSize:'24px'}}></i>
                                     Informações do Serviço
                                 </div>
 
