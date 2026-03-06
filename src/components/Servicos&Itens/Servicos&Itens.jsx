@@ -3,10 +3,13 @@ import { useState, useEffect } from "react";
 import { buscarServicos, buscarItens } from "../../service/api";
 import Servicos from "./Abas/Servicos";
 import Itens from "./Abas/Itens";
+import ModalAdicionarServico from "../ModalAdicionarServico/ModalAdicionarServico";
 
 function ServicosEItens({ pagina }) {
     console.log("Página atual no ServicosEItens:", pagina);
     const [abaAtiva, setAbaAtiva] = useState("servicos");
+    const [mostrarModalServico, setMostrarModalServico] = useState(false);
+
 
     console.log("Página atual:", pagina);
 
@@ -128,7 +131,7 @@ function ServicosEItens({ pagina }) {
                     <div className="options-action">
                         {
                             pagina === "orcamento" ?
-                                <button className="add">
+                                <button className="add" onClick={() => setMostrarModalServico(true)}>
                                     {abaAtiva === "servicos"
                                         ? "Adicionar Serviço"
                                         : "Adicionar Item"}
@@ -153,7 +156,15 @@ function ServicosEItens({ pagina }) {
                     <Itens dados={ticket.itens} />
                 )}
             </div>
+
+            {/* modal orcamento add servico */}
+            <ModalAdicionarServico
+                isOpen={mostrarModalServico}
+                onClose={() => setMostrarModalServico(false)}
+            />
         </div>
+
+
     );
 }
 
