@@ -8,17 +8,6 @@
   outline: 0;
 }
 
-/* BADGE (Substitui as Tabs no modo Visualizar) */
-.badge-tipo-servico {
-  display: inline-block;
-  background: #e0e0e0;
-  padding: 4px 12px;
-  font-size: 13px;
-  font-weight: 500;
-  border-radius: 8px;
-  color: #333;
-}
-
 .modal-dialog {
   max-width: 800px; 
   width: 100%;
@@ -48,37 +37,15 @@
   color: #333;
 }
 
-/* TABS */
-.tabs-servico {
-  display: inline-flex;
-  background: #e0e0e0;
-  border-radius: 10px;
-  padding: 3px;
-  gap: 2px;
-  margin-bottom: 12px;
+/* LINHA SEPARADORA DA REFERÊNCIA */
+.linha-separadora {
+  height: 1px;
+  background-color: #d4d4d4;
+  margin-bottom: 16px;
+  width: 100%;
 }
 
-.tabs-servico button {
-  border: none;
-  background: transparent;
-  padding: 4px 10px;
-  font-size: 13px;
-  border-radius: 8px;
-  color: #333;
-  transition: background-color 0.2s;
-}
-
-.tabs-servico button:hover {
-  background-color: rgba(255, 255, 255, 0.5);
-}
-
-
-.tabs-servico .ativo {
-  background: #ffffff;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-  font-weight: 500;
-}
-
+/* INPUTS E SELECTS GERAIS */
 .form-control,
 .form-select {
   border: none !important; 
@@ -90,7 +57,6 @@
   color: #333; 
 }
 
-
 .form-control:focus,
 .form-select:focus {
   border: none !important; 
@@ -98,12 +64,10 @@
   background-color: #e9ecef !important; 
 }
 
-
 .form-select {
   appearance: none; 
   -webkit-appearance: none;
   -moz-appearance: none;
-  
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.75rem center; 
@@ -111,15 +75,59 @@
   padding-right: 2.5rem !important; 
 }
 
+/* =========================================================
+   ESTILIZAÇÃO DOS RADIO BUTTONS CUSTOMIZADOS 
+   ========================================================= */
+.radio-group {
+  display: flex;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #666; /* Texto em cinza como na imagem */
+  cursor: pointer;
+  font-weight: 400; /* Força o peso normal da fonte para não ficar negrito */
+  margin-bottom: 0;
+}
+
+.radio-custom {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #d4d4d4; /* Fundo cinza quando inativo */
+  cursor: pointer;
+  position: relative;
+  outline: none;
+  border: none;
+}
+
+/* Bolinha interna escura quando está selecionado */
+.radio-custom:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #555; /* Cinza escuro da bolinha interna */
+}
+
 /* TEXTO INFORMATIVO */
 .texto-info {
   font-size: 12px;
   color: #6c6c6c;
   margin-top: 0;
-  margin-bottom: 15px;
 }
 
-/* LABEL */
+/* LABEL DOS INPUTS */
 label {
   font-size: 13px;
   font-weight: 500;
@@ -131,7 +139,6 @@ label {
 .botoes-modal {
   display: flex;
   gap: 10px;
-  margin-top: 15px;
 }
 
 .btn-adicionar, .btn-cancel {
@@ -153,7 +160,6 @@ label {
   opacity: 0.9;
 }
 
-/* ESTILO DO BOTÃO DE CANCELAR DA REFERÊNCIA */
 .btn-cancel {
   background: #ffffff;
   color: #333;
@@ -163,13 +169,4 @@ label {
 
 .btn-cancel:hover {
   background: #f0f0f0;
-}
-
-/* componente ordem serviço */
-.modal-body .section p {
-    font-size: 16px;
-}
-
-.modal-body .section p:first-child {
-    font-size: 18px;
 }
