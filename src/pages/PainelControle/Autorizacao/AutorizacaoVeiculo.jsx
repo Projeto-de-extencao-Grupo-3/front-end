@@ -1,5 +1,5 @@
 import { useNavigate} from "react-router-dom";
-import { useState } from 'react'
+import { useParams } from 'react'
 import Layout from "../../../components/Layout/Layout";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import "./AutorizacaoVeiculo.css";
@@ -7,13 +7,11 @@ import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
 import ServicosEItens from "../../../components/Servicos&Itens/Servicos&Itens";
 import ResumoOrcamento from "../../../components/Resumo/ResumoDoOrcamento";
 import Botoes from "../../../components/Botoes/botoes";
-import ConfirmacaoAutorizacao from "../../../components/Modais/Confirmacoes/ConfirmacaoAutorizacao";
 import "../../componentesInferiores.css";
 
 function AutorizacaoVeiculo() {
-    const navigate = useNavigate();
     const paginaAtual = "aprovar";
-    const [placa, setPlaca] = useState(''); 
+    const { placa } = useParams();
 
     return (
         <Layout ativo={"painel"}>

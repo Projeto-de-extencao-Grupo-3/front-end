@@ -129,7 +129,7 @@ function EntradaVeiculo() {
             </div>
             <div className="section-buttom">
                 <button className="btn-secundario"  onClick={() => navigate("/painelControle")}>Voltar para o painel</button>
-                <button className="btn-primario"  onClick={() => navigate("/")}>Finalizar entrada</button>
+                <button className="btn-primario"  onClick={() => navigate("/painelControle/orcamento")}>Finalizar entrada</button>
             </div>
 
         </Layout>

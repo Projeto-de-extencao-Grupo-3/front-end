@@ -6,12 +6,12 @@ import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
 import "./EtapaOrcamento.css";
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 
 function EtapaOrcamento() {
-    const [placa, setPlaca] = useState('aa');
 
-
+    const { placa } = useParams();
     return (
         <Layout ativo={"painel"}>
 
