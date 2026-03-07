@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import ConfirmacaoAutorizacao from "../Modais/Confirmacoes/ConfirmacaoAutorizacao";
 import VeiculoEEmpresa from "../Modais/Veiculo&Empresa/veiculo&empresa.jsx";
 import ModalConfirmacao from "../Modais/Confirmacoes/confirmacoes.jsx";
+import EntradaVeiculo from "../Modais/EntradaDeVeiculo/EntradaVeiculo.jsx";
 
 
 // ICONES USADOS
@@ -35,6 +36,7 @@ function Botoes({ pagina }) {
     const [modalServico, setModalServico] = useState(false);
     const [modalNota, setModalNota] = useState(false);
     const [modalRevisar, setModalRevisar] = useState(false);
+    const [modalEntrada, setModalEntrada] = useState(false);
 
     return (
         <div className="botoes">
@@ -85,7 +87,7 @@ function Botoes({ pagina }) {
                         className="icon"
                         style={{ backgroundImage: `url(${iconCheck})` }}
                     ></div>
-                    <button className="botao">Ver entrada do veículo</button>
+                    <button className="botao" onClick={() => setModalEntrada(true)}>Ver entrada do veículo</button>
                 </div>
                 : null}
 
@@ -152,9 +154,14 @@ function Botoes({ pagina }) {
                 aoFechar={() => setModalVeiculo(false)}
             />
 
+            <EntradaVeiculo
+                aberto={modalEntrada}
+                aoFechar={() => setModalEntrada(false)}
+            />
+
             <ModalConfirmacao
                 aberto={modalPagamento}
-                aoConfirmar={() => setModalPagamento(false)}
+                aoConfirmar={() => { setModalPagamento(false); navigate("/painelControle/analisar2"); }}
                 aoCancelar={() => setModalPagamento(false)}
                 icone={iconConfirmPgmt}
                 titulo="Confirmação de Pagamento"
@@ -174,7 +181,7 @@ function Botoes({ pagina }) {
 
             <ModalConfirmacao
                 aberto={modalNota}
-                aoConfirmar={() => setModalNota(false)}
+                aoConfirmar={() => { setModalNota(false); navigate("/painelControle/analisar3"); }}
                 aoCancelar={() => setModalNota(false)}
                 icone={iconPagGreen}
                 titulo="Conclusão de Nota Fiscal"
