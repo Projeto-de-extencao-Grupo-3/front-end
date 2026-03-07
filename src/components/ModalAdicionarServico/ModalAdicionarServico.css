@@ -8,6 +8,17 @@
   outline: 0;
 }
 
+/* BADGE (Substitui as Tabs no modo Visualizar) */
+.badge-tipo-servico {
+  display: inline-block;
+  background: #e0e0e0;
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 8px;
+  color: #333;
+}
+
 .modal-dialog {
   max-width: 800px; 
   width: 100%;

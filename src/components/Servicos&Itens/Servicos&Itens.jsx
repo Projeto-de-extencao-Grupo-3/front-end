@@ -9,11 +9,14 @@ import ModalAdicionarItem from "../ModalAdicionarItem/ModalAdicionarItem";
 function ServicosEItens({ pagina }) {
     console.log("Página atual no ServicosEItens:", pagina);
     const [abaAtiva, setAbaAtiva] = useState("servicos");
+    
     const [mostrarModalServico, setMostrarModalServico] = useState(false);
+    const [modoServico, setModoServico] = useState("adicionar");
+    const [servicoVisualizar, setServicoVisualizar] = useState(null);
+
     const [mostrarModalItem, setMostrarModalItem] = useState(false);
-
-
-    console.log("Página atual:", pagina);
+    const [modoItem, setModoItem] = useState("adicionar");
+    const [itemVisualizar, setItemVisualizar] = useState(null);
 
     const ticket = {
         id: 1,
@@ -61,20 +64,15 @@ function ServicosEItens({ pagina }) {
             try {
                 if (abaAtiva === "servicos") {
                     const res = await buscarServicos();
-
                     const lista = Array.isArray(res.data)
                         ? res.data
                         : res.data.content ?? res.data.servicos ?? [];
-
                     setDados(lista);
-
                 } else {
                     const res = await buscarItens();
-
                     const lista = Array.isArray(res.data)
                         ? res.data
                         : res.data.content ?? res.data.itens ?? [];
-
                     setDados(lista);
                 }
             } catch (error) {
@@ -85,9 +83,9 @@ function ServicosEItens({ pagina }) {
 
         carregarDados();
     }, [abaAtiva]);
+
     return (
         <div className="resumo-container">
-            {/* Progesso */}
             {pagina === "finalizar" || pagina === "produzir" ?
                 <div className="progresso-servico">
                     <div className="progresso-titulo">
@@ -103,15 +101,11 @@ function ServicosEItens({ pagina }) {
                     <div className="datas">
                         <span>18/01/2000</span>
                         <span>31/02/2012</span>
-                        {/* <span>{dataInicio}</span>
-                        <span>{dataFim}</span> */}
                     </div>
                 </div>
                 : null
             }
 
-
-            {/* Parte superior do resumo */}
             <div className="bar-menu">
                 <div className={`bar-options ${pagina === "analisar" ? "full" : ""}`}>
                     <button
@@ -132,13 +126,20 @@ function ServicosEItens({ pagina }) {
                 {pagina != "analisar" ? (
                     <div className="options-action">
                         {pagina === "orcamento" ? (
-                            /* segrega em 2 botoes diferentes cada um com seu modal */
                             abaAtiva === "servicos" ? (
-                                <button className="add" onClick={() => setMostrarModalServico(true)}>
+                                <button className="add" onClick={() => {
+                                    setModoServico("adicionar");
+                                    setServicoVisualizar(null);
+                                    setMostrarModalServico(true);
+                                }}>
                                     Adicionar Serviço
                                 </button>
                             ) : (
-                                <button className="add" onClick={() => setMostrarModalItem(true)}>
+                                <button className="add" onClick={() => {
+                                    setModoItem("adicionar");
+                                    setItemVisualizar(null);
+                                    setMostrarModalItem(true);
+                                }}>
                                     Adicionar Item
                                 </button>
                             )
@@ -151,30 +152,44 @@ function ServicosEItens({ pagina }) {
                 ) : null}
             </div>
 
-            {/* Parte dos tickets */}
-
             <div className="conteudo">
                 {abaAtiva === "servicos" ? (
-                    <Servicos dados={ticket.servicos} />
+                    <Servicos 
+                        dados={ticket.servicos} 
+                        onVisualizar={(dados) => {
+                            setModoServico("visualizar");
+                            setServicoVisualizar(dados);
+                            setMostrarModalServico(true);
+                        }} 
+                    />
                 ) : (
-                    <Itens dados={ticket.itens} />
+                    <Itens 
+                        dados={ticket.itens} 
+                        onVisualizar={(dados) => {
+                            setModoItem("visualizar");
+                            setItemVisualizar(dados);
+                            setMostrarModalItem(true);
+                        }} 
+                    />
                 )}
             </div>
 
-            {/* modal orcamento add servico */}
             <ModalAdicionarServico
                 isOpen={mostrarModalServico}
                 onClose={() => setMostrarModalServico(false)}
+                placa={ticket.placa}
+                modo={modoServico}
+                servico={servicoVisualizar}
             />
-            {/* modal orcamento add item */}
+            
             <ModalAdicionarItem
                 isOpen={mostrarModalItem}
                 onClose={() => setMostrarModalItem(false)}
                 placa={ticket.placa}
+                modo={modoItem}
+                item={itemVisualizar}
             />
         </div>
-
-
     );
 }
 

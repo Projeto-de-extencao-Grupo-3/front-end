@@ -1,6 +1,6 @@
 import "./servicos.css";
 
-function Servicos({ dados }) {
+function Servicos({ dados, onVisualizar }) {
     return (
         <table className="tabela">
             <thead className="titles">
@@ -19,7 +19,16 @@ function Servicos({ dados }) {
                         <td className="dado">{servico.parte}</td>
                         <td className="dado">{servico.lado}</td>
                         <td className="dado">R${servico.preco}</td>
-                        <td className="dado">⋮</td>
+                        
+                        {/* aq chama no modo de visualizar */}
+                        <td 
+                            className="dado" 
+                            style={{ cursor: "pointer" }} 
+                            onClick={() => onVisualizar(servico)}
+                        >
+                            ⋮
+                        </td>
+                        
                     </tr>
                 ))}
             </tbody>
