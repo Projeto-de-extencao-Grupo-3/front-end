@@ -1,5 +1,10 @@
 import "./servicos.css";
 
+import iconBook from "../../../assets/icons/bookService icon.png";
+import iconBox from "../../../assets/icons/boxItens icon.png";
+import iconLixo from "../../../assets/icons/lixoService Icon.png";
+import iconEdit from "../../../assets/icons/EditIcon.png";
+
 function Servicos({ dados, onVisualizar }) {
     return (
         <table className="tabela">
@@ -19,16 +24,20 @@ function Servicos({ dados, onVisualizar }) {
                         <td className="dado">{servico.parte}</td>
                         <td className="dado">{servico.lado}</td>
                         <td className="dado">R${servico.preco}</td>
-                        
+
                         {/* aq chama no modo de visualizar */}
-                        <td 
-                            className="dado" 
-                            style={{ cursor: "pointer" }} 
-                            onClick={() => onVisualizar(servico)}
-                        >
-                            ⋮
+                        <td className="dado">
+                            <div className="box-options">
+                                <div className="icon" style={{ backgroundImage: `url(${iconEdit})` }}></div>
+
+                                <div className="icon" style={{ backgroundImage: `url(${iconLixo})` }}></div>
+
+                                <div className="icon" style={{ backgroundImage: `url(${iconBook})` }} onClick={() => onVisualizar(servico)}></div>
+
+                                {/* <div className="icon" style={{ backgroundImage: `url(${iconBox})` }}></div> */}
+                            </div>
                         </td>
-                        
+
                     </tr>
                 ))}
             </tbody>

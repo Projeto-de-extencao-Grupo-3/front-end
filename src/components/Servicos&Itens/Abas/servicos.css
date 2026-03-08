@@ -49,3 +49,12 @@
 .dado{
     width: 100px;
 }
+
+.icon{
+    cursor: pointer;
+}
+
+.box-options{
+    display: flex;
+    gap: 0 3px;
+}
