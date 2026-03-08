@@ -27,7 +27,6 @@ import iconRevisar from "../../assets/icons/revisar icon.png";
 function Botoes({ pagina }) {
     console.log("Página atual nos botões:", pagina);
     const navigate = useNavigate();
-    pagina = "analisar2"
 
     // Estado para controlar abertura do modal
     const [showModal, setShowModal] = useState(false);

@@ -23,7 +23,17 @@ function Itens({ dados }) {
                         <td className="dado">{item.quantidade} Unid</td>
                         <td className="dado">R${item.preco}</td>
                         <td className="dado">{item.status}</td>
-                        <td className="dado">⋮</td>
+                        <td className="dado">
+                            <div>
+                                <div className="icon" style={{ backgroundImage: `url(${iconPag})` }}></div>
+
+                                <div className="icon" style={{ backgroundImage: `url(${iconPag})` }}></div>
+
+                                <div className="icon" style={{ backgroundImage: `url(${iconPag})` }}></div>
+
+                                <div className="icon" style={{ backgroundImage: `url(${iconPag})` }}></div>
+                            </div>
+                        </td>
                     </tr>
                 ))}
             </tbody>

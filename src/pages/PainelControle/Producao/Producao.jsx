@@ -11,7 +11,7 @@ import "../../componentesInferiores.css";
 
 function Producao() {
     const navigate = useNavigate();
-    const placa = useParams()
+    const { placa } = useParams()
     const paginaAtual = "produzir";
 
 
