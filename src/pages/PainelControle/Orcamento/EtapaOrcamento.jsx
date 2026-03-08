@@ -41,12 +41,12 @@ function EtapaOrcamento() {
             <div>
                 <OrdemServicoCard placa={placa} />
             </div>
-
+                
             <div className="painelteste">
                 <ServicosEItens pagina={"orcamento"} />
                 <div className="teste2">
                     <ResumoOrcamento />
-                    <Botoes pagina={"orcar"} />
+                    <Botoes pagina={"orcar"} placa={placa} />
                 </div>
             </div>
 

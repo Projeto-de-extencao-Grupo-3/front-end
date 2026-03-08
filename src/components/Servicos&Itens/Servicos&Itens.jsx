@@ -8,6 +8,7 @@ import ModalAdicionarItem from "../ModalAdicionarItem/ModalAdicionarItem";
 
 function ServicosEItens({ pagina }) {
     console.log("Página atual no ServicosEItens:", pagina);
+    const [dados, setDados] = useState([]);
     const [abaAtiva, setAbaAtiva] = useState("servicos");
     
     const [mostrarModalServico, setMostrarModalServico] = useState(false);

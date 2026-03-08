@@ -33,6 +33,8 @@ function App() {
         <Route path="/painelControle/entrada" element={<EntradaVeiculo />} />
         <Route path="/painelControle/entradaCamera" element={<EntradaVeiculoCamera />} />
         <Route path="/painelControle/entrada/:placa" element={<EntradaVeiculoCamera />} />
+        <Route path="/painelControle/orcamento" element={<EtapaOrcamento />} />
+        <Route path="/painelControle/orcamento/:placa" element={<EtapaOrcamento />} />
         <Route path="/painelControle/autorizacao" element={<AutorizacaoVeiculo />} />
         <Route path="/painelControle/autorizacao/:placa" element={<AutorizacaoVeiculo />} />
         <Route path="/painelControle/aguardandoVaga" element={<AguardandoVaga />} />
@@ -41,8 +43,6 @@ function App() {
         <Route path="/painelControle/producao/:placa" element={<Producao />} />
         <Route path="/painelControle/finalizado" element={<Finalizado />} />
         <Route path="/painelControle/finalizado/:placa" element={<Finalizado />} />
-        <Route path="/painelControle/orcamento" element={<EtapaOrcamento />} />
-        <Route path="/painelControle/orcamento/:placa" element={<EtapaOrcamento />} />
         
         {/* Roteamento de Clientes */}
         <Route path="/clientes" element={<GestaoClientes />} />

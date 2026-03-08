@@ -40,7 +40,7 @@ function AguardandoVaga() {
                 <ServicosEItens pagina={paginaAtual} />
                 <div className="componentesDireita">
                     <ResumoOrcamento pagina={paginaAtual} />
-                    <Botoes pagina={paginaAtual} />
+                    <Botoes pagina={paginaAtual} placa={placa} />
                 </div>
             </div>
 
