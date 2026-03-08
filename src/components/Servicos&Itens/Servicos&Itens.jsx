@@ -7,7 +7,6 @@ import ModalAdicionarServico from "../ModalAdicionarServico/ModalAdicionarServic
 import ModalAdicionarItem from "../ModalAdicionarItem/ModalAdicionarItem";
 
 function ServicosEItens({ pagina }) {
-    console.log("Página atual no ServicosEItens:", pagina);
     const [dados, setDados] = useState([]);
     const [abaAtiva, setAbaAtiva] = useState("servicos");
     
@@ -42,7 +41,7 @@ function ServicosEItens({ pagina }) {
             {
                 id: 1,
                 codigo: "00024",
-                item: "Tinta Azul-Fiap",
+                item: "Tinta Azul",
                 visibilidade: "Privado",
                 quantidade: 8,
                 preco: 30.00,
@@ -156,9 +155,9 @@ function ServicosEItens({ pagina }) {
             <div className="conteudo">
                 {abaAtiva === "servicos" ? (
                     <Servicos 
-                        dados={ticket.servicos} 
+                        dados={ticket.servicos}
+                        pagina={pagina}
                         onVisualizar={(dados) => {
-                            setModoServico("visualizar");
                             setServicoVisualizar(dados);
                             setMostrarModalServico(true);
                         }} 
@@ -166,8 +165,8 @@ function ServicosEItens({ pagina }) {
                 ) : (
                     <Itens 
                         dados={ticket.itens} 
+                        pagina={pagina}
                         onVisualizar={(dados) => {
-                            setModoItem("visualizar");
                             setItemVisualizar(dados);
                             setMostrarModalItem(true);
                         }} 

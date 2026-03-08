@@ -1,11 +1,16 @@
 import "./servicos.css";
+import { useState, useEffect } from "react";
 
-import iconBook from "../../../assets/icons/bookService icon.png";
+import RegistroSaidaMaterial from "../../Modais/RegistrarSaida/RegistroSaidaMaterial.jsx"
+
 import iconBox from "../../../assets/icons/boxItens icon.png";
 import iconLixo from "../../../assets/icons/lixoService Icon.png";
 import iconEdit from "../../../assets/icons/EditIcon.png";
 
-function Itens({ dados }) {
+function Itens({ dados, pagina }) {
+    const [modalSaida, setModalSaida] = useState(false);
+    const [dadosSaida, setDadosSaida] = useState(null);
+    console.log("Página atual no Itens compone:", pagina);
     return (
         <table className="tabela">
             <thead className="titles">
@@ -23,20 +28,62 @@ function Itens({ dados }) {
                 {dados.map((item) => (
                     <tr key={item.id} className="config-dados">
                         <td className="dado">{item.codigo}</td>
-                        <td className="dado">{item.nome}</td>
+                        <td className="dado">{item.item}</td>
                         <td className="dado">{item.visibilidade}</td>
                         <td className="dado">{item.quantidade} Unid</td>
                         <td className="dado">R${item.preco}</td>
                         <td className="dado">{item.status}</td>
                         <td className="dado">
                             <div className="box-options">
-                                <div className="icon" style={{ backgroundImage: `url(${iconEdit})` }}></div>
+                                {pagina === "orcamento" ?
+                                    <>
+                                        <div className="icon" style={{ backgroundImage: `url(${iconEdit})` }}></div>
 
-                                <div className="icon" style={{ backgroundImage: `url(${iconLixo})` }}></div>
+                                        <div className="icon" style={{ backgroundImage: `url(${iconLixo})` }}></div>
 
-                                <div className="icon" style={{ backgroundImage: `url(${iconBook})` }}></div>
+                                        <div
+                                            className="icon"
+                                            style={{ backgroundImage: `url(${iconBox})` }}
+                                            onClick={() => {
+                                                setDadosSaida({
+                                                    codigo: "00025",
+                                                    itemProduto: "Tinta-Azul-Fiat",
+                                                    visibilidade: "Privado",
+                                                    quantidadeSaida: 8,
+                                                    precoPorUnidade: "30,00",
+                                                    quantidadeEstoque: 7
+                                                });
+                                                setModalSaida(true);
+                                            }}
+                                        ></div>
+                                    </>
+                                    :
+                                    <div
+                                        className="icon"
+                                        style={{ backgroundImage: `url(${iconBox})` }}
+                                        onClick={() => {
+                                            setDadosSaida({
+                                                codigo: "00025",
+                                                itemProduto: "Tinta-Azul-Fiat",
+                                                visibilidade: "Privado",
+                                                quantidadeSaida: 8,
+                                                precoPorUnidade: "30,00",
+                                                quantidadeEstoque: 7
+                                            });
+                                            setModalSaida(true);
+                                        }}
+                                    ></div>
+                                }
 
-                                {/* <div className="icon" style={{ backgroundImage: `url(${iconBox})` }}></div> */}
+                                <RegistroSaidaMaterial
+                                    aberto={modalSaida}
+                                    aoConfirmar={(dados) => {
+                                        setModalSaida(false);
+                                    }}
+                                    aoCancelar={() => setModalSaida(false)}
+                                    dados={dadosSaida}
+                                />
+
                             </div>
                         </td>
                     </tr>

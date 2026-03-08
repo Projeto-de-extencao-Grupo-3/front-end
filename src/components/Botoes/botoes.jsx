@@ -7,6 +7,7 @@ import ConfirmacaoAutorizacao from "../Modais/Confirmacoes/ConfirmacaoAutorizaca
 import VeiculoEEmpresa from "../Modais/Veiculo&Empresa/veiculo&empresa.jsx";
 import ModalConfirmacao from "../Modais/Confirmacoes/confirmacoes.jsx";
 import EntradaVeiculo from "../Modais/EntradaDeVeiculo/EntradaVeiculo.jsx";
+import ReagendamentoServico from "../Modais/ReagendamentoData/ReagendamentoServico.jsx";
 
 // ICONES USADOS
 import iconCheck from "../../assets/icons/check icon.png"
@@ -33,6 +34,7 @@ function Botoes({ pagina, placa }) {
     const [modalNota, setModalNota] = useState(false);
     const [modalRevisar, setModalRevisar] = useState(false);
     const [modalEntrada, setModalEntrada] = useState(false);
+    const [modalReagendamento, setModalReagendamento] = useState(false);
 
     // Função centralizada de navegação
     const navegarPara = (rotaBase) => {
@@ -104,7 +106,7 @@ function Botoes({ pagina, placa }) {
             {pagina === "produzir" && (
                 <div className="button container4">
                     <div className="icon" style={{ backgroundImage: `url(${CalendarIcon})` }}></div>
-                    <button className="botao">Alternar data de entrega</button>
+                    <button className="botao" onClick={() => setModalReagendamento(true)}>Alternar data de entrega</button>
                 </div>
             )}
 
@@ -134,6 +136,14 @@ function Botoes({ pagina, placa }) {
                 descricao="O pagamento deste serviço já foi concluído?"
                 textoBotaoConfirmar="Sim, foi pago"
                 textoBotaoCancelar="Não, ainda não"
+            />
+
+            <ReagendamentoServico
+                aberto={modalReagendamento}
+                aoConfirmar={(novaData) => {
+                    setModalReagendamento(false);
+                }}
+                aoCancelar={() => setModalReagendamento(false)}
             />
 
             <ModalConfirmacao

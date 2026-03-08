@@ -1,11 +1,11 @@
 import "./servicos.css";
+import { useState, useEffect } from "react";
 
 import iconBook from "../../../assets/icons/bookService icon.png";
-import iconBox from "../../../assets/icons/boxItens icon.png";
 import iconLixo from "../../../assets/icons/lixoService Icon.png";
 import iconEdit from "../../../assets/icons/EditIcon.png";
 
-function Servicos({ dados, onVisualizar }) {
+function Servicos({ dados, pagina, onVisualizar }) {
     return (
         <table className="tabela">
             <thead className="titles">
@@ -28,13 +28,17 @@ function Servicos({ dados, onVisualizar }) {
                         {/* aq chama no modo de visualizar */}
                         <td className="dado">
                             <div className="box-options">
-                                <div className="icon" style={{ backgroundImage: `url(${iconEdit})` }}></div>
+                                {pagina === "orcamento" ?
+                                    <>
+                                        <div className="icon" style={{ backgroundImage: `url(${iconEdit})` }}></div>
 
-                                <div className="icon" style={{ backgroundImage: `url(${iconLixo})` }}></div>
+                                        <div className="icon" style={{ backgroundImage: `url(${iconLixo})` }}></div>
 
-                                <div className="icon" style={{ backgroundImage: `url(${iconBook})` }} onClick={() => onVisualizar(servico)}></div>
-
-                                {/* <div className="icon" style={{ backgroundImage: `url(${iconBox})` }}></div> */}
+                                        <div className="icon" style={{ backgroundImage: `url(${iconBook})` }} onClick={() => onVisualizar(servico)}></div>
+                                    </>
+                                    :
+                                    <div className="icon" style={{ backgroundImage: `url(${iconBook})` }} onClick={() => onVisualizar(servico)}></div>
+                                }
                             </div>
                         </td>
 
