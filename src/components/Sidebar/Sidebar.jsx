@@ -37,9 +37,9 @@ function Sidebar({ ativo }) {
           <i className='bx bxs-group' style={{ fontSize: "25px" }}></i> Clientes
         </li>
 
-        <li className={ativo === "servicos" ? "ativo" : ""}>
+        {/* <li className={ativo === "servicos" ? "ativo" : ""}>
           <i className='bx bxs-spanner' style={{ fontSize: "25px" }}></i> Serviços
-        </li>
+        </li> */}
 
         <li className={ativo === "estoque" ? "ativo" : ""} onClick={() => navigate("/estoque")}>
           <i className='bx bxs-package' style={{ fontSize: "25px" }}></i> Estoque
@@ -49,9 +49,9 @@ function Sidebar({ ativo }) {
           <i className='bx bxs-briefcase-alt-2' style={{ fontSize: "25px" }}></i> Funcionários
         </li>
 
-        <li className={ativo === "veiculos" ? "ativo" : ""}>
+        {/* <li className={ativo === "veiculos" ? "ativo" : ""}>
           <i className='bx bxs-bus' style={{ fontSize: "25px" }}></i> Veículos
-        </li>
+        </li> */}
       </ul>
 
       {/* CARD DO USUARIO */}
