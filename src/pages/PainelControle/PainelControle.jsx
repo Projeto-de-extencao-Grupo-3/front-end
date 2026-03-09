@@ -12,6 +12,8 @@ function PainelControle() {
     const [servicos, setServicos] = useState(null);
     const [mostrarModalEntrada, setMostrarModalEntrada] = useState(false);
     const [mostrarModalAgendar, setMostrarModalAgendar] = useState(false);
+    const navigate = useNavigate();
+
 
     const chavesStatus = {
         entrada: "AGUARDANDO_ENTRADA",
@@ -168,6 +170,7 @@ function PainelControle() {
                                     {kpiAtiva === "entrada" && (
                                         <button
                                             className={`btn w-100 fs-5 btn-status-${corCard}`}
+                                            onClick={navigate(`/painelControle/entrada`)}
                                         >
                                             Fazer Entrada
                                         </button>
@@ -177,6 +180,7 @@ function PainelControle() {
                                     {kpiAtiva === "orcamento" && (
                                         <button
                                             className={`btn w-100 fs-5 btn-status-${corCard}`}
+                                            onClick={navigate(`/painelControle/orcamento`)}
                                         >
                                             Fazer Orçamento
                                         </button>
@@ -186,6 +190,7 @@ function PainelControle() {
                                     {kpiAtiva === "autorizacao" && (
                                         <button
                                             className={`btn w-100 fs-5 btn-status-${corCard}`}
+                                            onClick={navigate(`/painelControle/autorizacao`)}
                                         >
                                             Autorizar
                                         </button>
@@ -195,6 +200,7 @@ function PainelControle() {
                                     {kpiAtiva === "vaga" && (
                                         <button
                                             className={`btn w-100 fs-5 btn-status-${corCard}`}
+                                            onClick={navigate(`/painelControle/aguardandoVaga`)}
                                         >
                                             Enviar para Produção
                                         </button>
@@ -204,6 +210,7 @@ function PainelControle() {
                                     {kpiAtiva === "producao" && (
                                         <button
                                             className={`btn w-100 fs-5 btn-status-${corCard}`}
+                                            onClick={navigate(`/painelControle/producao`)}
                                         >
                                             Verificar Andamento
                                         </button>
@@ -213,6 +220,7 @@ function PainelControle() {
                                     {kpiAtiva === "finalizados" && (
                                         <button
                                             className={`btn w-100 fs-5 btn-status-${corCard}`}
+                                            onClick={navigate(`/painelControle/finalizado`)}
                                         >
                                             Analisar Ordem de Serviço
                                         </button>
