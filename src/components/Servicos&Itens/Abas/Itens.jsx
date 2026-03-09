@@ -1,5 +1,5 @@
 import "./servicos.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import RegistroSaidaMaterial from "../../Modais/RegistrarSaida/RegistroSaidaMaterial.jsx"
 
@@ -77,7 +77,7 @@ function Itens({ dados, pagina }) {
 
                                 <RegistroSaidaMaterial
                                     aberto={modalSaida}
-                                    aoConfirmar={(dados) => {
+                                    aoConfirmar={(_dados) => {
                                         setModalSaida(false);
                                     }}
                                     aoCancelar={() => setModalSaida(false)}

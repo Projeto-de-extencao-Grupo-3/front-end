@@ -5,7 +5,7 @@ import "./ConfirmacaoAutorizacao.css";
 import TempoEstimado from "../TempoEstimado";
 
 // 1. Adicione a prop 'placa' aqui
-function ConfirmacaoAutorizacao({ onClose, onConfirm, placa }) {
+function ConfirmacaoAutorizacao({ onClose, _onConfirm, placa }) {
     const navigate = useNavigate();
     
     return (

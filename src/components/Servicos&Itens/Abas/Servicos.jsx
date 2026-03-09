@@ -1,6 +1,4 @@
 import "./servicos.css";
-import { useState, useEffect } from "react";
-
 import iconBook from "../../../assets/icons/bookService icon.png";
 import iconLixo from "../../../assets/icons/lixoService Icon.png";
 import iconEdit from "../../../assets/icons/EditIcon.png";

@@ -10,7 +10,7 @@ function ModalConfirmacao({
     descricao,
     textoBotaoConfirmar = "Confirmar",
     textoBotaoCancelar = "Cancelar",
-    tipoBotaoConfirmar = "primario", // "primario" | "perigo"
+    _tipoBotaoConfirmar = "primario", // "primario" | "perigo"
 }) {
     if (!aberto) return null;
 

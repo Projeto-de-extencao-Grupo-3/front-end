@@ -1,8 +1,8 @@
 import { useState } from "react";
 import "./ZoomButtons.css";
 
-function ZoomButtons({ min = 1, max = 1.3, step = 0.1 }) {
-  const [zoom, setZoom] = useState(1);
+function ZoomButtons() {
+  const [_zoom, setZoom] = useState(1);
   const [aberto, setAberto] = useState(false);
 
   function zoomIn() {

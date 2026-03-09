@@ -4,7 +4,6 @@ import InformacoesCard from "../../../components/ServicoCard/InformacoesCard";
 import ItemContador from "../../../components/ServicoCard/ItemContador";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import "./EntradaVeiculo.css";
-import { use } from "react";
 
 function EntradaVeiculo() {
     const itensDaLista = [

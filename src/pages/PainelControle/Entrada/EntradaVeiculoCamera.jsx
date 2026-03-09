@@ -23,8 +23,7 @@ function EntradaVeiculoCamera() {
 
     const [placa, setPlaca] = useState(placaDaUrl || '');
 
-    const [loading, setLoading] = useState(false);
-    const [erro, setErro] = useState('');
+    const [_loading, setLoading] = useState(false);
 
 
     useEffect(() => {

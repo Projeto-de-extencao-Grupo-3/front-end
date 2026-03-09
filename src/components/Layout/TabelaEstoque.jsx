@@ -3,7 +3,7 @@ import "./TabelaEstoque.css";
 
 function TabelaEstoque() {
     // Exemplo de dados baseados na sua imagem
-    const [itens, setItens] = useState([
+    const [itens, _setItens] = useState([
         { id: '00001', nome: 'Balde Vermelho', quantidade: '20 unid', fornecedor: 'Tubarão de tintas', status: 'Crítico' },
         { id: '00002', nome: 'Massinha', quantidade: '8 unid', fornecedor: 'Tubarão de tintas', status: 'Baixo' },
         { id: '00003', nome: 'Lixa', quantidade: '10 unid', fornecedor: 'Tubarão de tintas', status: 'OK' },
