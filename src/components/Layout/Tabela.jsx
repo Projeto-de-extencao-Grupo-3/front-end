@@ -3,7 +3,7 @@ import "./Tabela.css";
 
 function Tabela() {
     // Exemplo de dados baseados na sua imagem
-    const [clientes, setClientes] = useState([
+    const [clientes, _setClientes] = useState([
         { id: '00001', nome: 'João Silva Santos', documento: '123.456.789-00', telefone: '(48) 99999-1111', endereco: 'Rua Felipe Schmidt,', status: 'Ativo' },
         { id: '00002', nome: 'Maria Oliveira', documento: '987.654.321-00', telefone: '(48) 99999-2222', endereco: 'Av. Beira Mar Norte,', status: 'Ativo' },
         { id: '00003', nome: 'Empresa XPTO LTDA', documento: '12.345.678/0001-99', telefone: '(48) 3333-4444', endereco: 'Rua Bocaiúva,', status: 'Inativo' },

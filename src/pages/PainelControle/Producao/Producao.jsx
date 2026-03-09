@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Layout from "../../../components/Layout/Layout";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import "./Producao.css";
@@ -10,7 +10,6 @@ import Botoes from "../../../components/Botoes/botoes";
 import "../../componentesInferiores.css";
 
 function Producao() {
-    const navigate = useNavigate();
     const { placa } = useParams()
     const paginaAtual = "produzir";
 

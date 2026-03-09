@@ -5,7 +5,6 @@ import Botoes from "../../../components/Botoes/botoes";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
 import "./EtapaOrcamento.css";
-import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 

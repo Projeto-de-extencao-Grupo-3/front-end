@@ -7,7 +7,7 @@ import ModalAdicionarServico from "../ModalAdicionarServico/ModalAdicionarServic
 import ModalAdicionarItem from "../ModalAdicionarItem/ModalAdicionarItem";
 
 function ServicosEItens({ pagina }) {
-    const [dados, setDados] = useState([]);
+    const [_dados, setDados] = useState([]);
     const [abaAtiva, setAbaAtiva] = useState("servicos");
     
     const [mostrarModalServico, setMostrarModalServico] = useState(false);

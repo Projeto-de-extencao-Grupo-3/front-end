@@ -140,7 +140,7 @@ function Botoes({ pagina, placa }) {
 
             <ReagendamentoServico
                 aberto={modalReagendamento}
-                aoConfirmar={(novaData) => {
+                aoConfirmar={(_novaData) => {
                     setModalReagendamento(false);
                 }}
                 aoCancelar={() => setModalReagendamento(false)}

@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import "./ModalConfirmar.css";
 
 function ModalConfirmar({ isOpen, onClose, itemData }) {
