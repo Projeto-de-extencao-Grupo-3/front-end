@@ -86,7 +86,7 @@ function ServicosEItens({ pagina }) {
 
     return (
         <div className="resumo-container">
-            {pagina === "finalizar" || pagina === "produzir" ?
+            {pagina === "finalizar" ?
                 <div className="progresso-servico">
                     <div className="progresso-titulo">
                         <strong>Progresso do Serviço:</strong> Concluído!
@@ -99,8 +99,8 @@ function ServicosEItens({ pagina }) {
                     </div>
 
                     <div className="datas">
-                        <span>18/01/2000</span>
-                        <span>31/02/2012</span>
+                        <span>01/03/2026</span>
+                        <span>10/03/2026</span>
                     </div>
                 </div>
                 : null

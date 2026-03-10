@@ -37,11 +37,11 @@ function ResumoDoOrcamento( { pagina }) {
                 </div>
 
                 <div className="box-valores">
-                    <span className="valoresTexto">R$3.000,00</span>
-                    <span className="valoresTexto">R$150,00</span>
+                    <span className="valoresTexto">R$600,00</span>
+                    <span className="valoresTexto">R$60,00</span>
 
                     {pagina === "produzir" || pagina === "finalizar" || pagina === "analisar" ?
-                        <span className="valoresTexto">0/1 Itens</span>
+                        <span className="valoresTexto">0/18 Itens</span>
                         : null
                     }
 
@@ -59,7 +59,7 @@ function ResumoDoOrcamento( { pagina }) {
 
             <div className="box-total">
                 <span className="titleTotal">Total Geral:</span>
-                <span className="valorTotal">R$3.150,00</span>
+                <span className="valorTotal">R$660,00</span>
             </div>
         </div>
     );
