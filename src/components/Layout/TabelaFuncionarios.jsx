@@ -1,7 +1,7 @@
 import "./Tabela.css";
 
-function TabelaFuncionarios({ funcionarios, excluirFuncionario }) {
-    
+function TabelaFuncionarios({ funcionarios, excluirFuncionario, editarFuncionario }) {
+
     if (!funcionarios || funcionarios.length === 0) {
         return (
             <div className="text-center mt-5">
@@ -9,7 +9,7 @@ function TabelaFuncionarios({ funcionarios, excluirFuncionario }) {
             </div>
         );
     }
-    console.log("Dados Funcionários: ", funcionarios) 
+    console.log("Dados Funcionários: ", funcionarios)
     return (
         <div className="table-responsive mt-4">
             <table className="table table-custom">
@@ -24,7 +24,9 @@ function TabelaFuncionarios({ funcionarios, excluirFuncionario }) {
                     </tr>
                 </thead>
                 <tbody>
-                    {funcionarios.map((funcionario) => (
+                    {funcionarios.map((funcionario) =>
+                    (
+
                         <tr key={funcionario.id_funcionario}>
                             <td className="px-4">
                                 <span className="badge-codigo">
@@ -37,15 +39,20 @@ function TabelaFuncionarios({ funcionarios, excluirFuncionario }) {
                             <td>{funcionario.telefone}</td>
                             <td className="text-center">
                                 <div className="d-flex justify-content-center gap-3">
-                                    <button className="btn-acao" title="Editar">
+                                    <button
+                                        className="btn-acao"
+                                        title="Editar"
+                                        onClick={() => {
+                                            editarFuncionario(funcionario); 
+                                        }}                                    >
                                         <i className='bx bx-edit-alt'></i>
                                     </button>
-                                    <button 
-                                        className="btn-acao btn-excluir" 
+                                    <button
+                                        className="btn-acao btn-excluir"
                                         title="Excluir"
                                         onClick={() => {
-                                            if(window.confirm("Tem certeza que deseja excluir este cliente?")) {
-                                                excluirFuncionario(funcionario.id_funcionario);
+                                            if (window.confirm("Tem certeza que deseja excluir este cliente?")) {
+                                                excluirFuncionario(funcionario.id_funcionario || funcionario.idFuncionario);
                                             }
                                         }}
                                     >

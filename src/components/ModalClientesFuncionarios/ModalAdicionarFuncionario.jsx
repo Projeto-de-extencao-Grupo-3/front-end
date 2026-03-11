@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import './ModalAdicionar.css';
 
-function ModalAdicionarFuncionario({ isOpen, onClose, onSave }) {
+function ModalAdicionarFuncionario({ isOpen, onClose, onSave, funcionarioParaEditar }) {
     const [_etapa, setEtapa] = useState("pesquisa");
 
     const estadoInicial = {
@@ -14,6 +14,14 @@ function ModalAdicionarFuncionario({ isOpen, onClose, onSave }) {
     };
 
     const [formData, setFormData] = useState(estadoInicial);
+
+    useEffect(() => {
+        if (funcionarioParaEditar) {
+            setFormData(funcionarioParaEditar);
+        } else {
+            setFormData(estadoInicial);
+        }
+    }, [funcionarioParaEditar, isOpen]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -31,7 +39,8 @@ function ModalAdicionarFuncionario({ isOpen, onClose, onSave }) {
 
     const handleFinalizar = async () => {
         try {
-            await onSave(formData);
+            const id = formData.idFuncionario || formData.id_funcionario;
+            await onSave(formData, id);
             handleCancelar();
         } catch (error) {
             console.error("Erro ao salvar:", error);
@@ -56,24 +65,24 @@ function ModalAdicionarFuncionario({ isOpen, onClose, onSave }) {
                         <div className="modal-body">
                             <label className="form-label fw-semibold">Nome</label>
                             <input type="text" name="nome" value={formData.nome} onChange={handleChange} className="form-control mb-3" placeholder="Nome Completo" />
-                            
+
                             <label className="form-label fw-semibold">Cargo</label>
                             <input type="text" name="cargo" value={formData.cargo} onChange={handleChange} className="form-control mb-3" placeholder="Ex: Mecânico" />
-                            
+
                             <label className="form-label fw-semibold">Especialidade</label>
                             <input type="text" name="especialidade" value={formData.especialidade} onChange={handleChange} className="form-control mb-3" placeholder="Ex: Suspensão" />
-                            
+
                             <label className="form-label fw-semibold">Email</label>
                             <input type="email" name="email" value={formData.email} onChange={handleChange} className="form-control mb-3" placeholder="email@oficina.com" />
-                            
+
                             <label className="form-label fw-semibold">Telefone</label>
                             <input type="text" name="telefone" value={formData.telefone} onChange={handleChange} className="form-control mb-3" placeholder="(00) 00000-0000" />
-                            
+
                             <label className="form-label fw-semibold">Senha</label>
                             <input type="password" name="senha" value={formData.senha} onChange={handleChange} className="form-control mb-3" placeholder="Digite a senha" />
-                            
+
                             <button className="btn btn-primary w-100 mb-3" onClick={handleFinalizar}>
-                                Salvar Funcionário
+                                {funcionarioParaEditar ? "Salvar Alterações" : "Adicionar Novo Funcionário"}
                             </button>
                         </div>
                     </div>

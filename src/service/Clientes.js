@@ -25,13 +25,24 @@ function Clientes() {
             return response.data;
         } catch (error) {
             console.error("Erro na requisição POST:", error);
-            throw error; 
+            throw error;
         }
     };
 
     const excluirCliente = async (id) => {
-        await api.delete(`/clientes/${id}`);
-        setClientes(clientes.filter(c => c.id !== id));
+        try {
+            await api.delete(`/clientes/${id}`);
+
+            setClientes(prev => prev.filter(cliente => {
+                const atualId = cliente.idCliente || f.id_cliente || f.id;
+                return Number(atualId) !== Number(id);
+            }));
+
+            console.log("Cliente removido da tela com sucesso");
+        } catch (error) {
+            console.error("Erro ao excluir cliente:", error);
+            alert("Erro ao excluir no servidor.");
+        }
     };
 
     const atualizarCliente = async (id, dadosAtualizados) => {

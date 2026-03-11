@@ -50,7 +50,7 @@ function Tabela({ clientes, excluirCliente }) {
                                         title="Excluir"
                                         onClick={() => {
                                             if(window.confirm("Tem certeza que deseja excluir este cliente?")) {
-                                                excluirCliente(cliente.id);
+                                                excluirCliente(cliente.idCliente || cliente.id_cliente);
                                             }
                                         }}
                                     >

@@ -26,7 +26,7 @@ function Funcionarios() {
                 email: dadosDoFormulario.email,
                 senha: dadosDoFormulario.senha,
                 fk_oficina: {
-                    id_oficina: 1 
+                    id_oficina: 1
                 }
             };
 
@@ -42,14 +42,40 @@ function Funcionarios() {
     const excluirFuncionario = async (id) => {
         try {
             await api.delete(`/funcionarios/${id}`);
-            setFuncionarios(prev => prev.filter(c => c.idFuncionario !== id));
+
+            setFuncionarios(prev => prev.filter(f => {
+                const atualId = f.idFuncionario || f.id_funcionario || f.id;
+                return Number(atualId) !== Number(id);
+            }));
+
+            console.log("Removido com sucesso!");
         } catch (error) {
             console.error("Erro ao excluir:", error);
         }
     };
     const atualizarFuncionario = async (id, dadosAtualizados) => {
-        const response = await api.put(`/funcionarios/${id}`, dadosAtualizados);
-        setFuncionarios(funcionarios.map(c => c.id === id ? response.data : c));
+        try {
+            const payload = {
+                nome: dadosAtualizados.nome,
+                cargo: dadosAtualizados.cargo,
+                especialidade: dadosAtualizados.especialidade,
+                telefone: dadosAtualizados.telefone,
+                email: dadosAtualizados.email,
+                senha: dadosAtualizados.senha,
+                fk_oficina: {
+                    id_oficina: 1
+                }
+            };
+
+            const response = await api.put(`/funcionarios/${id}`, payload);
+            setFuncionarios(prev => prev.map(f =>
+                (f.id_funcionario === id || f.idFuncionario === id) ? response.data : f
+            ));
+            return response.data
+        } catch (error) {
+            console.error("Erro ao atualizar:", error);
+            throw error
+        }
     };
 
     useEffect(() => {
