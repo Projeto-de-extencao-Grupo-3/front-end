@@ -6,7 +6,7 @@ import Clientes from "../../service/Clientes.js";
 import "./GestaoClientes.css";
 
 function GestaoClientes() {
-    const { clientes, loading, excluirCliente, adicionarCliente } = Clientes();
+    const { clientes, _loading, excluirCliente, adicionarCliente } = Clientes();
     const [mostrarModalAdicionar, setMostrarModalAdicionar] = useState(false);
 
     return (

@@ -7,7 +7,7 @@ import TabelaFuncionarios from "../../components/Layout/TabelaFuncionarios.jsx";
 import Funcionarios from "../../service/Funcionarios.js";
 
 function GestaoFuncionarios() {
-    const { funcionarios, loading, excluirFuncionario, adicionarFuncionario } = Funcionarios();
+    const { funcionarios, _loading, excluirFuncionario, adicionarFuncionario } = Funcionarios();
     const [mostrarModalAdicionar, setMostrarModalAdicionar] = useState(false);
     
     return (

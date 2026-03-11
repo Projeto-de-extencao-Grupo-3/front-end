@@ -2,7 +2,7 @@ import { useState } from "react";
 import './ModalAdicionar.css';
 
 function ModalAdicionarFuncionario({ isOpen, onClose, onSave }) {
-    const [etapa, setEtapa] = useState("pesquisa");
+    const [_etapa, setEtapa] = useState("pesquisa");
 
     const estadoInicial = {
         nome: "",
