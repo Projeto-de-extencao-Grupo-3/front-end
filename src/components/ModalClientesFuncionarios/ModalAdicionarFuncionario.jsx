@@ -1,27 +1,35 @@
 import { useState, useEffect } from "react";
 import './ModalAdicionar.css';
 
+const estadoInicial = {
+    nome: "",
+    cargo: "",
+    especialidade: "",
+    telefone: "",
+    email: "",
+    senha: "",
+};
+
 function ModalAdicionarFuncionario({ isOpen, onClose, onSave, funcionarioParaEditar }) {
     const [_etapa, setEtapa] = useState("pesquisa");
-
-    const estadoInicial = {
-        nome: "",
-        cargo: "",
-        especialidade: "",
-        telefone: "",
-        email: "",
-        senha: "",
-    };
 
     const [formData, setFormData] = useState(estadoInicial);
 
     useEffect(() => {
-        if (funcionarioParaEditar) {
-            setFormData(funcionarioParaEditar);
-        } else {
-            setFormData(estadoInicial);
+        let montado = true;
+
+        if (isOpen && montado) {
+            setTimeout(() => {
+                if (funcionarioParaEditar) {
+                    setFormData(funcionarioParaEditar);
+                } else {
+                    setFormData(estadoInicial);
+                }
+            }, 0);
         }
-    }, [funcionarioParaEditar, isOpen]);
+
+        return () => { montado = false; };
+    }, [isOpen, funcionarioParaEditar]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;

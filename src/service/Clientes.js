@@ -34,7 +34,7 @@ function Clientes() {
             await api.delete(`/clientes/${id}`);
 
             setClientes(prev => prev.filter(cliente => {
-                const atualId = cliente.idCliente || f.id_cliente || f.id;
+                const atualId = cliente.idCliente || cliente.id_cliente || cliente.id;
                 return Number(atualId) !== Number(id);
             }));
 
