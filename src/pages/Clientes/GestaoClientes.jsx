@@ -2,10 +2,11 @@ import { useState } from "react";
 import Layout from "../../components/Layout/Layout.jsx";
 import Tabela from "../../components/Layout/Tabela.jsx";
 import ModalAdicionar from "../../components/ModalClientesFuncionarios/ModalAdicionar.jsx";
+import Clientes from "../../service/Clientes.js";
 import "./GestaoClientes.css";
 
 function GestaoClientes() {
-    
+    const { clientes, loading, excluirCliente, adicionarCliente } = Clientes();
     const [mostrarModalAdicionar, setMostrarModalAdicionar] = useState(false);
 
     return (
@@ -25,10 +26,10 @@ function GestaoClientes() {
                     <button className="add_client btn btn-dark d-flex align-items-center" onClick={() => setMostrarModalAdicionar(true)}>
                         Adicionar novo Cliente +
                     </button>
-                    <ModalAdicionar isOpen={mostrarModalAdicionar} onClose={() => setMostrarModalAdicionar(false)} />
+                    <ModalAdicionar isOpen={mostrarModalAdicionar} onClose={() => setMostrarModalAdicionar(false)} onSave={adicionarCliente} />
                 </div>
             </div>
-            <Tabela></Tabela>
+            <Tabela clientes={clientes} excluirCliente={excluirCliente}></Tabela>
         </Layout>
     );
 }

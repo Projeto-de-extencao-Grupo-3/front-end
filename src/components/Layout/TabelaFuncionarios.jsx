@@ -1,15 +1,15 @@
 import "./Tabela.css";
 
-function Tabela({ clientes, excluirCliente }) {
+function TabelaFuncionarios({ funcionarios, excluirFuncionario }) {
     
-    if (!clientes || clientes.length === 0) {
+    if (!funcionarios || funcionarios.length === 0) {
         return (
             <div className="text-center mt-5">
                 <p className="text-muted">Nenhum cliente encontrado.</p>
             </div>
         );
     }
-
+    console.log("Dados Funcionários: ", funcionarios) 
     return (
         <div className="table-responsive mt-4">
             <table className="table table-custom">
@@ -17,29 +17,24 @@ function Tabela({ clientes, excluirCliente }) {
                     <tr>
                         <th className="px-4">Código</th>
                         <th>Nome</th>
-                        <th>CPF/CNPJ</th>
+                        <th>Cargo</th>
+                        <th>Especialidade</th>
                         <th>Telefone</th>
-                        <th>Email</th>
-                        <th>Tipo</th> {/* Coluna de Tipo */}
                         <th className="text-center">Opções</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {clientes.map((cliente) => (
-                        <tr key={cliente.id_cliente}>
+                    {funcionarios.map((funcionario) => (
+                        <tr key={funcionario.id_funcionario}>
                             <td className="px-4">
                                 <span className="badge-codigo">
-                                    {String(cliente.id_cliente).padStart(5, '0')}
+                                    {String(funcionario.id_funcionario).padStart(5, '0')}
                                 </span>
                             </td>
-                            <td className="fw-bold">{cliente.nome}</td>
-                            <td>{cliente.cpf_cnpj || cliente.documento}</td>
-                            <td>{cliente.telefone}</td>
-                            <td className="text-truncate" style={{ maxWidth: '150px' }}>
-                                {cliente.email || "N/A"}
-                            </td>
-                            <td>{cliente.tipo_cliente}</td> 
-                            
+                            <td className="fw-bold">{funcionario.nome}</td>
+                            <td>{funcionario.cargo}</td>
+                            <td>{funcionario.especialidade}</td>
+                            <td>{funcionario.telefone}</td>
                             <td className="text-center">
                                 <div className="d-flex justify-content-center gap-3">
                                     <button className="btn-acao" title="Editar">
@@ -50,7 +45,7 @@ function Tabela({ clientes, excluirCliente }) {
                                         title="Excluir"
                                         onClick={() => {
                                             if(window.confirm("Tem certeza que deseja excluir este cliente?")) {
-                                                excluirCliente(cliente.id);
+                                                excluirFuncionario(funcionario.id_funcionario);
                                             }
                                         }}
                                     >
@@ -66,4 +61,4 @@ function Tabela({ clientes, excluirCliente }) {
     );
 }
 
-export default Tabela;
+export default TabelaFuncionarios;

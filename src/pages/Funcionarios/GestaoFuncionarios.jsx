@@ -1,11 +1,13 @@
 import { useState } from "react";
 import Layout from "../../components/Layout/Layout.jsx";
 import Tabela from "../../components/Layout/Tabela.jsx";
-import ModalAdicionar from "../../components/ModalClientesFuncionarios/ModalAdicionar.jsx";
+import ModalAdicionarFuncionario from "../../components/ModalClientesFuncionarios/ModalAdicionarFuncionario.jsx";
 import "./GestaoFuncionarios.css";
+import TabelaFuncionarios from "../../components/Layout/TabelaFuncionarios.jsx";
+import Funcionarios from "../../service/Funcionarios.js";
 
 function GestaoFuncionarios() {
-
+    const { funcionarios, loading, excluirFuncionario, adicionarFuncionario } = Funcionarios();
     const [mostrarModalAdicionar, setMostrarModalAdicionar] = useState(false);
     
     return (
@@ -25,10 +27,10 @@ function GestaoFuncionarios() {
                     <button className="add_funcionario btn btn-dark d-flex align-items-center" onClick={() => setMostrarModalAdicionar(true)}>
                         Adicionar novo Funcionário +
                     </button>
-                    <ModalAdicionar isOpen={mostrarModalAdicionar} onClose={() => setMostrarModalAdicionar(false)} />
+                    <ModalAdicionarFuncionario isOpen={mostrarModalAdicionar} onClose={() => setMostrarModalAdicionar(false)} onSave={adicionarFuncionario} />
                 </div>
             </div>
-            <Tabela></Tabela>
+            <TabelaFuncionarios funcionarios={funcionarios} excluirFuncionario={excluirFuncionario} />
         </Layout >
     );
 }
