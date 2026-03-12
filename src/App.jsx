@@ -17,8 +17,11 @@ import Teste from './pages/Teste.jsx';
 import TesteModal from './components/ModalNovoItem/TesteModal.jsx';
 import TesteModalEditar from './components/ModalEditarItem/TesteModalEditar.jsx';
 import TesteModalQtd from './components/ModalQtdItem/TesteModalQtd.jsx';
-import MeusModais from './components/Modais/meusModais.jsx';  
 import EtapaOrcamento from './pages/PainelControle/Orcamento/EtapaOrcamento.jsx';
+import PagamentoPendente from './pages/AnaliseServico/PagamentoPendente.jsx';
+import Servicos from './components/Servicos&Itens/Abas/Servicos.jsx';
+
+
 
 function App() {
 
@@ -31,7 +34,7 @@ function App() {
         <Route path="/painelControle" element={<PainelControle />} />
         <Route path="/painelControle/entrada" element={<EntradaVeiculo />} />
         <Route path="/painelControle/entradaCamera" element={<EntradaVeiculoCamera />} />
-        <Route path="/painelControle/autorizacao" element={<AutorizacaoVeiculo />} />
+        <Route pakith="/painelControle/autorizacao" element={<AutorizacaoVeiculo />} />
         <Route path="/painelControle/aguardandoVaga" element={<AguardandoVaga />} />
         <Route path="/painelControle/producao" element={<Producao />} />
         <Route path="/painelControle/finalizado" element={<Finalizado />} />
@@ -43,7 +46,11 @@ function App() {
         <Route path="/TesteModal" element={<TesteModal />} />
         <Route path="/TesteModalEditar" element={<TesteModalEditar />} />
         <Route path="/TesteModalQtd" element={<TesteModalQtd />} />
-        <Route path="/MeusModais" element={<MeusModais />} />
+        <Route path="/PagamentoPendente" element={<PagamentoPendente />} />
+        <Route path="/Servicos&Itens/Servicos" element={<Servicos />} />
+
+
+
       </Routes>
 
     </BrowserRouter>
