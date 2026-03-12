@@ -2,31 +2,32 @@ import { useState, useEffect } from "react";
 import "./ModalDesativarItem.css";
 
 function ModalDesativarItem({ isOpen, onClose, itemData }) {
-    const [form, setForm] = useState({
-        item: "",
-        fornecedor: "",
-        precoVenda: "",
-        precoCompra: "",
-        isPrivado: true,
-    });
+    const [form, setForm] = useState(() => ({
+        item: itemData?.item || "",
+        fornecedor: itemData?.fornecedor || "",
+        precoVenda: itemData?.precoVenda || "",
+        precoCompra: itemData?.precoCompra || "",
+        isPrivado: itemData?.isPrivado ?? true,
+    }));
 
     useEffect(() => {
-        if (itemData) {
-            setForm({
-                item: itemData.item || "",
-                fornecedor: itemData.fornecedor || "",
-                precoVenda: itemData.precoVenda || "",
-                precoCompra: itemData.precoCompra || "",
-                isPrivado: itemData.isPrivado !== undefined ? itemData.isPrivado : true,
-            });
-        }
-    }, [itemData, isOpen]);
+        if (!itemData) return;
+        
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setForm({
+            item: itemData.item ?? "",
+            fornecedor: itemData.fornecedor ?? "",
+            precoVenda: itemData.precoVenda ?? "",
+            precoCompra: itemData.precoCompra ?? "",
+            isPrivado: itemData.isPrivado ?? true,
+        });
+    }, [itemData]);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setForm({ 
-            ...form, 
-            [name]: type === 'checkbox' ? checked : value 
+        setForm({
+            ...form,
+            [name]: type === 'checkbox' ? checked : value
         });
     };
 
@@ -44,7 +45,7 @@ function ModalDesativarItem({ isOpen, onClose, itemData }) {
             <div className={`modal fade ${isOpen ? "show d-block" : ""}`} style={{ zIndex: 1050 }}>
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content modal-desativar-container">
-                        
+
                         <div className="modal-header border-0 pb-0">
                             <h2 className="modal-title fw-bold titulo-modal-desativar">
                                 Desativar Item de Estoque
@@ -69,29 +70,29 @@ function ModalDesativarItem({ isOpen, onClose, itemData }) {
                                 <div className="row g-2">
                                     <div className="col-6 text-center">
                                         <label className="label-form">Item</label>
-                                        <input 
-                                            type="text" 
+                                        <input
+                                            type="text"
                                             name="item"
-                                            className="form-control input-cinza-claro" 
+                                            className="form-control input-cinza-claro"
                                             value={form.item}
                                             onChange={handleChange}
                                         />
                                     </div>
                                     <div className="col-6 text-center">
                                         <label className="label-form">Fornecedor</label>
-                                        <input 
-                                            type="text" 
+                                        <input
+                                            type="text"
                                             name="fornecedor"
-                                            className="form-control input-cinza-claro" 
+                                            className="form-control input-cinza-claro"
                                             value={form.fornecedor}
                                             onChange={handleChange}
                                         />
                                     </div>
-                                    
+
                                     <div className="col-4 d-flex flex-column align-items-center justify-content-end">
                                         <label className="label-form">Visibilidade</label>
                                         <label className="d-flex align-items-center gap-2 pb-2 cursor-pointer">
-                                            <input 
+                                            <input
                                                 type="checkbox"
                                                 name="isPrivado"
                                                 className="checkbox-custom"
@@ -104,10 +105,10 @@ function ModalDesativarItem({ isOpen, onClose, itemData }) {
 
                                     <div className="col-4 text-center">
                                         <label className="label-form">Preço de Venda (Un.)</label>
-                                        <input 
-                                            type="text" 
+                                        <input
+                                            type="text"
                                             name="precoVenda"
-                                            className="form-control input-cinza-claro" 
+                                            className="form-control input-cinza-claro"
                                             value={form.precoVenda}
                                             onChange={handleChange}
                                         />
@@ -115,10 +116,10 @@ function ModalDesativarItem({ isOpen, onClose, itemData }) {
 
                                     <div className="col-4 text-center">
                                         <label className="label-form">Preço de Compra (Un.)</label>
-                                        <input 
-                                            type="text" 
+                                        <input
+                                            type="text"
                                             name="precoCompra"
-                                            className="form-control input-cinza-claro" 
+                                            className="form-control input-cinza-claro"
                                             value={form.precoCompra}
                                             onChange={handleChange}
                                         />

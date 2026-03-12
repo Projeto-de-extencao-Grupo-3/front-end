@@ -1,6 +1,5 @@
 import { useState } from "react";
 import "./ModalQtdItem.css";
-import iconCheck from "../../assets/icons/check icon.png"
 
 function ModalQtdItem({ isOpen, onClose }) {
 

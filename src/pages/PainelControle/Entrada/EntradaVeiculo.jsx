@@ -4,7 +4,6 @@ import InformacoesCard from "../../../components/ServicoCard/InformacoesCard";
 import ItemContador from "../../../components/ServicoCard/ItemContador";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import "./EntradaVeiculo.css";
-import { use } from "react";
 
 function EntradaVeiculo() {
     const itensDaLista = [
@@ -129,7 +128,7 @@ function EntradaVeiculo() {
             </div>
             <div className="section-buttom">
                 <button className="btn-secundario"  onClick={() => navigate("/painelControle")}>Voltar para o painel</button>
-                <button className="btn-primario"  onClick={() => navigate("/")}>Finalizar entrada</button>
+                <button className="btn-primario"  onClick={() => navigate("/painelControle/orcamento")}>Finalizar entrada</button>
             </div>
 
         </Layout>

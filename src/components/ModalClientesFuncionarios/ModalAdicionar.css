@@ -53,3 +53,13 @@
 .info-veiculo-card .linha-inferior {
     font-size: 15px;
 }
+
+.form-check{
+    display: flex;
+    gap: 10px;
+}
+.container-form-check{
+    display: flex;
+    gap: 20px;
+    margin-bottom: 10px;
+}

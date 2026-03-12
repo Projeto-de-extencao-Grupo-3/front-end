@@ -86,7 +86,7 @@ function VeiculoEEmpresa({ aberto, aoFechar }) {
                     </div>
                 </div>
 
-                <button className="botao-fechar" onClick={aberto}>
+                <button className="botao-fechar" onClick={aoFechar}>
                     Fechar
                 </button>
 

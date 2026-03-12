@@ -1,5 +1,4 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from 'react'
+import { useParams } from "react-router-dom";
 import Layout from "../../../components/Layout/Layout";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import "./Producao.css";
@@ -11,8 +10,7 @@ import Botoes from "../../../components/Botoes/botoes";
 import "../../componentesInferiores.css";
 
 function Producao() {
-    const navigate = useNavigate();
-    const [placa, setPlaca] = useState('');
+    const { placa } = useParams()
     const paginaAtual = "produzir";
 
 
@@ -40,7 +38,7 @@ function Producao() {
                 <ServicosEItens pagina={paginaAtual} />
                 <div className="componentesDireita">
                     <ResumoOrcamento pagina={paginaAtual} />
-                    <Botoes pagina={paginaAtual} />
+                    <Botoes pagina={paginaAtual} placa={placa} />
                 </div>
             </div>
 

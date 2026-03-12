@@ -27,7 +27,7 @@ function Login() {
         navigate("/painelControle")
       }
     } catch (error) {
-      setErro('Email ou senha inválidos');
+      setErro('Email ou senha inválidos', error);
     }
   }
 

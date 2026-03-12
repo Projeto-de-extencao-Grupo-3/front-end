@@ -4,14 +4,19 @@ import { buscarServicos, buscarItens } from "../../service/api";
 import Servicos from "./Abas/Servicos";
 import Itens from "./Abas/Itens";
 import ModalAdicionarServico from "../ModalAdicionarServico/ModalAdicionarServico";
+import ModalAdicionarItem from "../ModalAdicionarItem/ModalAdicionarItem";
 
 function ServicosEItens({ pagina }) {
-    console.log("Página atual no ServicosEItens:", pagina);
+    const [_dados, setDados] = useState([]);
     const [abaAtiva, setAbaAtiva] = useState("servicos");
+    
     const [mostrarModalServico, setMostrarModalServico] = useState(false);
+    const [modoServico, setModoServico] = useState("adicionar");
+    const [servicoVisualizar, setServicoVisualizar] = useState(null);
 
-
-    console.log("Página atual:", pagina);
+    const [mostrarModalItem, setMostrarModalItem] = useState(false);
+    const [modoItem, setModoItem] = useState("adicionar");
+    const [itemVisualizar, setItemVisualizar] = useState(null);
 
     const ticket = {
         id: 1,
@@ -36,7 +41,7 @@ function ServicosEItens({ pagina }) {
             {
                 id: 1,
                 codigo: "00024",
-                item: "Tinta Azul-Fiap",
+                item: "Tinta Azul",
                 visibilidade: "Privado",
                 quantidade: 8,
                 preco: 30.00,
@@ -59,20 +64,15 @@ function ServicosEItens({ pagina }) {
             try {
                 if (abaAtiva === "servicos") {
                     const res = await buscarServicos();
-
                     const lista = Array.isArray(res.data)
                         ? res.data
                         : res.data.content ?? res.data.servicos ?? [];
-
                     setDados(lista);
-
                 } else {
                     const res = await buscarItens();
-
                     const lista = Array.isArray(res.data)
                         ? res.data
                         : res.data.content ?? res.data.itens ?? [];
-
                     setDados(lista);
                 }
             } catch (error) {
@@ -83,10 +83,10 @@ function ServicosEItens({ pagina }) {
 
         carregarDados();
     }, [abaAtiva]);
+
     return (
         <div className="resumo-container">
-            {/* Progesso */}
-            {pagina === "finalizar" || pagina === "produzir" ?
+            {pagina === "finalizar" ?
                 <div className="progresso-servico">
                     <div className="progresso-titulo">
                         <strong>Progresso do Serviço:</strong> Concluído!
@@ -99,17 +99,13 @@ function ServicosEItens({ pagina }) {
                     </div>
 
                     <div className="datas">
-                        <span>18/01/2000</span>
-                        <span>31/02/2012</span>
-                        {/* <span>{dataInicio}</span>
-                        <span>{dataFim}</span> */}
+                        <span>01/03/2026</span>
+                        <span>10/03/2026</span>
                     </div>
                 </div>
                 : null
             }
 
-
-            {/* Parte superior do resumo */}
             <div className="bar-menu">
                 <div className={`bar-options ${pagina === "analisar" ? "full" : ""}`}>
                     <button
@@ -127,44 +123,73 @@ function ServicosEItens({ pagina }) {
                     </button>
                 </div>
 
-                {pagina != "analisar" ?
+                {pagina != "analisar" ? (
                     <div className="options-action">
-                        {
-                            pagina === "orcamento" ?
-                                <button className="add" onClick={() => setMostrarModalServico(true)}>
-                                    {abaAtiva === "servicos"
-                                        ? "Adicionar Serviço"
-                                        : "Adicionar Item"}
+                        {pagina === "orcamento" ? (
+                            abaAtiva === "servicos" ? (
+                                <button className="add" onClick={() => {
+                                    setModoServico("adicionar");
+                                    setServicoVisualizar(null);
+                                    setMostrarModalServico(true);
+                                }}>
+                                    Adicionar Serviço
                                 </button>
-                                :
-                                <button className="imprimir">
-                                    Imprimir
+                            ) : (
+                                <button className="add" onClick={() => {
+                                    setModoItem("adicionar");
+                                    setItemVisualizar(null);
+                                    setMostrarModalItem(true);
+                                }}>
+                                    Adicionar Item
                                 </button>
-                        }
+                            )
+                        ) : (
+                            <button className="imprimir">
+                                Imprimir
+                            </button>
+                        )}
                     </div>
-                    : null
-                    // Aqui em cima
-                }
+                ) : null}
             </div>
-
-            {/* Parte dos tickets */}
 
             <div className="conteudo">
                 {abaAtiva === "servicos" ? (
-                    <Servicos dados={ticket.servicos} />
+                    <Servicos 
+                        dados={ticket.servicos}
+                        pagina={pagina}
+                        onVisualizar={(dados) => {
+                            setServicoVisualizar(dados);
+                            setMostrarModalServico(true);
+                        }} 
+                    />
                 ) : (
-                    <Itens dados={ticket.itens} />
+                    <Itens 
+                        dados={ticket.itens} 
+                        pagina={pagina}
+                        onVisualizar={(dados) => {
+                            setItemVisualizar(dados);
+                            setMostrarModalItem(true);
+                        }} 
+                    />
                 )}
             </div>
 
-            {/* modal orcamento add servico */}
             <ModalAdicionarServico
                 isOpen={mostrarModalServico}
                 onClose={() => setMostrarModalServico(false)}
+                placa={ticket.placa}
+                modo={modoServico}
+                servico={servicoVisualizar}
+            />
+            
+            <ModalAdicionarItem
+                isOpen={mostrarModalItem}
+                onClose={() => setMostrarModalItem(false)}
+                placa={ticket.placa}
+                modo={modoItem}
+                item={itemVisualizar}
             />
         </div>
-
-
     );
 }
 

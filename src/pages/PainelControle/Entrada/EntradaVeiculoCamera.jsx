@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import api from "../../../service/api_python";
 import Layout from "../../../components/Layout/Layout";
 import InformacoesCard from "../../../components/ServicoCard/InformacoesCard";
@@ -19,16 +19,22 @@ function EntradaVeiculoCamera() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const [placa, setPlaca] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [erro, setErro] = useState('');
+    const { placa: placaDaUrl } = useParams();
+
+    const [placa, setPlaca] = useState(placaDaUrl || '');
+
+    const [_loading, setLoading] = useState(false);
 
 
     useEffect(() => {
         if (location.state?.arquivoCapturado) {
             send_to_python_api(location.state.arquivoCapturado);
         }
-    }, [location.state]);
+
+        else if (placaDaUrl && placaDaUrl !== 'novo') {
+            setPlaca(placaDaUrl);
+        }
+    }, [location.state, placaDaUrl]); 
 
     async function send_to_python_api(arquivo) {
         setLoading(true);
@@ -45,7 +51,11 @@ function EntradaVeiculoCamera() {
             //setPlaca(response.data.placa);
             console.log("Placa reconhecida:", data);
             setPlaca(data.plate);
+
+            navigate(`/painelControle/entrada/${data.plate}`, { replace: true });
+
             localStorage.setItem('TOKEN', response.data.token);
+            localStorage.setItem('PLACA', data.plate);
         } catch (error) {
             console.error("Erro ao processar imagem:", error);
             alert("Não foi possível ler a placa. Digite manualmente.");
@@ -71,8 +81,8 @@ function EntradaVeiculoCamera() {
                     { id: "finalizado", label: "Finalizado", icon: "bx bx-check-circle", status: "pendente" },
                 ]}
             />
-             <div> 
-                <OrdemServicoCard placa={placa}/>
+            <div>
+                <OrdemServicoCard placa={placa} />
             </div>
             <div className="section1">
                 <InformacoesCard titulo="Informações do Veículo" icone="bx bx-bus">
@@ -105,7 +115,7 @@ function EntradaVeiculoCamera() {
             </div>
             <div className="section-buttom">
                 <button className="btn-secundario" onClick={() => navigate("/painelControle")}>Voltar para o painel</button>
-                <button className="btn-primario" onClick={() => navigate("/")}>Finalizar entrada</button>
+                <button className="btn-primario" onClick={() => navigate(`/painelControle/orcamento/${placa}`)}>Finalizar entrada</button>
             </div>
 
         </Layout >

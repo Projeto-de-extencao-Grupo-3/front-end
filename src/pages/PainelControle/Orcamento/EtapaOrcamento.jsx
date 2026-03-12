@@ -5,13 +5,12 @@ import Botoes from "../../../components/Botoes/botoes";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
 import "./EtapaOrcamento.css";
-import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 
 function EtapaOrcamento() {
-    const [placa, setPlaca] = useState('aa');
 
-
+    const { placa } = useParams();
     return (
         <Layout ativo={"painel"}>
 
@@ -41,12 +40,12 @@ function EtapaOrcamento() {
             <div>
                 <OrdemServicoCard placa={placa} />
             </div>
-
+                
             <div className="painelteste">
                 <ServicosEItens pagina={"orcamento"} />
                 <div className="teste2">
                     <ResumoOrcamento />
-                    <Botoes pagina={"orcar"} />
+                    <Botoes pagina={"orcar"} placa={placa} />
                 </div>
             </div>
 

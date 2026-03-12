@@ -1,0 +1,190 @@
+.rsm-fundo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.rsm-caixa {
+    width: 600px;
+    background: #f4f4f4;
+    border-radius: 10px;
+    padding: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* TÍTULO */
+.rsm-titulo {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+    color: #1a1a1a;
+}
+
+/* ALERTA */
+.rsm-alerta {
+    background: #e53935;
+    color: #fff;
+    border-radius: 6px;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    line-height: 1.4;
+}
+
+.rsm-alerta-icone {
+    background: #fff;
+    color: #e53935;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 0.75rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+/* SEÇÕES */
+.rsm-secao {
+    border: 1px solid #cfcfcf;
+    border-radius: 8px;
+    padding: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    background: #fff;
+}
+
+.rsm-cabecalho-secao {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1a1a1a;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.rsm-secao-icone {
+    font-size: 1rem;
+}
+
+/* CAMPOS */
+.rsm-linha-dupla {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.rsm-campo {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 0.2rem;
+}
+
+.rsm-campo-fixo {
+    flex: 0 0 80px;
+}
+
+.rsm-campo label {
+    font-size: 0.78rem;
+    color: #555;
+}
+
+.rsm-valor {
+    background: #e0e0e0;
+    border-radius: 5px;
+    padding: 0.35rem 0.6rem;
+    font-size: 0.88rem;
+    color: #111;
+    min-height: 2rem;
+    display: flex;
+    align-items: center;
+}
+
+/* RADIO */
+.rsm-radio-grupo {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.88rem;
+    color: #333;
+}
+
+.rsm-radio {
+    width: 13px;
+    height: 13px;
+}
+
+/* LINHAS DE INFO */
+.rsm-info-linha {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.88rem;
+    color: #333;
+}
+
+.rsm-divisor {
+    border-top: 1px solid #e0e0e0;
+    margin: 0.1rem 0;
+}
+
+.rsm-resultado {
+    font-weight: 600;
+}
+
+.rsm-resultado-erro strong {
+    color: #e53935;
+}
+
+/* BOTÕES */
+.rsm-botoes {
+    display: flex;
+    gap: 0.7rem;
+}
+
+.rsm-btn {
+    flex: 1;
+    height: 2.5rem;
+    border-radius: 7px;
+    border: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: filter 0.2s;
+}
+
+.rsm-btn:hover:not(:disabled) {
+    filter: brightness(0.92);
+}
+
+.rsm-btn-confirmar {
+    background: #22c55e;
+    color: #fff;
+}
+
+.rsm-btn-desabilitado {
+    background: #a5d6b0;
+    color: #fff;
+    cursor: not-allowed;
+}
+
+.rsm-btn-cancelar {
+    background: #fff;
+    color: #1a1a1a;
+}

@@ -4,7 +4,7 @@ function OrdemServicoCard({ placa }) {
   return (
     <div className="dados-reconhecidos">
       <div className="bus-icon">
-        <i class='bx bxs-bus' style={{ fontSize: "38px" }}></i>
+        <i className='bx bxs-bus' style={{ fontSize: "38px" }}></i>
       </div>
 
       <div className="section">

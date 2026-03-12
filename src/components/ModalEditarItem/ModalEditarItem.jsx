@@ -1,6 +1,5 @@
 import { useState } from "react";
 import "./ModalEditarItem.css";
-import iconCheck from "../../assets/icons/check icon.png"
 
 function ModalEditarItem({ isOpen, onClose }) {
 

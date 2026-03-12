@@ -26,38 +26,38 @@ function Sidebar({ ativo }) {
       {/* Checa qual ta ativo para aplicar estilo, !!atenção aos nomes!! */}
       <ul className="menu list-unstyled flex-grow-1">
         <li className={ativo === "painel" ? "ativo" : ""} onClick={() => navigate("/painelControle")}>
-          <i class='bx bxs-layout' style={{ fontSize: "25px" }}></i>  Painel de Controle
+          <i className='bx bxs-layout' style={{ fontSize: "25px" }}></i>  Painel de Controle
         </li>
 
         <li className={ativo === "financeiro" ? "ativo" : ""} onClick={() => navigate("/analiseFinanceira")}>
-          <i class='bx  bx-chart-bar-columns' style={{ fontSize: "25px" }} ></i> Análise Financeira
+          <i className='bx  bx-chart-bar-columns' style={{ fontSize: "25px" }} ></i> Análise Financeira
         </li>
 
         <li className={ativo === "clientes" ? "ativo" : ""} onClick={() => navigate("/clientes")}>
-          <i class='bx bxs-group' style={{ fontSize: "25px" }}></i> Clientes
+          <i className='bx bxs-group' style={{ fontSize: "25px" }}></i> Clientes
         </li>
 
-        <li className={ativo === "servicos" ? "ativo" : ""}>
-          <i class='bx bxs-spanner' style={{ fontSize: "25px" }}></i> Serviços
-        </li>
+        {/* <li className={ativo === "servicos" ? "ativo" : ""}>
+          <i className='bx bxs-spanner' style={{ fontSize: "25px" }}></i> Serviços
+        </li> */}
 
         <li className={ativo === "estoque" ? "ativo" : ""} onClick={() => navigate("/estoque")}>
-          <i class='bx bxs-package' style={{ fontSize: "25px" }}></i> Estoque
+          <i className='bx bxs-package' style={{ fontSize: "25px" }}></i> Estoque
         </li>
 
         <li className={ativo === "funcionarios" ? "ativo" : ""} onClick={() => navigate("/funcionarios")}>
-          <i class='bx bxs-briefcase-alt-2' style={{ fontSize: "25px" }}></i> Funcionários
+          <i className='bx bxs-briefcase-alt-2' style={{ fontSize: "25px" }}></i> Funcionários
         </li>
 
-        <li className={ativo === "veiculos" ? "ativo" : ""}>
-          <i class='bx bxs-bus' style={{ fontSize: "25px" }}></i> Veículos
-        </li>
+        {/* <li className={ativo === "veiculos" ? "ativo" : ""}>
+          <i className='bx bxs-bus' style={{ fontSize: "25px" }}></i> Veículos
+        </li> */}
       </ul>
 
       {/* CARD DO USUARIO */}
       <div className="user-card p-2 rounded mb-3">
         <div className="d-flex align-items-center gap-2">
-          <div ><i class='bx bxs-user-circle' style={{ fontSize: "45px" }}></i></div>
+          <div ><i className='bx bxs-user-circle' style={{ fontSize: "45px" }}></i></div>
           <div>
             <strong className="fs-6">José da Silva</strong>
             <div className="fs-6 text-muted" style={{ fontSize: "13px" }}>
