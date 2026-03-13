@@ -1,16 +1,71 @@
 import { useState } from "react";
 import './ModalAgendarEntrada.css';
+import api, { buscarVeiculoPorPlaca } from "../../service/api";
+import { useNavigate } from "react-router-dom";
 
 function ModalAgendarEntrada({ isOpen, onClose }) {
     const [etapa, setEtapa] = useState("pesquisa");
+    const [placa, setPlaca] = useState("");
+    const [dataAgendamento, setDataAgendamento] = useState("");
+ 
+    const handlePlacaChange = (e) => {
+        setPlaca(e.target.value);
+    };
 
-    const handlePesquisar = () => {
-        setEtapa("detalhes"); //muda quando clica no botão pesquisar. aq vai ser as chamadas de api
+    const [cliente, setCliente] = useState({
+        cpf_cnpj: "",
+        email: "",
+        id_cliente: null, 
+        id_endereco: null,
+        id_oficina: null,
+        nome: "",
+        telefone: "",
+        tipo_cliente: "",
+        veiculo: {
+            ano_modelo: "",
+            id_veiculo: null,
+            marca: "",
+            modelo: "",
+            placa: "",
+            prefixo: ""
+
+        }
+    });
+
+    const handlePesquisar = async (placa) => {
+        var response = await api.get(`/clientes/placa/${placa}`)
+            .catch(error => {
+                alert("Veículo não encontrado. Verifique a placa e tente novamente.");
+                return;
+            });
+
+        console.log("Resposta da API:", response);
+
+        if (response.status === 200) {
+            setCliente(response.data);
+            setEtapa("detalhes");
+        }
     };
 
     const handleCancelar = () => {
         setEtapa("pesquisa"); //dps de fechar o modal volta pra etapa de pesquisa
         onClose();
+    };
+
+    const handleAgendar = (data) => async () => {
+        const response = await api.post("/entrada/agendamento", {
+            dt_entrada_prevista: data,
+            fk_veiculo: cliente.veiculo.id_veiculo
+        })
+        .catch(error => {
+            if (error.response?.status === 422) {
+                alert("Este veículo já está no Painel de Controle, não é possível agendar entrada.");
+            } else {
+                alert("Erro ao agendar entrada. Tente novamente. " + (error.response?.data?.message || error.message));
+            }
+        });
+
+        handleCancelar();
     };
 
     return (
@@ -43,11 +98,12 @@ function ModalAgendarEntrada({ isOpen, onClose }) {
                                         type="text"
                                         className="form-control input-placa mb-3"
                                         placeholder="Informe a placa (Ex: FUB-5296)"
+                                        onChange={handlePlacaChange}
                                     />
 
                                     <button
                                         className="btn btn-primary w-100 botao-pesquisar mb-3"
-                                        onClick={handlePesquisar}
+                                        onClick={() => handlePesquisar(placa)}
                                     >
                                         Pesquisar
                                     </button>
@@ -64,11 +120,11 @@ function ModalAgendarEntrada({ isOpen, onClose }) {
 
                                             <div className="flex-grow-1">
                                                 <div className="linha-superior">
-                                                    <strong>Empresa:</strong> Sussantur
+                                                    <strong>Cliente:</strong> {cliente.nome}
                                                 </div>
 
                                                 <div className="linha-inferior">
-                                                    Marcopolo G8 - 1200 &nbsp; Placa: ABC-1234
+                                                    {cliente.veiculo.modelo} - {cliente.veiculo.prefixo} &nbsp; <strong>Placa:</strong> {cliente.veiculo.placa}
                                                 </div>
                                             </div>
                                         </div>
@@ -79,10 +135,11 @@ function ModalAgendarEntrada({ isOpen, onClose }) {
                                     <input
                                         type="date"
                                         className="form-control mb-4"
+                                        onChange={(e) => setDataAgendamento(e.target.value)}
                                     />
 
                                     <div className="d-flex gap-3">
-                                        <button className="btn btn-success w-50">
+                                        <button className="btn btn-success w-50" onClick={handleAgendar(dataAgendamento)}>
                                             ✓ Agendar
                                         </button>
 

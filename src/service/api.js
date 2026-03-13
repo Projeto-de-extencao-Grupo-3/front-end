@@ -17,5 +17,6 @@ api.interceptors.request.use(config => {
 
 export const buscarServicos = () => api.get("/servicos");
 export const buscarItens = () => api.get("/itens");
+export const buscarVeiculoPorPlaca = (placa) => api.get(`/veiculos/placa/${placa}`);
 
 export default api;
