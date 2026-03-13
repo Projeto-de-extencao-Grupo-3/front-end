@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import './ModalAgendarEntrada.css';
 import api, { buscarVeiculoPorPlaca } from "../../service/api";
 import { useNavigate } from "react-router-dom";
 
-function ModalAgendarEntrada({ isOpen, onClose }) {
+function ModalAgendarEntrada({ isOpen, onClose, onAgendamentoSuccess }) {
     const [etapa, setEtapa] = useState("pesquisa");
     const [placa, setPlaca] = useState("");
     const [dataAgendamento, setDataAgendamento] = useState("");
@@ -65,7 +65,13 @@ function ModalAgendarEntrada({ isOpen, onClose }) {
             }
         });
 
-        handleCancelar();
+        if (response.status === 201) {
+            alert("Entrada agendada com sucesso!");
+            if (onAgendamentoSuccess) {
+                onAgendamentoSuccess();
+            }
+            onClose();
+        }
     };
 
     return (

@@ -34,19 +34,32 @@ function PainelControle() {
         finalizados: "Finalizados"
     };
 
-    useEffect(() => {
+    const fetchServicos = () => {
         api.get("/painel-controle")
             .then((res) => {
                 setServicos(res.data);
                 console.log("Dados do painel de controle:", res.data);
             })
             .catch((err) => console.error("Erro na API:", err));
+    };
+
+    useEffect(() => {
+        fetchServicos();
     }, []);
 
     function calcularDias(data1, data2) {
-        const d1 = data1 ? new Date(data1) : new Date();
-        const d2 = data2 ? new Date(data2) : new Date();
-        return Math.abs(Math.floor((d1 - d2) / (1000 * 60 * 60 * 24)));
+        // quero calcular a diferença de dias entre as duas datas
+        const hoje = new Date();
+        const dt1 = data1 ? new Date(data1) : hoje;
+        const dt2 = data2 ? new Date(data2) : hoje;
+
+        console.log(dt1)
+        console.log(dt2)
+
+        const diffTime = dt1 - dt2; // diferença em milissegundos
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // converte para dias
+
+        return diffDays;
     }
 
     const chaveBack = chavesStatus[kpiAtiva];
@@ -73,7 +86,11 @@ function PainelControle() {
                     </div>
                 </div>
 
-                <ModalAgendarEntrada isOpen={mostrarModalAgendar} onClose={() => setMostrarModalAgendar(false)} />
+                <ModalAgendarEntrada 
+                    isOpen={mostrarModalAgendar} 
+                    onClose={() => setMostrarModalAgendar(false)} 
+                    onAgendamentoSuccess={fetchServicos}
+                />
                 <ModalEntradaVeiculo isOpen={mostrarModalEntrada} onClose={() => setMostrarModalEntrada(false)} />
 
                 {/* KPIS - paremetros de cores*/}
@@ -116,7 +133,13 @@ function PainelControle() {
                             ? calcularDias(os.entrada?.data_entrada_prevista, null)
                             : calcularDias(null, os.entrada?.data_entrada_efetiva);
 
-                        if (kpiAtiva !== "producao" && kpiAtiva !== "finalizados") {
+                        const diasRestantes = () => {
+                            if (kpiAtiva === "producao") {
+                                return calcularDias(os.entrada?.data_entrada_efetiva, os.data_saida_prevista);
+                            }
+                        }
+
+                        if (kpiAtiva === "producao" && kpiAtiva !== "finalizados") {
                             if (diasAtraso > 10) {
                                 corCard = "vermelho";
                                 icone = <i className='bx bx-alert-triangle text-danger fs-3'></i>;
@@ -148,20 +171,47 @@ function PainelControle() {
                                 <hr className="my-2" />
 
                                 <div className="mb-3 small">
-                                    {checkEntrada ? (
-                                        <>
-                                            <div><b>Dias restantes para Entrada:</b> {diasAtraso} Dias</div>
-                                            <div><b>Data Agendada:</b> {os.entrada?.data_entrada_prevista}</div>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <div><b>Total do Serviço Orçado:</b> R${os.valor_total.toLocaleString('pt-BR')}</div>
-                                            {kpiAtiva === "finalizados"
-                                                ? <div><b>Duração do Serviço:</b> 6 Dias</div>
-                                                : <div><b>Dias em espera:</b> {diasAtraso} Dias</div>
-                                            }
-                                        </>
-                                    )}
+                                    {(() => {
+                                        const formattedValor = os.valor_total ? os.valor_total.toLocaleString('pt-BR') : 'N/A';
+                                        switch (kpiAtiva) {
+                                            case 'entrada':
+                                                return (
+                                                    <>
+                                                        <div><b>Dias restantes para Entrada:</b> {diasAtraso} Dias</div>
+                                                        <div><b>Data Agendada:</b> {new Date(os.entrada?.data_entrada_prevista).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</div>
+                                                    </>
+                                                );
+                                            case 'producao':
+                                                return (
+                                                    <>
+                                                        <div><b>Total do Serviço Orçado:</b> R${formattedValor}</div>
+                                                        <div><b>Dias em produção:</b> {diasAtraso} Dias</div>
+                                                    </>
+                                                );
+                                            case 'finalizados':
+                                                const data1 = os.data_saida_efetiva ? new Date(os.data_saida_efetiva) : null;
+                                                var data2 = os.entrada?.data_entrada_efetiva ? new Date(os.entrada.data_entrada_efetiva) : null;
+
+                                                if (data2 == null) {
+                                                    data2 = new Date(os.entrada?.data_entrada_prevista);
+                                                };
+
+                                                const duracaoServico = calcularDias(data2, data1);
+                                                return (
+                                                    <>
+                                                        <div><b>Total do Serviço Orçado:</b> R${formattedValor}</div>
+                                                        <div><b>Duração do Serviço:</b> {duracaoServico} Dias</div>
+                                                    </>
+                                                );
+                                            default: // 'orcamento', 'autorizacao', 'vaga'
+                                                return (
+                                                    <>
+                                                        <div><b>Total do Serviço Orçado:</b> R${formattedValor}</div>
+                                                        <div><b>Dias em espera:</b> {diasAtraso} Dias</div>
+                                                    </>
+                                                );
+                                        }
+                                    })()}
                                 </div>
 
 
