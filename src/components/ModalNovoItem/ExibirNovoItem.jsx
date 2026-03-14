@@ -37,7 +37,7 @@ function ExibirNovoItem({ isOpen, onClose, dadosDoProduto, onUpdate }) {
             const dadosParaEnviar = {
                 nome: form.nome,
                 fornecedor_nf: form.fornecedor_nf,
-                viavel_orcamento: String(form.viavel_orcamento) === "true",
+                visivel_orcamento: String(form.viavel_orcamento) === "true",
                 preco_venda: parseFloat(form.preco_venda) || 0,
                 preco_compra: parseFloat(form.preco_compra) || 0,
                 quantidade_estoque: parseInt(form.quantidade_estoque) || 0,

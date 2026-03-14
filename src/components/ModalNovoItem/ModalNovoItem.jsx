@@ -55,7 +55,7 @@ function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
                 preco_compra: parseFloat(form.precoCompra), // Garante que é número
                 preco_venda: parseFloat(form.precoVenda),   // Garante que é número
                 quantidade_estoque: parseInt(form.quantidadeMinima), // De 'quantidadeMinima' para 'quantidadeEstoque'
-                viavel_orcamento: form.visibilidade === "publico" // De String para Boolean
+                visivel_orcamento: form.visibilidade === "publico" // De String para Boolean
             };
 
             const id = form.idProduto || form.id_produto || form.id_peca || form.idPeca;
