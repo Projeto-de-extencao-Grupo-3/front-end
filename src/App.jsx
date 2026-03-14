@@ -17,6 +17,7 @@ import TesteModal from './components/ModalNovoItem/TesteModal.jsx';
 import TesteModalEditar from './components/ModalEditarItem/TesteModalEditar.jsx';
 
 import EtapaOrcamento from './pages/PainelControle/Orcamento/EtapaOrcamento.jsx';
+import HistoricoServicos from './pages/HistoricoServicos/HistoricoServicos.jsx';
 
 function App() {
 
@@ -45,9 +46,16 @@ function App() {
         
         {/* Roteamento de Clientes */}
         <Route path="/clientes" element={<GestaoClientes />} />
+
+        {/* Roteamento de Estoque */}
         <Route path="/estoque" element={<ControleEstoque />} />
+       
+        {/* Roteamento de Funcionários */}
         <Route path="/funcionarios" element={<GestaoFuncionarios />} />
         
+        {/* Roteamento do Histórico de Serviços */}
+        <Route path="/servicos" element={<HistoricoServicos/>} />
+
         {/* Roteamento de Análise Financeira */}
         <Route path="/analiseFinanceira" element={<AnaliseFinanceira />} />
         

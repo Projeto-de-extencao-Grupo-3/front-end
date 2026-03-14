@@ -3,11 +3,12 @@ import "./ModalNovoItem.css";
 
 const estadoInicial = {
     nome: "",
-    fornecedorNf: "",      
-    viavelOrcamento: true, 
+    fornecedorNf: "",
+    viavelOrcamento: true,
     precoVenda: "",
     precoCompra: "",
-    quantidadeEstoque: ""  
+    quantidadeEstoque: "",
+    tipoServico: ""
 }
 
 function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
@@ -51,11 +52,12 @@ function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
 
             const dadosParaEnviar = {
                 nome: form.nome,
-                fornecedor_nf: form.fornecedorNf, // De 'fornecedor' para 'fornecedorNf'
-                preco_compra: parseFloat(form.precoCompra), // Garante que é número
-                preco_venda: parseFloat(form.precoVenda),   // Garante que é número
-                quantidade_estoque: parseInt(form.quantidadeMinima), // De 'quantidadeMinima' para 'quantidadeEstoque'
-                visivel_orcamento: form.visibilidade === "publico" // De String para Boolean
+                fornecedor_nf: form.fornecedorNf,
+                preco_compra: parseFloat(form.precoCompra),
+                preco_venda: parseFloat(form.precoVenda),
+                quantidade_estoque: parseInt(form.quantidadeMinima),
+                visivel_orcamento: form.visibilidade === "publico",
+                tipo_servico: form.tipoServico
             };
 
             const id = form.idProduto || form.id_produto || form.id_peca || form.idPeca;
@@ -116,6 +118,19 @@ function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
                                 onChange={handleChange}
                                 placeholder="Ex: Tubarão Tintas"
                             />
+                            <label className="form-label fw-semibold">Tipo de Serviço</label>
+                            <select
+                                className="form-select mb-4"
+                                name="tipoServico"
+                                value={form.tipoServico}
+                                onChange={handleChange}
+                            >
+                                <option value="" disabled>Selecione um serviço...</option>
+                                <option value="FUNILARIA">FUNILARIA</option>
+                                <option value="PINTURA">PINTURA</option>
+                                <option value="MECANICA">MECANICA</option>
+                                <option value="OUTROS">OUTROS</option>
+                            </select>
 
                             {/* Visibilidade */}
                             <label className="form-label fw-semibold">
@@ -187,7 +202,7 @@ function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
 
                             {/* Quantidade mínima */}
                             <label className="form-label fw-semibold">
-                                Quantidade mínima para gerar alerta
+                                Quantidade no estoque
                             </label>
                             <div className="input-group mb-4">
                                 <span className="input-group-text">Un.</span>

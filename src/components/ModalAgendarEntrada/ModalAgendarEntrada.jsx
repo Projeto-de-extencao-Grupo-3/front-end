@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import './ModalAgendarEntrada.css';
-import api, { buscarVeiculoPorPlaca } from "../../service/api";
-import { useNavigate } from "react-router-dom";
+import api from "../../service/api";
 
 function ModalAgendarEntrada({ isOpen, onClose, onAgendamentoSuccess }) {
     const [etapa, setEtapa] = useState("pesquisa");
@@ -35,7 +34,7 @@ function ModalAgendarEntrada({ isOpen, onClose, onAgendamentoSuccess }) {
     const handlePesquisar = async (placa) => {
         var response = await api.get(`/clientes/placa/${placa}`)
             .catch(error => {
-                alert("Veículo não encontrado. Verifique a placa e tente novamente.");
+                alert("Veículo não encontrado. Verifique a placa e tente novamente.", error);
                 return;
             });
 
