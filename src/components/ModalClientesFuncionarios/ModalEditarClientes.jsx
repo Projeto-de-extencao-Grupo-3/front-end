@@ -10,7 +10,6 @@ function ModalEditarCliente({ isOpen, onClose, clienteParaEditar, onSave }) {
     useEffect(() => {
         if (clienteParaEditar) {
             setDadosEditados({ ...clienteParaEditar });
-
             const idEnd = clienteParaEditar.id_endereco || clienteParaEditar.fk_endereco;
             if (idEnd && typeof idEnd !== 'object') {
                 buscarEndereco(idEnd);
@@ -36,21 +35,43 @@ function ModalEditarCliente({ isOpen, onClose, clienteParaEditar, onSave }) {
         setDadosEditados(prev => ({ ...prev, [name]: value }));
     };
 
-    const handleSave = () => {
-        const payload = {
-            id_cliente: dadosEditados.id_cliente || dadosEditados.idCliente,
-            nome: dadosEditados.nome,
-            cpf_cnpj: dadosEditados.cpf_cnpj || dadosEditados.cpfCnpj,
-            telefone: String(dadosEditados.telefone).replace(/\D/g, ''),
-            email: dadosEditados.email,
-            tipo_cliente: dadosEditados.tipo_cliente || dadosEditados.tipoCliente,
-            fk_endereco: dadosEditados.id_endereco || dadosEditados.fkEndereco,
-            fk_oficina: 1
-        };
-
-        onSave(payload); 
+    const handleChangeEndereco = (e) => {
+        const { name, value } = e.target;
+        setDetalhesEndereco(prev => ({ ...prev, [name]: value }));
     };
 
+    const handleSave = async () => {
+        try {
+            const payloadEndereco = {
+                id_endereco: detalhesEndereco.id_endereco || detalhesEndereco.idEndereco,
+                cep: detalhesEndereco.cep,
+                logradouro: detalhesEndereco.logradouro,
+                complemento: detalhesEndereco.complemento,
+                numero: detalhesEndereco.numero,
+                bairro: detalhesEndereco.bairro,
+                cidade: detalhesEndereco.cidade,
+                estado: detalhesEndereco.estado
+            };
+            await api.put("/enderecos", payloadEndereco);
+
+            const payloadCliente = {
+                id_cliente: dadosEditados.id_cliente || dadosEditados.idCliente,
+                nome: dadosEditados.nome,
+                cpf_cnpj: dadosEditados.cpf_cnpj || dadosEditados.cpfCnpj,
+                telefone: String(dadosEditados.telefone).replace(/\D/g, ''),
+                email: dadosEditados.email,
+                tipo_cliente: dadosEditados.tipo_cliente || dadosEditados.tipoCliente,
+                fk_endereco: payloadEndereco.id_endereco,
+                fk_oficina: 1
+            };
+
+            await onSave(payloadCliente);
+            onClose();
+        } catch (error) {
+            console.error("Erro na atualização dupla:", error);
+            alert("Erro ao salvar alterações.");
+        }
+    };
     const endereco = detalhesEndereco || {};
 
     return (
@@ -103,23 +124,27 @@ function ModalEditarCliente({ isOpen, onClose, clienteParaEditar, onSave }) {
                         <div className="row g-3">
                             <div className="col-md-4">
                                 <label className="form-label">CEP</label>
-                                <input type="text" className="form-control" value={endereco?.cep || "N/A"} disabled />
+                                <input type="text" className="form-control" name="cep" value={endereco?.cep || "N/A"} disabled />
                             </div>
                             <div className="col-md-8">
                                 <label className="form-label">Logradouro</label>
-                                <input type="text" className="form-control" value={endereco?.logradouro || "Não carregado"}  />
+                                <input type="text" className="form-control" name="logradouro" value={endereco?.logradouro || "Não carregado"} onChange={handleChangeEndereco} />
                             </div>
                             <div className="col-md-4">
                                 <label className="form-label">Número</label>
-                                <input type="text" className="form-control" value={endereco?.numero || ""}  />
+                                <input type="text" className="form-control" name="numero" value={endereco?.numero || ""} onChange={handleChangeEndereco} />
                             </div>
                             <div className="col-md-8">
                                 <label className="form-label">Bairro</label>
-                                <input type="text" className="form-control" value={endereco?.bairro || ""}  />
+                                <input type="text" className="form-control" name="bairro" value={endereco?.bairro || ""} onChange={handleChangeEndereco} />
+                            </div>
+                            <div className="col-md-12">
+                                <label className="form-label">Complemento</label>
+                                <input type="text" className="form-control" name="complemento" value={endereco?.complemento || "Não carregado"} onChange={handleChangeEndereco} />
                             </div>
                             <div className="col-md-12">
                                 <label className="form-label">Cidade/Estado</label>
-                                <input type="text" className="form-control" value={`${endereco?.cidade || ""} - ${endereco?.estado || ""}`}  />
+                                <input type="text" className="form-control" name="cidade" value={`${endereco?.cidade || ""} - ${endereco?.estado || ""}`} onChange={handleChangeEndereco} />
                             </div>
                         </div>
                     )}

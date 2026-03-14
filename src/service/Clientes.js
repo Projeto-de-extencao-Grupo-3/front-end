@@ -21,12 +21,12 @@ function Clientes() {
             const payload = {
                 // Ajustado para bater com o RequestPostCliente.java
                 nome: dadosDoCliente.nome,
-                cpfCnpj: dadosDoCliente.cpfCnpj.replace(/\D/g, ''), // CamelCase
+                cpf_cnpj: dadosDoCliente.cpfCnpj.replace(/\D/g, ''), // CamelCase
                 telefone: dadosDoCliente.telefone.replace(/\D/g, ''),
                 email: dadosDoCliente.email,
-                tipoCliente: dadosDoCliente.tipo === "Pessoa Física" ? "PESSOA_FISICA" : "PESSOA_JURIDICA",
-                fkOficina: 1,
-                fkEndereco: Number(dadosDoEndereco.id_endereco)
+                tipo_cliente: dadosDoCliente.tipo === "Pessoa Física" ? "PESSOA_FISICA" : "PESSOA_JURIDICA",
+                fk_oficina: 1,
+                fk_endereco: Number(dadosDoEndereco.id_endereco)
             };
 
             console.log("Enviando Payload:", payload);
