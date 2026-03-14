@@ -57,19 +57,28 @@ function ModalAdicionar({ isOpen, onClose, onSave }) {
                                 <>
                                     <label className="form-label fw-semibold">Nome</label>
                                     <input type="text" name="nome" value={formData.nome} onChange={handleChange} className="form-control mb-3" placeholder="Maria Oliveira" />
-                                    
+
                                     <label className="form-label fw-semibold">CPF/CNPJ</label>
                                     <input type="text" name="cpfCnpj" value={formData.cpfCnpj} onChange={handleChange} className="form-control mb-3" placeholder="000.000.000-00" />
-                                    
+
                                     <label className="form-label fw-semibold">Email</label>
                                     <input type="text" name="email" value={formData.email} onChange={handleChange} className="form-control mb-3" placeholder="maria.oliveira@email.com" />
-                                    
+
                                     <label className="form-label fw-semibold">Telefone</label>
                                     <input type="text" name="telefone" value={formData.telefone} onChange={handleChange} className="form-control mb-3" placeholder="(00) 00000-0000" />
-                                    
+
                                     <label className="form-label fw-semibold">Tipo</label>
-                                    <input type="text" name="tipo" value={formData.tipo} onChange={handleChange} className="form-control mb-3" placeholder="Pessoa Física" />
-                                    
+                                    <select
+                                        name="tipo"
+                                        value={formData.tipo}
+                                        onChange={handleChange}
+                                        className="form-select mb-4"
+                                    >
+                                        <option value="" disabled>Selecione um serviço...</option>
+                                        <option value="Pessoa Física">Pessoa Física</option>
+                                        <option value="Pessoa Jurídica">Pessoa Jurídica</option>
+                                    </select>
+
                                     <button className="btn btn-primary w-100 mb-3" onClick={handleFinalizar}>
                                         Próximo
                                     </button>
