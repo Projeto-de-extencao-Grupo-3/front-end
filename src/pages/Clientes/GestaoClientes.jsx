@@ -6,13 +6,16 @@ import Clientes from "../../service/Clientes.js";
 import "./GestaoClientes.css";
 import api from "../../service/api.js";
 import ModalAdicionarEndereco from "../../components/ModalEnderecos/ModalAdicionarEndereco.jsx";
+import ModalEditarCliente from "../../components/ModalClientesFuncionarios/ModalEditarClientes.jsx";
 
 function GestaoClientes() {
-    const { clientes, _loading, excluirCliente, adicionarCliente } = Clientes();
+    const { clientes, _loading, excluirCliente, adicionarCliente, atualizarCliente } = Clientes();
 
     const [mostrarModalAdicionar, setMostrarModalAdicionar] = useState(false);
     const [mostrarModalEndereco, setMostrarModalEndereco] = useState(false);
     const [dadosClienteTemp, setDadosClienteTemp] = useState(null);
+    const [modalEditarAberto, setModalEditarAberto] = useState(false);
+    const [clienteSelecionado, setClienteSelecionado] = useState(null);
 
     const handleAvancarParaEndereco = (dadosCliente) => {
         setDadosClienteTemp(dadosCliente);
@@ -26,8 +29,6 @@ function GestaoClientes() {
 
             const idCapturado = responseEndereco.data.idEndereco || responseEndereco.data.id_endereco;
 
-            console.log("ID gerado pelo banco para o endereço:", idCapturado);
-
             const enderecoComId = { id_endereco: idCapturado };
 
             await adicionarCliente(dadosClienteTemp, enderecoComId);
@@ -35,6 +36,22 @@ function GestaoClientes() {
             setMostrarModalEndereco(false);
         } catch (error) {
             console.error("Erro no processo:", error);
+        }
+    };
+
+    const handleAbrirEdicao = (cliente) => {
+        setClienteSelecionado(cliente);
+        setModalEditarAberto(true);
+    };
+
+    const handleSalvarEdicao = async (dadosNovos) => {
+        try {
+            await atualizarCliente(dadosNovos);
+
+            setModalEditarAberto(false);
+        } catch (error) {
+            console.error("Erro capturado no componente:", error);
+            alert("Erro ao atualizar cliente.");
         }
     };
 
@@ -70,7 +87,14 @@ function GestaoClientes() {
                     />
                 </div>
             </div>
-            <Tabela clientes={clientes} excluirCliente={excluirCliente}></Tabela>
+            <Tabela clientes={clientes} excluirCliente={excluirCliente} editarCliente={handleAbrirEdicao}></Tabela>
+
+            <ModalEditarCliente
+                isOpen={modalEditarAberto}
+                onClose={() => setModalEditarAberto(false)}
+                clienteParaEditar={clienteSelecionado}
+                onSave={handleSalvarEdicao}
+            />
         </Layout>
     );
 }

@@ -199,7 +199,7 @@ function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
 
                             {/* Quantidade mínima */}
                             <label className="form-label fw-semibold">
-                                Quantidade mínima para gerar alerta
+                                Quantidade no estoque
                             </label>
                             <div className="input-group mb-4">
                                 <span className="input-group-text">Un.</span>

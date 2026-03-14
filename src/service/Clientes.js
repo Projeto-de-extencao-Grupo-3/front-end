@@ -10,51 +10,61 @@ function Clientes() {
             const response = await api.get("/clientes");
             setClientes(response.data);
         } catch (error) {
-            console.error("Erro ao buscar:", error);
+            console.error("Erro ao buscar clientes:", error);
         } finally {
             setLoading(false);
         }
     };
 
-const adicionarCliente = async (dadosDoCliente, dadosDoEndereco) => {
-    try {
-        const payload = {
-            nome: dadosDoCliente.nome,
-            cpf_cnpj: dadosDoCliente.cpfCnpj, 
-            telefone: dadosDoCliente.telefone,
-            email: dadosDoCliente.email,
-            tipo_cliente: dadosDoCliente.tipo === "Pessoa Física" ? "PESSOA_FISICA" : "PESSOA_JURIDICA",
-            fk_oficina: 1, 
-            fk_endereco: Number(dadosDoEndereco.id_endereco) 
-        };
+    const adicionarCliente = async (dadosDoCliente, dadosDoEndereco) => {
+        try {
+            const payload = {
+                // Ajustado para bater com o RequestPostCliente.java
+                nome: dadosDoCliente.nome,
+                cpfCnpj: dadosDoCliente.cpfCnpj.replace(/\D/g, ''), // CamelCase
+                telefone: dadosDoCliente.telefone.replace(/\D/g, ''),
+                email: dadosDoCliente.email,
+                tipoCliente: dadosDoCliente.tipo === "Pessoa Física" ? "PESSOA_FISICA" : "PESSOA_JURIDICA",
+                fkOficina: 1,
+                fkEndereco: Number(dadosDoEndereco.id_endereco)
+            };
 
-        console.log("Enviando para o DTO:", payload);
-        const response = await api.post("/clientes", payload);
-        return response.data;
-    } catch (error) {
-        console.error("Erro no Back-end:", error.response?.data);
-        throw error;
-    }
-};
+            console.log("Enviando Payload:", payload);
+            const response = await api.post("/clientes", payload);
+
+            await listarClientes();
+
+            return response.data;
+        } catch (error) {
+            console.error("Erro no Back-end:", error.response?.data);
+            throw error;
+        }
+    };
+
     const excluirCliente = async (id) => {
         try {
             await api.delete(`/clientes/${id}`);
-
-            setClientes(prev => prev.filter(cliente => {
-                const atualId = cliente.idCliente || cliente.id_cliente || cliente.id;
+            setClientes(prev => prev.filter(c => {
+                const atualId = c.idCliente || c.id_cliente || c.id;
                 return Number(atualId) !== Number(id);
             }));
-
-            console.log("Cliente removido da tela com sucesso");
         } catch (error) {
             console.error("Erro ao excluir cliente:", error);
             alert("Erro ao excluir no servidor.");
         }
     };
 
-    const atualizarCliente = async (id, dadosAtualizados) => {
-        const response = await api.put(`/clientes/${id}`, dadosAtualizados);
-        setClientes(clientes.map(c => c.id === id ? response.data : c));
+    const atualizarCliente = async (dadosAtualizados) => {
+        try {
+            const response = await api.put("/clientes", dadosAtualizados);
+
+            await listarClientes();
+
+            return response.data;
+        } catch (error) {
+            console.error("Erro no Back-end (PUT):", error.response?.data);
+            throw error;
+        }
     };
 
     useEffect(() => {
