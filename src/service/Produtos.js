@@ -12,7 +12,8 @@ function Produtos() {
             const response = await api.get("/produtos");
             setProdutos(response.data);
         } catch (error) {
-            exibirAlertaErro("Erro ao buscar produtos.");
+            exibirAlertaErro("Erro ao buscar produtos.", );
+            throw error
         } finally {
             setLoading(false);
         }
@@ -43,6 +44,7 @@ function Produtos() {
                 exibirAlertaSucesso("Produto excluído com sucesso!");
             } catch (error) {
                 exibirAlertaErro("Erro ao excluir produto.");
+                throw error
             }
         }
     };
