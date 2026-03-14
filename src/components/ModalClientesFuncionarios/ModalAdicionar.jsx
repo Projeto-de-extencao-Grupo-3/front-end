@@ -71,7 +71,7 @@ function ModalAdicionar({ isOpen, onClose, onSave }) {
                                     <input type="text" name="tipo" value={formData.tipo} onChange={handleChange} className="form-control mb-3" placeholder="Pessoa Física" />
                                     
                                     <button className="btn btn-primary w-100 mb-3" onClick={handleFinalizar}>
-                                        Adicionar Novo Cliente
+                                        Próximo
                                     </button>
                                 </>
                             )}

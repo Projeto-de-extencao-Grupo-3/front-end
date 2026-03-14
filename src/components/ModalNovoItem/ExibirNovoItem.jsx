@@ -6,7 +6,8 @@ const estadoInicial = {
     viavel_orcamento: true,
     preco_venda: "",
     preco_compra: "",
-    quantidade_estoque: ""
+    quantidade_estoque: "",
+    tipo_servico: ""
 };
 
 function ExibirNovoItem({ isOpen, onClose, dadosDoProduto, onUpdate }) {
@@ -41,6 +42,7 @@ function ExibirNovoItem({ isOpen, onClose, dadosDoProduto, onUpdate }) {
                 preco_venda: parseFloat(form.preco_venda) || 0,
                 preco_compra: parseFloat(form.preco_compra) || 0,
                 quantidade_estoque: parseInt(form.quantidade_estoque) || 0,
+                tipo_servico: form.tipo_servico
             };
 
             const id = form.id_peca || form.id;
@@ -84,6 +86,16 @@ function ExibirNovoItem({ isOpen, onClose, dadosDoProduto, onUpdate }) {
                                 value={form.fornecedor_nf}
                                 onChange={handleChange}
                                 className="form-control mb-3"
+                            />
+
+                            <label className="form-label fw-semibold">Tipo de Serviço</label>
+                            <input
+                                type="text"
+                                className="form-control input-padrao mb-3"
+                                name="tipoServico"
+                                value={form.tipo_servico}
+                                onChange={handleChange}
+                                placeholder="Ex: FUNILARIA"
                             />
 
                             <label className="form-label fw-semibold">Preço de Venda (R$)</label>

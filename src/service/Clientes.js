@@ -16,19 +16,26 @@ function Clientes() {
         }
     };
 
-    const adicionarCliente = async (dadosDoFormulario) => {
-        try {
-            const response = await api.post("/clientes", dadosDoFormulario);
+const adicionarCliente = async (dadosDoCliente, dadosDoEndereco) => {
+    try {
+        const payload = {
+            nome: dadosDoCliente.nome,
+            cpf_cnpj: dadosDoCliente.cpfCnpj, 
+            telefone: dadosDoCliente.telefone,
+            email: dadosDoCliente.email,
+            tipo_cliente: dadosDoCliente.tipo === "Pessoa Física" ? "PESSOA_FISICA" : "PESSOA_JURIDICA",
+            fk_oficina: 1, 
+            fk_endereco: Number(dadosDoEndereco.id_endereco) 
+        };
 
-            setClientes(prevClientes => [...prevClientes, response.data]);
-
-            return response.data;
-        } catch (error) {
-            console.error("Erro na requisição POST:", error);
-            throw error;
-        }
-    };
-
+        console.log("Enviando para o DTO:", payload);
+        const response = await api.post("/clientes", payload);
+        return response.data;
+    } catch (error) {
+        console.error("Erro no Back-end:", error.response?.data);
+        throw error;
+    }
+};
     const excluirCliente = async (id) => {
         try {
             await api.delete(`/clientes/${id}`);

@@ -22,6 +22,7 @@ function TabelaEstoque({ produtos, excluirProdutos, editarProdutos }) {
                         <th>Fornecedor</th>
                         <th>Preço a compra</th>
                         <th>Preço a venda</th>
+                        <th>Tipo de Serviço</th>
                         <th className="text-center">Opções</th>
                     </tr>
                 </thead>
@@ -36,6 +37,7 @@ function TabelaEstoque({ produtos, excluirProdutos, editarProdutos }) {
                             <td>{produto.fornecedor_nf}</td>
                             <td>R${produto.preco_compra}</td>
                             <td>R${produto.preco_venda}</td>
+                            <td>{produto.tipo_servico}</td>
                             <td className="text-center">
                                 <div className="d-flex justify-content-center gap-3">
                                     <button
