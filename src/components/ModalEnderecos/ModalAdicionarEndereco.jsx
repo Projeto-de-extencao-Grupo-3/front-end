@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import './ModalAdicionarEndereco.css';
 import useEndereco from "../../service/Endereco";
 
@@ -14,32 +14,37 @@ const estadoInicial = {
 
 function ModalAdicionarEndereco({ isOpen, onClose, onSaveEndereco }) {
     const [formData, setFormData] = useState(estadoInicial);
-    const { buscarEnderecoViaCEP, loading } = useEndereco();
+    const { buscarEnderecoViaCEP, _loading } = useEndereco();
 
-    useEffect(() => {
-        const cep = formData.cep.replace(/\D/g, '');
-        if (cep.length === 8) {
-            autocompletarEndereco(cep);
-        }
-    }, [formData.cep]);
+    const handleCEPChange = async (valor) => {
+        setFormData(prev => ({ ...prev, cep: valor }));
 
-    const autocompletarEndereco = async (cep) => {
-        const dados = await buscarEnderecoViaCEP(cep);
-        if (dados) {
-            setFormData(prev => ({
-                ...prev,
-                logradouro: dados.logradouro || "",
-                bairro: dados.bairro || "",
-                cidade: dados.localidade || dados.cidade || "",
-                estado: dados.uf || dados.estado || ""
-            }));
+        const cepLimpo = valor.replace(/\D/g, '');
+        
+        if (cepLimpo.length === 8) {
+            const dados = await buscarEnderecoViaCEP(cepLimpo);
+            if (dados) {
+                setFormData(prev => ({
+                    ...prev,
+                    logradouro: dados.logradouro || prev.logradouro,
+                    bairro: dados.bairro || prev.bairro,
+                    cidade: dados.localidade || dados.cidade || prev.cidade,
+                    estado: dados.uf || dados.estado || prev.estado
+                }));
+            }
         }
     };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        
+        if (name === "cep") {
+            handleCEPChange(value);
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        }
     };
+
     const handleCancelar = () => {
         setFormData(estadoInicial);
         onClose();
@@ -64,7 +69,18 @@ function ModalAdicionarEndereco({ isOpen, onClose, onSaveEndereco }) {
                         </div>
                         <div className="modal-body">
                             <label className="form-label fw-semibold">CEP</label>
-                            <input type="text" name="cep" value={formData.cep} onChange={handleChange} className="form-control mb-3" placeholder="00000-000" />
+                            <input 
+                                type="text" 
+                                name="cep" 
+                                value={formData.cep} 
+                                onChange={handleChange} 
+                                className="form-control mb-3" 
+                                placeholder="00000-000"
+                                maxLength={9} 
+                            />
+                            
+                            {/* Exibindo um feedback visual enquanto busca */}
+                            {_loading && <small className="text-primary d-block mb-2">Buscando endereço...</small>}
 
                             <div className="row">
                                 <div className="col-8">
@@ -94,8 +110,8 @@ function ModalAdicionarEndereco({ isOpen, onClose, onSaveEndereco }) {
                                 </div>
                             </div>
 
-                            <button className="btn btn-primary w-100 mb-3" onClick={handleFinalizar}>
-                                Finalizar Cadastro
+                            <button className="btn btn-primary w-100 mb-3" onClick={handleFinalizar} disabled={_loading}>
+                                {_loading ? "Carregando..." : "Finalizar Cadastro"}
                             </button>
                         </div>
                     </div>

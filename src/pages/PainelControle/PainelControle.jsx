@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import api from "../../service/api";
 import Layout from "../../components/Layout/Layout";
 import KpiStatus from "../../components/KpiStatus/KpiStatus";
@@ -13,7 +12,6 @@ function PainelControle() {
     const [servicos, setServicos] = useState(null);
     const [mostrarModalEntrada, setMostrarModalEntrada] = useState(false);
     const [mostrarModalAgendar, setMostrarModalAgendar] = useState(false);
-    const navigate = useNavigate();
 
 
     const chavesStatus = {
@@ -86,9 +84,9 @@ function PainelControle() {
                     </div>
                 </div>
 
-                <ModalAgendarEntrada 
-                    isOpen={mostrarModalAgendar} 
-                    onClose={() => setMostrarModalAgendar(false)} 
+                <ModalAgendarEntrada
+                    isOpen={mostrarModalAgendar}
+                    onClose={() => setMostrarModalAgendar(false)}
                     onAgendamentoSuccess={fetchServicos}
                 />
                 <ModalEntradaVeiculo isOpen={mostrarModalEntrada} onClose={() => setMostrarModalEntrada(false)} />
@@ -133,7 +131,7 @@ function PainelControle() {
                             ? calcularDias(os.entrada?.data_entrada_prevista, null)
                             : calcularDias(null, os.entrada?.data_entrada_efetiva);
 
-                        const diasRestantes = () => {
+                        const _diasRestantes = () => {
                             if (kpiAtiva === "producao") {
                                 return calcularDias(os.entrada?.data_entrada_efetiva, os.data_saida_prevista);
                             }
@@ -188,7 +186,7 @@ function PainelControle() {
                                                         <div><b>Dias em produção:</b> {diasAtraso} Dias</div>
                                                     </>
                                                 );
-                                            case 'finalizados':
+                                            case 'finalizados': {
                                                 const data1 = os.data_saida_efetiva ? new Date(os.data_saida_efetiva) : null;
                                                 var data2 = os.entrada?.data_entrada_efetiva ? new Date(os.entrada.data_entrada_efetiva) : null;
 
@@ -203,6 +201,7 @@ function PainelControle() {
                                                         <div><b>Duração do Serviço:</b> {duracaoServico} Dias</div>
                                                     </>
                                                 );
+                                            }
                                             default: // 'orcamento', 'autorizacao', 'vaga'
                                                 return (
                                                     <>
@@ -221,7 +220,7 @@ function PainelControle() {
                                     {kpiAtiva === "entrada" && (
                                         <button
                                             className={`btn w-100 fs-5 btn-status-${corCard}`}
-                                            //onClick={navigate(`/painelControle/entrada`)}
+                                        //onClick={navigate(`/painelControle/entrada`)}
                                         >
                                             Fazer Entrada
                                         </button>
@@ -231,7 +230,7 @@ function PainelControle() {
                                     {kpiAtiva === "orcamento" && (
                                         <button
                                             className={`btn w-100 fs-5 btn-status-${corCard}`}
-                                            //onClick={navigate(`/painelControle/orcamento`)}
+                                        //onClick={navigate(`/painelControle/orcamento`)}
                                         >
                                             Fazer Orçamento
                                         </button>
@@ -241,7 +240,7 @@ function PainelControle() {
                                     {kpiAtiva === "autorizacao" && (
                                         <button
                                             className={`btn w-100 fs-5 btn-status-${corCard}`}
-                                            //onClick={navigate(`/painelControle/autorizacao`)}
+                                        //onClick={navigate(`/painelControle/autorizacao`)}
                                         >
                                             Autorizar
                                         </button>
@@ -251,7 +250,7 @@ function PainelControle() {
                                     {kpiAtiva === "vaga" && (
                                         <button
                                             className={`btn w-100 fs-5 btn-status-${corCard}`}
-                                            //onClick={navigate(`/painelControle/aguardandoVaga`)}
+                                        //onClick={navigate(`/painelControle/aguardandoVaga`)}
                                         >
                                             Enviar para Produção
                                         </button>
@@ -261,7 +260,7 @@ function PainelControle() {
                                     {kpiAtiva === "producao" && (
                                         <button
                                             className={`btn w-100 fs-5 btn-status-${corCard}`}
-                                            //onClick={navigate(`/painelControle/producao`)}
+                                        //onClick={navigate(`/painelControle/producao`)}
                                         >
                                             Verificar Andamento
                                         </button>
@@ -271,7 +270,7 @@ function PainelControle() {
                                     {kpiAtiva === "finalizados" && (
                                         <button
                                             className={`btn w-100 fs-5 btn-status-${corCard}`}
-                                            //onClick={navigate(`/painelControle/finalizado`)}
+                                        //onClick={navigate(`/painelControle/finalizado`)}
                                         >
                                             Analisar Ordem de Serviço
                                         </button>

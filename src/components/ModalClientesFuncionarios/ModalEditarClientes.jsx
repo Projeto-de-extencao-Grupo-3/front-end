@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import "./ModalEditar.css";
 import api from "../../service/api";
 
@@ -7,26 +7,29 @@ function ModalEditarCliente({ isOpen, onClose, clienteParaEditar, onSave }) {
     const [dadosEditados, setDadosEditados] = useState(null);
     const [detalhesEndereco, setDetalhesEndereco] = useState(null);
 
-    useEffect(() => {
-        if (clienteParaEditar) {
-            setDadosEditados({ ...clienteParaEditar });
-            const idEnd = clienteParaEditar.id_endereco || clienteParaEditar.fk_endereco;
-            if (idEnd && typeof idEnd !== 'object') {
-                buscarEndereco(idEnd);
-            } else if (typeof idEnd === 'object') {
-                setDetalhesEndereco(idEnd);
-            }
-        }
-    }, [clienteParaEditar]);
-
-    const buscarEndereco = async (id) => {
+    const buscarEndereco = useCallback(async (id) => {
         try {
             const response = await api.get(`/enderecos/${id}`);
             setDetalhesEndereco(response.data);
         } catch (error) {
             console.error("Erro ao carregar detalhes do endereço:", error);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        if (clienteParaEditar) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
+            setDadosEditados({ ...clienteParaEditar });
+
+            const idEnd = clienteParaEditar.id_endereco || clienteParaEditar.fk_endereco;
+
+            if (idEnd && typeof idEnd !== 'object') {
+                buscarEndereco(idEnd);
+            } else if (typeof idEnd === 'object') {
+                setDetalhesEndereco(idEnd);
+            }
+        }
+    }, [clienteParaEditar, buscarEndereco]);
 
     if (!isOpen || !dadosEditados) return null;
 
