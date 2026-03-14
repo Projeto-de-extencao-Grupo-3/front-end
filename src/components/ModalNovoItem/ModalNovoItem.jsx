@@ -1,30 +1,70 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./ModalNovoItem.css";
 
-function ModalNovoItem({ isOpen, onClose }) {
+const estadoInicial = {
+    nome: "",
+    fornecedorNf: "",      
+    viavelOrcamento: true, 
+    precoVenda: "",
+    precoCompra: "",
+    quantidadeEstoque: ""  
+}
 
-    const [form, setForm] = useState({
-        nome: "",
-        fornecedor: "",
-        visibilidade: "publico",
-        precoVenda: "",
-        precoCompra: "",
-        quantidadeMinima: ""
-    });
+function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
+
+    const [form, setForm] = useState(estadoInicial);
+
+    useEffect(() => {
+        let montado = true;
+
+        if (isOpen && montado) {
+            setTimeout(() => {
+                if (produtosParaEditar) {
+                    const _formatadoParaEdicao = {
+                        ...produtosParaEditar,
+                        visibilidade: (produtosParaEditar.visibilidade === 1 || produtosParaEditar.visibilidade === true)
+                            ? "publico"
+                            : "privado"
+                    };
+                    setForm(produtosParaEditar);
+                } else {
+                    setForm(estadoInicial);
+                }
+            }, 0);
+        }
+
+        return () => { montado = false; };
+    }, [isOpen, produtosParaEditar]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm({ ...form, [name]: value });
     };
 
-    const handleConfirmar = () => {
-        console.log("Novo item:", form);
-        // aqui você pode chamar sua API depois
+    const handleCancelar = () => {
+        setForm(estadoInicial)
         onClose();
     };
 
-    const handleCancelar = () => {
-        onClose();
+    const handleFinalizar = async () => {
+        try {
+
+            const dadosParaEnviar = {
+                nome: form.nome,
+                fornecedor_nf: form.fornecedorNf, // De 'fornecedor' para 'fornecedorNf'
+                preco_compra: parseFloat(form.precoCompra), // Garante que é número
+                preco_venda: parseFloat(form.precoVenda),   // Garante que é número
+                quantidade_estoque: parseInt(form.quantidadeMinima), // De 'quantidadeMinima' para 'quantidadeEstoque'
+                viavel_orcamento: form.visibilidade === "publico" // De String para Boolean
+            };
+
+            const id = form.idProduto || form.id_produto || form.id_peca || form.idPeca;
+            await onSave(dadosParaEnviar, id);
+            handleCancelar();
+        } catch (error) {
+            console.error("Erro ao salvar:", error);
+            alert("Erro ao salvar funcionário.");
+        }
     };
 
     return (
@@ -71,8 +111,8 @@ function ModalNovoItem({ isOpen, onClose }) {
                             <input
                                 type="text"
                                 className="form-control input-padrao mb-3"
-                                name="fornecedor"
-                                value={form.fornecedor}
+                                name="fornecedorNf"
+                                value={form.fornecedorNf}
                                 onChange={handleChange}
                                 placeholder="Ex: Tubarão Tintas"
                             />
@@ -165,7 +205,7 @@ function ModalNovoItem({ isOpen, onClose }) {
                             <div className="d-flex gap-3">
                                 <button
                                     className="btn btn-success w-50 botao-confirmar"
-                                    onClick={handleConfirmar}
+                                    onClick={handleFinalizar}
                                 >
                                     Confirmar
                                 </button>
