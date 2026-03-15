@@ -12,7 +12,7 @@ function Produtos() {
             const response = await api.get("/produtos");
             setProdutos(response.data);
         } catch (error) {
-            exibirAlertaErro("Erro ao buscar produtos.", );
+            exibirAlertaErro("Erro ao buscar produtos.");
             throw error
         } finally {
             setLoading(false);

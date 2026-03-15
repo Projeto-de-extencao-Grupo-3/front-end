@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "./api";
+import { exibirAlertaSucesso, exibirAlertaErro, exibirAlertaConfirmacao } from './alertas';
+
 
 function Funcionarios() {
     const [funcionarios, setFuncionarios] = useState([]);
@@ -10,7 +12,7 @@ function Funcionarios() {
             const response = await api.get("/funcionarios");
             setFuncionarios(response.data);
         } catch (error) {
-            console.error("Erro ao buscar:", error);
+            exibirAlertaErro("Erro ao buscar Funcionários.")
         } finally {
             setLoading(false);
         }
@@ -32,25 +34,32 @@ function Funcionarios() {
 
             const response = await api.post("/funcionarios", payload);
             setFuncionarios(prev => [...prev, response.data]);
+            exibirAlertaSucesso("Funcionário adicionado com sucesso!")
             return response.data;
         } catch (error) {
-            console.error("Erro na requisição POST:", error);
+            exibirAlertaErro("Erro ao adicionar Funcionários.")
             throw error;
         }
     };
 
     const excluirFuncionario = async (id) => {
-        try {
-            await api.delete(`/funcionarios/${id}`);
+        const confirmacao = await exibirAlertaConfirmacao("Deseja realmente excluir este funcionário?");
 
-            setFuncionarios(prev => prev.filter(f => {
-                const atualId = f.idFuncionario || f.id_funcionario || f.id;
-                return Number(atualId) !== Number(id);
-            }));
+        if (confirmacao.isConfirmed) {
 
-            console.log("Removido com sucesso!");
-        } catch (error) {
-            console.error("Erro ao excluir:", error);
+            try {
+                await api.delete(`/funcionarios/${id}`);
+
+                setFuncionarios(prev => prev.filter(f => {
+                    const atualId = f.idFuncionario || f.id_funcionario || f.id;
+                    return Number(atualId) !== Number(id);
+                }));
+
+                exibirAlertaSucesso("Funcionário excluído com sucesso!")
+            } catch (error) {
+                exibirAlertaErro("Erro ao excluir Funcionários.")
+                throw error;
+            }
         }
     };
     const atualizarFuncionario = async (id, dadosAtualizados) => {
@@ -71,9 +80,11 @@ function Funcionarios() {
             setFuncionarios(prev => prev.map(f =>
                 (f.id_funcionario === id || f.idFuncionario === id) ? response.data : f
             ));
+            exibirAlertaSucesso("Funcionário atualizado com sucesso!")
             return response.data
         } catch (error) {
-            console.error("Erro ao atualizar:", error);
+            exibirAlertaErro("Erro ao atualizar Funcionários.")
+
             throw error
         }
     };
