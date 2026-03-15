@@ -1,0 +1,34 @@
+name: Build & Push Imagem Docker
+
+on:
+  workflow_run:
+    workflows: ["CI Workflow"] 
+    types:
+      - completed
+    branches:
+      - main  
+
+jobs:
+  on-success:
+    runs-on: ubuntu-latest
+    # Condição crucial: só executa se o workflow de CI terminou com SUCESSO
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            gabrielpacificooo/grotrack:${{ secrets.DOCKERHUB_IMAGE_TAG }}
+            gabrielpacificooo/grotrack:latest
