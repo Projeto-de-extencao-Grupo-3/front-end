@@ -13,6 +13,7 @@ function Funcionarios() {
             setFuncionarios(response.data);
         } catch (error) {
             exibirAlertaErro("Erro ao buscar Funcionários.")
+            throw error
         } finally {
             setLoading(false);
         }
