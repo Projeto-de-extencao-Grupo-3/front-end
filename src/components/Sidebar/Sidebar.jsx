@@ -1,13 +1,22 @@
 import "./Sidebar.css";
+import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
 function Sidebar({ ativo }) {
 
   const navigate = useNavigate();
 
+  const [usuario, _setUsuario] = useState(() => {
+    const nomeSalvo = sessionStorage.getItem("NOME_USUARIO");
+    const cargoSalvo = sessionStorage.getItem("CARGO_USUARIO");
 
+    return {
+      nome: nomeSalvo || "Usuário",
+      cargo: cargoSalvo || "Colaborador"
+    };
+  });
   return (
-    
+
     <div className="sidebar col-12 col-md-4 col-lg-2 d-flex flex-column p-3" style={{ height: "100vh", position: "sticky", top: 0, overflowY: "auto" }}>
       {/* LOGO */}
       <div className="d-flex align-items-center mb-4 logo-box">
@@ -63,9 +72,9 @@ function Sidebar({ ativo }) {
         <div className="d-flex align-items-center gap-2">
           <div ><i className='bx bxs-user-circle' style={{ fontSize: "45px" }}></i></div>
           <div>
-            <strong className="fs-6">José da Silva</strong>
+            <strong className="fs-6">{usuario.nome || "Não autenticado"}</strong>
             <div className="fs-6 text-muted" style={{ fontSize: "13px" }}>
-              Chefe de Produção
+              {usuario.cargo || "Não autenticado"}
             </div>
           </div>
         </div>

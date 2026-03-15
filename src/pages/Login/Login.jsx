@@ -18,10 +18,11 @@ function Login() {
         senha
       });
 
-        // salva o token
       localStorage.setItem("token", response.data.token);
-      console.log("vamo ve se salva o token mesmo", response.data.token)
+      console.log("Dados retornados do Login: ", response.data)
       sessionStorage.setItem('ID_OFICINA_USUARIO', response.data.id_oficina);
+      sessionStorage.setItem('NOME_USUARIO', response.data.nome);
+      sessionStorage.setItem('CARGO_USUARIO', response.data.cargo);
 
       if (response.data.token != null) {
         navigate("/painelControle")
