@@ -1,6 +1,6 @@
 import "./TabelaEstoque.css";
 
-function TabelaEstoque({ produtos, excluirProdutos, editarProdutos }) {
+function TabelaEstoque({ produtos, excluirProdutos, editarProdutos, editarQuantidadeEstoque }) {
 
     if (!produtos || produtos.length === 0) {
         return (
@@ -50,9 +50,17 @@ function TabelaEstoque({ produtos, excluirProdutos, editarProdutos }) {
                                     </button>
                                     <button
                                         className="btn-acao"
+                                        title='Editar'
+                                        onClick={() => {
+                                            editarQuantidadeEstoque(produto)
+                                        }}>
+                                        <i className='bx bxs-package'></i>
+                                    </button>
+                                    <button
+                                        className="btn-acao"
                                         title='Excluir'
                                         onClick={() => {
-                                                excluirProdutos(produto);
+                                            excluirProdutos(produto);
                                         }}
                                     >
                                         <i className='bx bx-x'></i>

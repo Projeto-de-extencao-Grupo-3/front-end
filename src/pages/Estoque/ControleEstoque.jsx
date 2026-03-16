@@ -5,17 +5,25 @@ import "./ControleEstoque.css";
 import ExibirNovoItem from "../../components/ModalNovoItem/ExibirNovoItem.jsx";
 import ModalNovoItem from "../../components/ModalNovoItem/ModalNovoItem.jsx";
 import ModalDesativarEstoque from "../../components/ModalClientesFuncionarios/ModalDesativarEstoque.jsx";
+import EditarQuantidadeEstoque from "../../components/ModalNovoItem/EditarQuantidadeEstoque.jsx";
 import Produtos from "../../service/Produtos.js";
 
 function ControleEstoque() {
-    const { produtos, excluirProduto, adicionarProduto, atualizarProduto } = Produtos();
+    const { produtos, excluirProduto, adicionarProduto, atualizarProduto, atualizarQuantidadeEstoque } = Produtos();
 
     const [produtosParaEditar, setProdutosParaEditar] = useState(null);
-    const [itemParaDesativar, setItemParaDesativar] = useState(null); // Estado para o item a ser excluído
+    const [itemParaDesativar, setItemParaDesativar] = useState(null);
+    const [itemParaAjustarEstoque, setItemParaAjustarEstoque] = useState(null);
 
     const [mostrarModalAdicionar, setMostrarModalAdicionar] = useState(false);
     const [mostrarModalExibir, setMostrarModalExibir] = useState(false);
-    const [isModalDesativarOpen, setIsModalDesativarOpen] = useState(false); // Controle do modal de desativação
+    const [isModalDesativarOpen, setIsModalDesativarOpen] = useState(false);
+    const [editarQuantidadeEstoque, setEditarQuantidadeEstoque] = useState(false);
+
+    const lidarComAjusteEstoque = (produto) => {
+        setItemParaAjustarEstoque(produto);
+        setEditarQuantidadeEstoque(true);
+    };
 
     const lidarComEdicao = (produto) => {
         setProdutosParaEditar(produto);
@@ -57,6 +65,23 @@ function ControleEstoque() {
         }
     };
 
+    const confirmarAjusteEstoque = async (novaQuantidade) => {
+        try {
+            const id = itemParaAjustarEstoque.id_peca || itemParaAjustarEstoque.id;
+
+            const dadosParaEnviar = {
+                id: id, 
+                quantidade_estoque: parseInt(novaQuantidade)
+            };
+
+            await atualizarQuantidadeEstoque(id, dadosParaEnviar);
+            setEditarQuantidadeEstoque(false);
+            setItemParaAjustarEstoque(null);
+        } catch (error) {
+            console.error("Erro ao ajustar estoque:", error);
+        }
+    };
+
     return (
         <Layout ativo={"estoque"}>
             <div className="header-clientes">
@@ -74,8 +99,9 @@ function ControleEstoque() {
 
             <TabelaEstoque
                 produtos={produtos}
-                excluirProdutos={lidarComDesativacao} // Mudamos para abrir o modal primeiro
+                excluirProdutos={lidarComDesativacao}
                 editarProdutos={lidarComEdicao}
+                editarQuantidadeEstoque={lidarComAjusteEstoque}
             />
 
             <ModalNovoItem
@@ -95,7 +121,14 @@ function ControleEstoque() {
                 isOpen={isModalDesativarOpen}
                 onClose={() => setIsModalDesativarOpen(false)}
                 onConfirm={confirmarDesativacao}
-                itemParaDesativar={itemParaDesativar} // <--- Passa o objeto completo aqui
+                itemParaDesativar={itemParaDesativar}
+            />
+
+            <EditarQuantidadeEstoque
+                show={editarQuantidadeEstoque}
+                handleClose={() => setEditarQuantidadeEstoque(false)}
+                handleConfirm={confirmarAjusteEstoque}
+                itemParaAjustarEstoque={itemParaAjustarEstoque}
             />
         </Layout>
     );
