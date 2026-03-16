@@ -14,10 +14,14 @@ function ExibirNovoItem({ isOpen, onClose, dadosDoProduto, onUpdate }) {
 
     useEffect(() => {
         if (isOpen && dadosDoProduto) {
-            setForm({
-                ...dadosDoProduto,
-                visivel_orcamento: dadosDoProduto.visivel_orcamento ?? true
-            });
+            const timer = setTimeout(() => {
+                setForm({
+                    ...dadosDoProduto,
+                    visivel_orcamento: dadosDoProduto.visivel_orcamento ?? true
+                });
+            }, 0);
+
+            return () => clearTimeout(timer); 
         }
     }, [isOpen, dadosDoProduto]);
 

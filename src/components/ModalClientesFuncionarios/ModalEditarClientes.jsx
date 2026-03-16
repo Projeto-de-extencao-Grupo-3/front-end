@@ -17,16 +17,22 @@ function ModalEditarCliente({ isOpen, onClose, clienteParaEditar, onSave }) {
     }, []);
 
     useEffect(() => {
-        if (clienteParaEditar) {
-            setDadosEditados({ ...clienteParaEditar });
-            const idEnd = clienteParaEditar.id_endereco || clienteParaEditar.fk_endereco;
-            if (idEnd && typeof idEnd !== 'object') {
-                buscarEndereco(idEnd);
-            } else if (typeof idEnd === 'object') {
-                setDetalhesEndereco(idEnd);
-            }
+        if (clienteParaEditar && isOpen) {
+            const timer = setTimeout(() => {
+                setDadosEditados({ ...clienteParaEditar });
+
+                const idEnd = clienteParaEditar.id_endereco || clienteParaEditar.fk_endereco;
+
+                if (idEnd && typeof idEnd !== 'object') {
+                    buscarEndereco(idEnd);
+                } else if (typeof idEnd === 'object') {
+                    setDetalhesEndereco(idEnd);
+                }
+            }, 0);
+
+            return () => clearTimeout(timer); 
         }
-    }, [clienteParaEditar, buscarEndereco]);
+    }, [clienteParaEditar, isOpen, buscarEndereco]);
 
     if (!isOpen || !dadosEditados) return null;
 

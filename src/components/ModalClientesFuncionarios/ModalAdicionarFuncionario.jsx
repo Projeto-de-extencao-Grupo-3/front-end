@@ -11,15 +11,13 @@ const estadoInicial = {
 };
 
 function ModalAdicionarFuncionario({ isOpen, onClose, onSave, funcionarioParaEditar }) {
-    const [formData, setFormData] = useState(estadoInicial);
+    const [formData, setFormData] = useState(() => funcionarioParaEditar || estadoInicial);
 
     useEffect(() => {
         if (isOpen) {
-            if (funcionarioParaEditar) {
-                setFormData(funcionarioParaEditar);
-            } else {
-                setFormData(estadoInicial);
-            }
+            setTimeout(() => {
+                setFormData(funcionarioParaEditar || estadoInicial);
+            }, 0);
         }
     }, [isOpen, funcionarioParaEditar]);
 
@@ -58,6 +56,7 @@ function ModalAdicionarFuncionario({ isOpen, onClose, onSave, funcionarioParaEdi
                             <h2 className="fw-medium" style={{ fontSize: '1.75rem', color: '#000' }}>
                                 {funcionarioParaEditar ? "Editar Funcionário" : "Adicionar novo Funcionário"}
                             </h2>
+                            <button className="btn-close" onClick={handleCancelar}></button>
                         </div>
 
                         <div className="modal-body">
@@ -73,7 +72,7 @@ function ModalAdicionarFuncionario({ isOpen, onClose, onSave, funcionarioParaEdi
                                         <input
                                             type="text"
                                             name="nome"
-                                            value={formData.nome}
+                                            value={formData.nome || ""}
                                             onChange={handleChange}
                                             className="form-control bg-light border-0"
                                             placeholder="Ex: João Silva"
@@ -85,18 +84,19 @@ function ModalAdicionarFuncionario({ isOpen, onClose, onSave, funcionarioParaEdi
                                         <input
                                             type="text"
                                             name="cargo"
-                                            value={formData.cargo}
+                                            value={formData.cargo || ""}
                                             onChange={handleChange}
                                             className="form-control bg-light border-0"
                                             placeholder="Ex: Mecânico"
                                         />
                                     </div>
+
                                     <div className="col-6">
                                         <label className="form-label mb-1 text-dark fw-normal">Especialidade</label>
                                         <input
                                             type="text"
                                             name="especialidade"
-                                            value={formData.especialidade}
+                                            value={formData.especialidade || ""}
                                             onChange={handleChange}
                                             className="form-control bg-light border-0"
                                             placeholder="Ex: Motores"
@@ -108,7 +108,7 @@ function ModalAdicionarFuncionario({ isOpen, onClose, onSave, funcionarioParaEdi
                                         <input
                                             type="email"
                                             name="email"
-                                            value={formData.email}
+                                            value={formData.email || ""}
                                             onChange={handleChange}
                                             className="form-control bg-light border-0"
                                             placeholder="email@oficina.com"
@@ -120,18 +120,19 @@ function ModalAdicionarFuncionario({ isOpen, onClose, onSave, funcionarioParaEdi
                                         <input
                                             type="text"
                                             name="telefone"
-                                            value={formData.telefone}
+                                            value={formData.telefone || ""}
                                             onChange={handleChange}
                                             className="form-control bg-light border-0"
                                             placeholder="(00) 00000-0000"
                                         />
                                     </div>
+
                                     <div className="col-6">
                                         <label className="form-label mb-1 text-dark fw-normal">Senha</label>
                                         <input
                                             type="password"
                                             name="senha"
-                                            value={formData.senha}
+                                            value={formData.senha || ""}
                                             onChange={handleChange}
                                             className="form-control bg-light border-0"
                                             placeholder="********"
