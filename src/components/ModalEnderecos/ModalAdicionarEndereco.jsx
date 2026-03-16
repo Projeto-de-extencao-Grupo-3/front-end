@@ -18,9 +18,8 @@ function ModalAdicionarEndereco({ isOpen, onClose, onSaveEndereco }) {
 
     const handleCEPChange = async (valor) => {
         setFormData(prev => ({ ...prev, cep: valor }));
-
         const cepLimpo = valor.replace(/\D/g, '');
-        
+
         if (cepLimpo.length === 8) {
             const dados = await buscarEnderecoViaCEP(cepLimpo);
             if (dados) {
@@ -37,7 +36,6 @@ function ModalAdicionarEndereco({ isOpen, onClose, onSaveEndereco }) {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        
         if (name === "cep") {
             handleCEPChange(value);
         } else {
@@ -62,57 +60,89 @@ function ModalAdicionarEndereco({ isOpen, onClose, onSaveEndereco }) {
             <div className="modal-backdrop fade show" onClick={handleCancelar} style={{ zIndex: 1040 }} />
             <div className="modal fade show d-block" style={{ zIndex: 1050 }}>
                 <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content modal-entrada">
-                        <div className="modal-header border-0">
-                            <h2 className="modal-title fw-bold titulo-modal">Informações do Endereço</h2>
-                            <button className="btn-close" onClick={handleCancelar}></button>
+                    <div className="modal-content border-0 p-3" style={{ borderRadius: '12px' }}>
+
+                        <div className="modal-header border-0 pb-0">
+                            <h2 className="fw-medium" style={{ fontSize: '1.75rem', color: '#000' }}>
+                                Informações do Endereço
+                            </h2>
                         </div>
+
                         <div className="modal-body">
-                            <label className="form-label fw-semibold">CEP</label>
-                            <input 
-                                type="text" 
-                                name="cep" 
-                                value={formData.cep} 
-                                onChange={handleChange} 
-                                className="form-control mb-3" 
-                                placeholder="00000-000"
-                                maxLength={9} 
-                            />
-                            
-                            {/* Exibindo um feedback visual enquanto busca */}
-                            {_loading && <small className="text-primary d-block mb-2">Buscando endereço...</small>}
-
-                            <div className="row">
-                                <div className="col-8">
-                                    <label className="form-label fw-semibold">Logradouro</label>
-                                    <input type="text" name="logradouro" value={formData.logradouro} onChange={handleChange} className="form-control mb-3" />
+                            {/* Quadro interno cinza idêntico ao de Cliente */}
+                            <div className="p-3 border rounded-3 mb-4" style={{ backgroundColor: '#f8f9fa' }}>
+                                <div className="d-flex align-items-center mb-3 text-muted">
+                                    <i className='bx bx-map-pin me-2' style={{ fontSize: '1.2rem' }}></i>
+                                    <span style={{ fontSize: '0.95rem' }}>
+                                        {_loading ? "Buscando endereço..." : "Preencha a localização"}
+                                    </span>
                                 </div>
-                                <div className="col-4">
-                                    <label className="form-label fw-semibold">Nº</label>
-                                    <input type="text" name="numero" value={formData.numero} onChange={handleChange} className="form-control mb-3" />
+
+                                <div className="row g-3">
+                                    {/* CEP */}
+                                    <div className="col-12">
+                                        <label className="form-label mb-1 text-dark fw-normal">CEP</label>
+                                        <input
+                                            type="text"
+                                            name="cep"
+                                            value={formData.cep}
+                                            onChange={handleChange}
+                                            className="form-control bg-light border-0"
+                                            placeholder="00000-000"
+                                            maxLength={9}
+                                        />
+                                    </div>
+
+                                    {/* Logradouro e Número */}
+                                    <div className="col-8">
+                                        <label className="form-label mb-1 text-dark fw-normal">Logradouro</label>
+                                        <input type="text" name="logradouro" value={formData.logradouro} onChange={handleChange} className="form-control bg-light border-0" placeholder="Rua..." />
+                                    </div>
+                                    <div className="col-4">
+                                        <label className="form-label mb-1 text-dark fw-normal">Nº</label>
+                                        <input type="text" name="numero" value={formData.numero} onChange={handleChange} className="form-control bg-light border-0" placeholder="123" />
+                                    </div>
+
+                                    {/* Bairro e Complemento */}
+                                    <div className="col-6">
+                                        <label className="form-label mb-1 text-dark fw-normal">Bairro</label>
+                                        <input type="text" name="bairro" value={formData.bairro} onChange={handleChange} className="form-control bg-light border-0" />
+                                    </div>
+                                    <div className="col-6">
+                                        <label className="form-label mb-1 text-dark fw-normal">Complemento</label>
+                                        <input type="text" name="complemento" value={formData.complemento} onChange={handleChange} className="form-control bg-light border-0" placeholder="Apto, Bloco..." />
+                                    </div>
+
+                                    {/* Cidade e UF */}
+                                    <div className="col-9">
+                                        <label className="form-label mb-1 text-dark fw-normal">Cidade</label>
+                                        <input type="text" name="cidade" value={formData.cidade} onChange={handleChange} className="form-control bg-light border-0" />
+                                    </div>
+                                    <div className="col-3">
+                                        <label className="form-label mb-1 text-dark fw-normal">UF</label>
+                                        <input type="text" name="estado" value={formData.estado} onChange={handleChange} className="form-control bg-light border-0" maxLength={2} />
+                                    </div>
                                 </div>
                             </div>
 
-                            <label className="form-label fw-semibold">Complemento</label>
-                            <input type="text" name="complemento" value={formData.complemento} onChange={handleChange} className="form-control mb-3" />
-
-                            <label className="form-label fw-semibold">Bairro</label>
-                            <input type="text" name="bairro" value={formData.bairro} onChange={handleChange} className="form-control mb-3" />
-
-                            <div className="row">
-                                <div className="col-8">
-                                    <label className="form-label fw-semibold">Cidade</label>
-                                    <input type="text" name="cidade" value={formData.cidade} onChange={handleChange} className="form-control mb-3" />
-                                </div>
-                                <div className="col-4">
-                                    <label className="form-label fw-semibold">UF</label>
-                                    <input type="text" name="estado" value={formData.estado} onChange={handleChange} className="form-control mb-3" />
-                                </div>
+                            {/* Botões de Ação Seguindo o Estilo */}
+                            <div className="d-flex gap-3">
+                                <button
+                                    className="btn w-100 fw-medium"
+                                    onClick={handleFinalizar}
+                                    disabled={_loading}
+                                    style={{ backgroundColor: '#5cb85c', color: '#fff', padding: '10px 0' }}
+                                >
+                                    {_loading ? "Carregando..." : "Confirmar"}
+                                </button>
+                                <button
+                                    className="btn w-100 fw-medium border"
+                                    onClick={handleCancelar}
+                                    style={{ backgroundColor: '#fff', color: '#333', padding: '10px 0' }}
+                                >
+                                    Cancelar
+                                </button>
                             </div>
-
-                            <button className="btn btn-primary w-100 mb-3" onClick={handleFinalizar} disabled={_loading}>
-                                {_loading ? "Carregando..." : "Finalizar Cadastro"}
-                            </button>
                         </div>
                     </div>
                 </div>

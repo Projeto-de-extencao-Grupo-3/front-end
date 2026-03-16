@@ -11,36 +11,24 @@ const estadoInicial = {
 };
 
 function ModalAdicionarFuncionario({ isOpen, onClose, onSave, funcionarioParaEditar }) {
-    const [_etapa, setEtapa] = useState("pesquisa");
-
     const [formData, setFormData] = useState(estadoInicial);
 
     useEffect(() => {
-        let montado = true;
-
-        if (isOpen && montado) {
-            setTimeout(() => {
-                if (funcionarioParaEditar) {
-                    setFormData(funcionarioParaEditar);
-                } else {
-                    setFormData(estadoInicial);
-                }
-            }, 0);
+        if (isOpen) {
+            if (funcionarioParaEditar) {
+                setFormData(funcionarioParaEditar);
+            } else {
+                setFormData(estadoInicial);
+            }
         }
-
-        return () => { montado = false; };
     }, [isOpen, funcionarioParaEditar]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
+        setFormData(prev => ({ ...prev, [name]: value }));
     };
 
     const handleCancelar = () => {
-        setEtapa("pesquisa");
         setFormData(estadoInicial);
         onClose();
     };
@@ -62,36 +50,112 @@ function ModalAdicionarFuncionario({ isOpen, onClose, onSave, funcionarioParaEdi
         <>
             <div className="modal-backdrop fade show" onClick={handleCancelar} style={{ zIndex: 1040 }} />
 
-            <div className={`modal fade show d-block`} style={{ zIndex: 1050 }}>
+            <div className="modal fade show d-block" style={{ zIndex: 1050 }}>
                 <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content modal-entrada">
-                        <div className="modal-header border-0">
-                            <h2 className="modal-title fw-bold titulo-modal">Informações do Funcionário</h2>
-                            <button className="btn-close" onClick={handleCancelar}></button>
+                    <div className="modal-content border-0 p-3" style={{ borderRadius: '12px' }}>
+
+                        <div className="modal-header border-0 pb-0">
+                            <h2 className="fw-medium" style={{ fontSize: '1.75rem', color: '#000' }}>
+                                {funcionarioParaEditar ? "Editar Funcionário" : "Adicionar novo Funcionário"}
+                            </h2>
                         </div>
 
                         <div className="modal-body">
-                            <label className="form-label fw-semibold">Nome</label>
-                            <input type="text" name="nome" value={formData.nome} onChange={handleChange} className="form-control mb-3" placeholder="Nome Completo" />
+                            <div className="p-3 border rounded-3 mb-4" style={{ backgroundColor: '#f8f9fa' }}>
+                                <div className="d-flex align-items-center mb-3 text-muted">
+                                    <i className='bx bx-briefcase me-2' style={{ fontSize: '1.2rem' }}></i>
+                                    <span style={{ fontSize: '0.95rem' }}>Dados profissionais e contato</span>
+                                </div>
 
-                            <label className="form-label fw-semibold">Cargo</label>
-                            <input type="text" name="cargo" value={formData.cargo} onChange={handleChange} className="form-control mb-3" placeholder="Ex: Mecânico" />
+                                <div className="row g-3">
+                                    <div className="col-12">
+                                        <label className="form-label mb-1 text-dark fw-normal">Nome Completo</label>
+                                        <input
+                                            type="text"
+                                            name="nome"
+                                            value={formData.nome}
+                                            onChange={handleChange}
+                                            className="form-control bg-light border-0"
+                                            placeholder="Ex: João Silva"
+                                        />
+                                    </div>
 
-                            <label className="form-label fw-semibold">Especialidade</label>
-                            <input type="text" name="especialidade" value={formData.especialidade} onChange={handleChange} className="form-control mb-3" placeholder="Ex: Suspensão" />
+                                    <div className="col-6">
+                                        <label className="form-label mb-1 text-dark fw-normal">Cargo</label>
+                                        <input
+                                            type="text"
+                                            name="cargo"
+                                            value={formData.cargo}
+                                            onChange={handleChange}
+                                            className="form-control bg-light border-0"
+                                            placeholder="Ex: Mecânico"
+                                        />
+                                    </div>
+                                    <div className="col-6">
+                                        <label className="form-label mb-1 text-dark fw-normal">Especialidade</label>
+                                        <input
+                                            type="text"
+                                            name="especialidade"
+                                            value={formData.especialidade}
+                                            onChange={handleChange}
+                                            className="form-control bg-light border-0"
+                                            placeholder="Ex: Motores"
+                                        />
+                                    </div>
 
-                            <label className="form-label fw-semibold">Email</label>
-                            <input type="email" name="email" value={formData.email} onChange={handleChange} className="form-control mb-3" placeholder="email@oficina.com" />
+                                    <div className="col-12">
+                                        <label className="form-label mb-1 text-dark fw-normal">Email</label>
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            className="form-control bg-light border-0"
+                                            placeholder="email@oficina.com"
+                                        />
+                                    </div>
 
-                            <label className="form-label fw-semibold">Telefone</label>
-                            <input type="text" name="telefone" value={formData.telefone} onChange={handleChange} className="form-control mb-3" placeholder="(00) 00000-0000" />
+                                    <div className="col-6">
+                                        <label className="form-label mb-1 text-dark fw-normal">Telefone</label>
+                                        <input
+                                            type="text"
+                                            name="telefone"
+                                            value={formData.telefone}
+                                            onChange={handleChange}
+                                            className="form-control bg-light border-0"
+                                            placeholder="(00) 00000-0000"
+                                        />
+                                    </div>
+                                    <div className="col-6">
+                                        <label className="form-label mb-1 text-dark fw-normal">Senha</label>
+                                        <input
+                                            type="password"
+                                            name="senha"
+                                            value={formData.senha}
+                                            onChange={handleChange}
+                                            className="form-control bg-light border-0"
+                                            placeholder="********"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
 
-                            <label className="form-label fw-semibold">Senha</label>
-                            <input type="password" name="senha" value={formData.senha} onChange={handleChange} className="form-control mb-3" placeholder="Digite a senha" />
-
-                            <button className="btn btn-primary w-100 mb-3" onClick={handleFinalizar}>
-                                {funcionarioParaEditar ? "Salvar Alterações" : "Adicionar Novo Funcionário"}
-                            </button>
+                            <div className="d-flex gap-3">
+                                <button
+                                    className="btn w-100 fw-medium"
+                                    onClick={handleFinalizar}
+                                    style={{ backgroundColor: '#5cb85c', color: '#fff', padding: '10px 0' }}
+                                >
+                                    Confirmar
+                                </button>
+                                <button
+                                    className="btn w-100 fw-medium border"
+                                    onClick={handleCancelar}
+                                    style={{ backgroundColor: '#fff', color: '#333', padding: '10px 0' }}
+                                >
+                                    Cancelar
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

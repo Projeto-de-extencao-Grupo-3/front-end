@@ -5,6 +5,7 @@ import ModalAdicionar from "../../components/ModalClientesFuncionarios/ModalAdic
 import Clientes from "../../service/Clientes.js";
 import "./GestaoClientes.css";
 import api from "../../service/api.js";
+import ModalDesativar from "../../components/ModalClientesFuncionarios/ModalDesativar.jsx";
 import ModalAdicionarEndereco from "../../components/ModalEnderecos/ModalAdicionarEndereco.jsx";
 import ModalEditarCliente from "../../components/ModalClientesFuncionarios/ModalEditarClientes.jsx";
 
@@ -16,6 +17,8 @@ function GestaoClientes() {
     const [dadosClienteTemp, setDadosClienteTemp] = useState(null);
     const [modalEditarAberto, setModalEditarAberto] = useState(false);
     const [clienteSelecionado, setClienteSelecionado] = useState(null);
+    const [clienteParaDesativar, setClienteParaDesativar] = useState(null);
+    const [isModalDesativarOpen, setIsModalDesativarOpen] = useState(false);
 
     const handleAvancarParaEndereco = (dadosCliente) => {
         setDadosClienteTemp(dadosCliente);
@@ -55,6 +58,26 @@ function GestaoClientes() {
         }
     };
 
+    const abrirModalDesativar = (cliente) => {
+        setClienteParaDesativar(cliente);
+        setIsModalDesativarOpen(true);
+    };
+
+    const confirmarDesativacao = async () => {
+        try {
+            const id = clienteParaDesativar.idCliente || clienteParaDesativar.id_cliente;
+
+            await excluirCliente(id); 
+
+            setIsModalDesativarOpen(false);
+            setClienteParaDesativar(null);
+        } catch (error) {
+            console.error("Erro ao excluir:", error);
+            alert("Não foi possível desativar o cliente.");
+        }
+    };
+
+
     return (
         <Layout ativo={"clientes"}>
             <div className="header-clientes">
@@ -87,8 +110,30 @@ function GestaoClientes() {
                     />
                 </div>
             </div>
-            <Tabela clientes={clientes} excluirCliente={excluirCliente} editarCliente={handleAbrirEdicao}></Tabela>
-
+            <Tabela
+                clientes={clientes}
+                excluirCliente={abrirModalDesativar}
+                editarCliente={handleAbrirEdicao}></Tabela>
+            <ModalDesativar
+                isOpen={isModalDesativarOpen}
+                onClose={() => {
+                    setIsModalDesativarOpen(false);
+                    setClienteParaDesativar(null);
+                }}
+                onConfirm={confirmarDesativacao}
+                titulo="Desativar Cliente"
+                subtitulo="Informações do Cliente"
+                textoBotao="Desativar"
+                corBotao="#dc3545"
+                iconClass="bx-user"
+                dados={clienteParaDesativar ? [
+                    { label: "Nome", value: clienteParaDesativar.nome, fullWidth: true },
+                    { label: "CPF/CNPJ", value: clienteParaDesativar.cpfCnpj || clienteParaDesativar.cpf_cnpj },
+                    { label: "Tipo de Cliente", value: clienteParaDesativar.tipoCliente || clienteParaDesativar.tipo_cliente },
+                    { label: "Email", value: clienteParaDesativar.email, fullWidth: true },
+                    { label: "Telefone", value: clienteParaDesativar.telefone, fullWidth: true }
+                ] : []}
+            />
             <ModalEditarCliente
                 isOpen={modalEditarAberto}
                 onClose={() => setModalEditarAberto(false)}

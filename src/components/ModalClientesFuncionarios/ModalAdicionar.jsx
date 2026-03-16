@@ -2,12 +2,10 @@ import { useState } from "react";
 import './ModalAdicionar.css';
 
 function ModalAdicionar({ isOpen, onClose, onSave }) {
-    const [etapa, setEtapa] = useState("pesquisa");
-
     const estadoInicial = {
         nome: "",
         cpfCnpj: "",
-        tipo: "Pessoa Física",
+        tipo: "PESSOA_FISICA",
         telefone: "",
         email: "",
     };
@@ -16,22 +14,18 @@ function ModalAdicionar({ isOpen, onClose, onSave }) {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
+        setFormData(prev => ({ ...prev, [name]: value }));
     };
 
     const handleCancelar = () => {
-        setEtapa("pesquisa");
-        setFormData(estadoInicial); // Usa a constante para resetar tudo
+        setFormData(estadoInicial);
         onClose();
     };
 
     const handleFinalizar = async () => {
         try {
             await onSave(formData);
-            handleCancelar(); // Reset e fechar
+            handleCancelar();
         } catch (error) {
             console.error("Erro ao salvar:", error);
             alert("Erro ao salvar cliente.");
@@ -44,46 +38,102 @@ function ModalAdicionar({ isOpen, onClose, onSave }) {
         <>
             <div className="modal-backdrop fade show" onClick={handleCancelar} style={{ zIndex: 1040 }} />
 
-            <div className={`modal fade show d-block`} style={{ zIndex: 1050 }}>
+            <div className="modal fade show d-block" style={{ zIndex: 1050 }}>
                 <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content modal-entrada">
-                        <div className="modal-header border-0">
-                            <h2 className="modal-title fw-bold titulo-modal">Informações do Cliente</h2>
-                            <button className="btn-close" onClick={handleCancelar}></button>
+                    <div className="modal-content border-0 p-3" style={{ borderRadius: '12px' }}>
+
+                        <div className="modal-header border-0 pb-0">
+                            <h2 className="fw-medium" style={{ fontSize: '1.75rem', color: '#000' }}>
+                                Adicionar novo Cliente
+                            </h2>
                         </div>
 
                         <div className="modal-body">
-                            {etapa === "pesquisa" && (
-                                <>
-                                    <label className="form-label fw-semibold">Nome</label>
-                                    <input type="text" name="nome" value={formData.nome} onChange={handleChange} className="form-control mb-3" placeholder="Maria Oliveira" />
+                            <div className="p-3 border rounded-3 mb-4" style={{ backgroundColor: '#f8f9fa' }}>
+                                <div className="d-flex align-items-center mb-3 text-muted">
+                                    <i className='bx bx-list-check me-2' style={{ fontSize: '1.2rem' }}></i>
+                                    <span style={{ fontSize: '0.95rem' }}>Preencha os campos abaixo</span>
+                                </div>
 
-                                    <label className="form-label fw-semibold">CPF/CNPJ</label>
-                                    <input type="text" name="cpfCnpj" value={formData.cpfCnpj} onChange={handleChange} className="form-control mb-3" placeholder="000.000.000-00" />
+                                <div className="row g-3">
+                                    <div className="col-12">
+                                        <label className="form-label mb-1 text-dark fw-normal">Nome</label>
+                                        <input
+                                            type="text"
+                                            name="nome"
+                                            value={formData.nome}
+                                            onChange={handleChange}
+                                            className="form-control bg-light border-0"
+                                            placeholder="Gabriel"
+                                        />
+                                    </div>
 
-                                    <label className="form-label fw-semibold">Email</label>
-                                    <input type="text" name="email" value={formData.email} onChange={handleChange} className="form-control mb-3" placeholder="maria.oliveira@email.com" />
+                                    <div className="col-6">
+                                        <label className="form-label mb-1 text-dark fw-normal">CPF/CNPJ</label>
+                                        <input
+                                            type="text"
+                                            name="cpfCnpj"
+                                            value={formData.cpfCnpj}
+                                            onChange={handleChange}
+                                            className="form-control bg-light border-0"
+                                            placeholder="132913128381"
+                                        />
+                                    </div>
+                                    <div className="col-6">
+                                        <label className="form-label mb-1 text-dark fw-normal">Tipo de Cliente</label>
+                                        <select
+                                            name="tipo"
+                                            value={formData.tipo}
+                                            onChange={handleChange}
+                                            className="form-select bg-light border-0"
+                                        >
+                                            <option value="PESSOA_FISICA">PESSOA_FISICA</option>
+                                            <option value="PESSOA_JURIDICA">PESSOA_JURIDICA</option>
+                                        </select>
+                                    </div>
 
-                                    <label className="form-label fw-semibold">Telefone</label>
-                                    <input type="text" name="telefone" value={formData.telefone} onChange={handleChange} className="form-control mb-3" placeholder="(00) 00000-0000" />
+                                    <div className="col-12">
+                                        <label className="form-label mb-1 text-dark fw-normal">Email</label>
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleChange}
+                                            className="form-control bg-light border-0"
+                                            placeholder="grotrack@gmail.com"
+                                        />
+                                    </div>
 
-                                    <label className="form-label fw-semibold">Tipo</label>
-                                    <select
-                                        name="tipo"
-                                        value={formData.tipo}
-                                        onChange={handleChange}
-                                        className="form-select mb-4"
-                                    >
-                                        <option value="" disabled>Selecione um serviço...</option>
-                                        <option value="Pessoa Física">Pessoa Física</option>
-                                        <option value="Pessoa Jurídica">Pessoa Jurídica</option>
-                                    </select>
+                                    <div className="col-12">
+                                        <label className="form-label mb-1 text-dark fw-normal">Telefone</label>
+                                        <input
+                                            type="text"
+                                            name="telefone"
+                                            value={formData.telefone}
+                                            onChange={handleChange}
+                                            className="form-control bg-light border-0"
+                                            placeholder="11999999999"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
 
-                                    <button className="btn btn-primary w-100 mb-3" onClick={handleFinalizar}>
-                                        Próximo
-                                    </button>
-                                </>
-                            )}
+                            <div className="d-flex gap-3">
+                                <button
+                                    className="btn w-100 fw-medium"
+                                    onClick={handleFinalizar}
+                                    style={{ backgroundColor: '#5cb85c', color: '#fff', padding: '10px 0' }}
+                                >
+                                    Confirmar
+                                </button>
+                                <button
+                                    className="btn w-100 fw-medium border"
+                                    onClick={handleCancelar}
+                                    style={{ backgroundColor: '#fff', color: '#333', padding: '10px 0' }}
+                                >
+                                    Cancelar
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

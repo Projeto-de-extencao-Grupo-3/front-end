@@ -56,7 +56,7 @@ function Tabela({ clientes, excluirCliente, editarCliente }) {
                                             className="btn-acao btn-excluir" 
                                             title="Excluir"
                                             onClick={() => {
-                                                    excluirCliente(idAtual);
+                                                    excluirCliente(cliente);
                                             }}
                                         >
                                             <i className='bx bx-x'></i>
