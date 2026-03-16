@@ -20,6 +20,21 @@ function ControleEstoque() {
     const [isModalDesativarOpen, setIsModalDesativarOpen] = useState(false);
     const [editarQuantidadeEstoque, setEditarQuantidadeEstoque] = useState(false);
 
+    const [filtroTexto, setFiltroTexto] = useState("");
+    const [categoriaAtiva, setCategoriaAtiva] = useState("TODOS");
+
+    const produtosFiltrados = produtos.filter((produto) => {
+        const matchesTexto = produto.nome.toLowerCase().includes(filtroTexto.toLowerCase());
+        const matchesCategoria = categoriaAtiva === "TODOS" || produto.tipo_servico === categoriaAtiva;
+        return matchesTexto && matchesCategoria;
+    });
+
+    const categorias = [
+        { id: "FUNILARIA", label: "FUNILARIA", icon: "bi-tools" },
+        { id: "PINTURA", label: "PINTURA", icon: "bi-paint-bucket" },
+        { id: "OUTROS", label: "OUTROS", icon: "bi-box-seam" },
+    ];
+
     const lidarComAjusteEstoque = (produto) => {
         setItemParaAjustarEstoque(produto);
         setEditarQuantidadeEstoque(true);
@@ -70,7 +85,7 @@ function ControleEstoque() {
             const id = itemParaAjustarEstoque.id_peca || itemParaAjustarEstoque.id;
 
             const dadosParaEnviar = {
-                id: id, 
+                id: id,
                 quantidade_estoque: parseInt(novaQuantidade)
             };
 
@@ -95,6 +110,27 @@ function ControleEstoque() {
                         Adicionar novo item +
                     </button>
                 </div>
+            </div>
+
+            <div className="d-flex gap-2 mb-4 mt-3 flex-wrap">
+                {categorias.map((cat) => (
+                    <button
+                        key={cat.id}
+                        onClick={() => setCategoriaAtiva(categoriaAtiva === cat.id ? "TODOS" : cat.id)}
+                        className={`btn d-flex align-items-center gap-2 px-4 py-2 fw-semibold transition-all shadow-sm`}
+                        style={{
+                            borderRadius: '8px',
+                            border: '1px solid #ccc',
+                            backgroundColor: categoriaAtiva === cat.id ? '#1b4a7d' : '#fff',
+                            color: categoriaAtiva === cat.id ? '#fff' : '#888',
+                            fontSize: '0.9rem',
+                            textTransform: 'uppercase'
+                        }}
+                    >
+                        <i className={`bi ${cat.icon}`} style={{ fontSize: '1.2rem' }}></i>
+                        {cat.label}
+                    </button>
+                ))}
             </div>
 
             <TabelaEstoque
