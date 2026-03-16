@@ -134,7 +134,7 @@ function ControleEstoque() {
             </div>
 
             <TabelaEstoque
-                produtos={produtos}
+                produtos={produtosFiltrados}
                 excluirProdutos={lidarComDesativacao}
                 editarProdutos={lidarComEdicao}
                 editarQuantidadeEstoque={lidarComAjusteEstoque}
