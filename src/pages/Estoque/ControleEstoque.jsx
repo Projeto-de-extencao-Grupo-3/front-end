@@ -30,9 +30,9 @@ function ControleEstoque() {
     });
 
     const categorias = [
-        { id: "FUNILARIA", label: "FUNILARIA", icon: "bi-tools" },
-        { id: "PINTURA", label: "PINTURA", icon: "bi-paint-bucket" },
-        { id: "OUTROS", label: "OUTROS", icon: "bi-box-seam" },
+        { id: "FUNILARIA", label: "FUNILARIA", icon: "bx-gear" },
+        { id: "PINTURA", label: "PINTURA", icon: "bx-paint-roll" },
+        { id: "OUTROS", label: "OUTROS", icon: "bx-package" },
     ];
 
     const lidarComAjusteEstoque = (produto) => {
@@ -127,7 +127,7 @@ function ControleEstoque() {
                             textTransform: 'uppercase'
                         }}
                     >
-                        <i className={`bi ${cat.icon}`} style={{ fontSize: '1.2rem' }}></i>
+                        <i className={`bx ${cat.icon}`} style={{ fontSize: '1.2rem' }}></i>
                         {cat.label}
                     </button>
                 ))}
