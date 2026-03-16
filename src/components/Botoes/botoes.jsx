@@ -99,7 +99,7 @@ function Botoes({ pagina, placa }) {
             {(pagina === "aguardar" || pagina === "produzir" || pagina === "aprovar") && (
                 <div className="button container4">
                     <div className="icon" style={{ backgroundImage: `url(${EditIcon})` }}></div>
-                    <button className="botao">Editar orçamento</button>
+                    <button className="botao" onClick={() => setModalRevisar(true)}>Editar orçamento</button>
                 </div>
             )}
 
@@ -155,6 +155,8 @@ function Botoes({ pagina, placa }) {
                 descricao="Deseja realmente finalizar este serviço?"
             />
 
+                
+            
             <ModalConfirmacao
                 aberto={modalNota}
                 aoConfirmar={() => { setModalNota(false); navegarPara("/painelControle/analisar3"); }}
@@ -166,12 +168,11 @@ function Botoes({ pagina, placa }) {
 
             <ModalConfirmacao
                 aberto={modalRevisar}
-                aoConfirmar={() => setModalRevisar(false)}
+                aoConfirmar={() =>  { setModalServico(false); navegarPara("/painelControle/orcamento"); }}
                 aoCancelar={() => setModalRevisar(false)}
                 icone={iconRevisar}
                 titulo="Revisar Orçamento?"
                 descricao="Caso você volte, o orçamento terá que ser aprovado novamente pelo cliente."
-                tipoBotaoConfirmar="perigo"
             />
         </div>
     );

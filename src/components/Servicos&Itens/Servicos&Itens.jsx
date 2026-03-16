@@ -5,11 +5,13 @@ import Servicos from "./Abas/Servicos";
 import Itens from "./Abas/Itens";
 import ModalAdicionarServico from "../ModalAdicionarServico/ModalAdicionarServico";
 import ModalAdicionarItem from "../ModalAdicionarItem/ModalAdicionarItem";
+import ServicosEItensLogic from "../../service/Servicos&Itens.js";
 
 function ServicosEItens({ pagina }) {
+    const { adicionarServico } = ServicosEItensLogic();
     const [_dados, setDados] = useState([]);
     const [abaAtiva, setAbaAtiva] = useState("servicos");
-    
+
     const [mostrarModalServico, setMostrarModalServico] = useState(false);
     const [modoServico, setModoServico] = useState("adicionar");
     const [servicoVisualizar, setServicoVisualizar] = useState(null);
@@ -17,6 +19,8 @@ function ServicosEItens({ pagina }) {
     const [mostrarModalItem, setMostrarModalItem] = useState(false);
     const [modoItem, setModoItem] = useState("adicionar");
     const [itemVisualizar, setItemVisualizar] = useState(null);
+
+
 
     const ticket = {
         id: 1,
@@ -27,6 +31,8 @@ function ServicosEItens({ pagina }) {
                 tipo: "Pintura",
                 parte: "Para-Choque",
                 lado: "Dianteiro",
+                tipoPintura: "Pintura a Spray",
+                cor: "Azul Marinho",
                 preco: 400.00
             },
             {
@@ -154,22 +160,22 @@ function ServicosEItens({ pagina }) {
 
             <div className="conteudo">
                 {abaAtiva === "servicos" ? (
-                    <Servicos 
+                    <Servicos
                         dados={ticket.servicos}
                         pagina={pagina}
                         onVisualizar={(dados) => {
                             setServicoVisualizar(dados);
                             setMostrarModalServico(true);
-                        }} 
+                        }}
                     />
                 ) : (
-                    <Itens 
-                        dados={ticket.itens} 
+                    <Itens
+                        dados={ticket.itens}
                         pagina={pagina}
                         onVisualizar={(dados) => {
                             setItemVisualizar(dados);
                             setMostrarModalItem(true);
-                        }} 
+                        }}
                     />
                 )}
             </div>
@@ -180,8 +186,9 @@ function ServicosEItens({ pagina }) {
                 placa={ticket.placa}
                 modo={modoServico}
                 servico={servicoVisualizar}
+                onSave={adicionarServico}
             />
-            
+
             <ModalAdicionarItem
                 isOpen={mostrarModalItem}
                 onClose={() => setMostrarModalItem(false)}

@@ -1,18 +1,62 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import OrdemServicoCard from "../ServicoCard/OrdemServicoCard";
 import "./ModalAdicionarServico.css";
 
 // Adicionamos as props 'modo' (padrão é "adicionar") e 'servico' (dados para visualização)
-function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", servico }) {
-    const [aba, setAba] = useState("funilaria");
+function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", servico, onSave }) {
+    const [aba, setAba] = useState("FUNILARIA");
+
+    const [formData, setFormData] = useState({
+        fk_ordem_servico: 1,
+        preco_cobrado: "",
+        parte_veiculo: "",
+        lado_veiculo: "",
+        cor: "",
+        especificacao_servico: "",
+        observacoes_item: "Nenhuma"
+    });
+
+    useEffect(() => {
+        setFormData(prev => ({
+            ...prev,
+            tipo_servico: aba
+        }));
+    }, [aba]);
 
     if (!isOpen) return null;
 
     // Define qual aba/tipo de serviço está ativo. 
     // Se for visualizar, pega do objeto. Se for adicionar, pega do state clicado.
-    const tipoAba = modo === "visualizar" && servico 
-        ? servico.tipo?.toLowerCase() 
+    const tipoAba = modo === "visualizar" && servico
+        ? servico.tipo?.toLowerCase()
         : aba;
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleFinalizar = async () => {
+        try {
+
+            const dados = {
+                ...formData,
+                tipo_servico: tipoAba,
+                placa: placa
+            };
+
+            await onSave(dados);
+
+            onClose();
+
+        } catch (error) {
+            console.error("Erro ao salvar:", error);
+        }
+    };
 
     return (
         <>
@@ -48,29 +92,35 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                 {modo === "adicionar" ? (
                                     <>
                                         <div className="tabs-servico">
-                                            <button className={aba === "funilaria" ? "ativo" : ""} onClick={() => setAba("funilaria")}>Funilaria</button>
-                                            <button className={aba === "pintura" ? "ativo" : ""} onClick={() => setAba("pintura")}>Pintura</button>
-                                            <button className={aba === "outros" ? "ativo" : ""} onClick={() => setAba("outros")}>Outros</button>
+                                            <button className={aba === "FUNILARIA" ? "ativo" : ""} onClick={() => setAba("FUNILARIA")}>Funilaria</button>
+                                            <button className={aba === "PINTURA" ? "ativo" : ""} onClick={() => setAba("PINTURA")}>Pintura</button>
+                                            <button className={aba === "OUTROS" ? "ativo" : ""} onClick={() => setAba("OUTROS")}>Outros</button>
                                         </div>
                                         <p className="texto-info">Todos os itens com (*) são obrigatórios!</p>
                                     </>
                                 ) : (
                                     <div className="badge-tipo-servico mb-3">
-                                        {servico?.tipo || "Funilaria"}
+                                        {servico?.tipo || "FUNILARIA"}
                                     </div>
                                 )}
 
                                 {/* FORMULÁRIO DINÂMICO */}
                                 <div className="row g-3">
-                                    
+
                                     {/* CAMPO SERVIÇO: Aba Outros */}
-                                    {tipoAba === "outros" && (
+                                    {tipoAba === "OUTROS" && (
                                         <div className="col-12">
                                             <label>Serviço*</label>
                                             {modo === "visualizar" ? (
                                                 <input className="form-control" value={servico?.nomeServico || "Não informado"} readOnly />
                                             ) : (
-                                                <input className="form-control" placeholder="Informe qual foi o serviço realizado" />
+                                                <input
+                                                    name="tipo_servico"
+                                                    className="form-control"
+                                                    placeholder="Informe qual foi o serviço realizado"
+                                                    value={formData.tipo_servico || ""}
+                                                    onChange={handleChange}
+                                                />
                                             )}
                                         </div>
                                     )}
@@ -80,8 +130,25 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                         {modo === "visualizar" ? (
                                             <input className="form-control" value={servico?.parte || "Não informada"} readOnly />
                                         ) : (
-                                            <select className="form-control form-select">
-                                                <option>Selecione a parte</option>
+                                            <select
+                                                name="parte_veiculo"
+                                                className="form-control form-select"
+                                                value={formData.parte_veiculo}
+                                                onChange={handleChange}>
+
+                                                <option value="" disabled>Selecione a parte</option>
+                                                <option value="PARACHOQUE">PARACHOQUE</option>
+                                                <option value="GRADE">GRADE</option>
+                                                <option value="CAPO">CAPO</option>
+                                                <option value="TETO">TETO</option>
+                                                <option value="SAIA">SAIA</option>
+                                                <option value="PAINEL">PAINEL</option>
+                                                <option value="TAMPA_DO_MOTOR">TAMPA DO MOTOR</option>
+                                                <option value="PORTA_BAGAGEIRO">PORTA BAGAGEIRO</option>
+                                                <option value="CAIXA_DE_RODA">CAIXA DE RODA</option>
+                                                <option value="CURVAO">CURVAO</option>
+                                                <option value="PORTA">PORTA</option>
+                                                <option value="PORTA_DE_SERVICO">PORTA DE SERVICO</option>
                                             </select>
                                         )}
                                     </div>
@@ -91,8 +158,23 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                         {modo === "visualizar" ? (
                                             <input className="form-control" value={servico?.lado || "Não informado"} readOnly />
                                         ) : (
-                                            <select className="form-control form-select">
-                                                <option>Selecione o lado</option>
+                                            <select
+                                                name="lado_veiculo"
+                                                className="form-control form-select"
+                                                value={formData.lado_veiculo}
+                                                onChange={handleChange}>
+
+                                                <option value="" disabled>Selecione o lado</option>
+                                                <option value="DIANTEIRO">DIANTEIRO</option>
+                                                <option value="TRASEIRO">TRASEIRO</option>
+                                                <option value="COMPLETO">COMPLETO</option>
+                                                <option value="DIREITO">DIREITO</option>
+                                                <option value="ESQUERDO">ESQUERDO</option>
+                                                <option value="DIANTEIRO_DIREITO">DIANTEIRO DIREITO</option>
+                                                <option value="DIANTEIRO_ESQUERDO">DIANTEIRO ESQUERDO</option>
+                                                <option value="TRASEIRO_DIREITO">TRASEIRO DIREITO</option>
+                                                <option value="TRASEIRO_ESQUERDO">TRASEIRO ESQUERDO</option>
+                                                <option value="SAIA">SAIA</option>
                                             </select>
                                         )}
                                     </div>
@@ -102,12 +184,18 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                         {modo === "visualizar" ? (
                                             <input className="form-control" value={servico?.descricao || "Sem descrição"} readOnly />
                                         ) : (
-                                            <textarea className="form-control" placeholder="Descreva o serviço a ser realizado" />
+                                            <textarea
+                                                name="especificacao_servico"
+                                                className="form-control"
+                                                placeholder="Descreva o serviço a ser realizado"
+                                                value={formData.especificacao_servico}
+                                                onChange={handleChange}
+                                            />
                                         )}
                                     </div>
 
                                     {/* CAMPOS PINTURA */}
-                                    {tipoAba === "pintura" && (
+                                    {tipoAba === "PINTURA" && (
                                         <>
                                             <div className="col-md-6">
                                                 <label>Tipo de Pintura *</label>
@@ -115,6 +203,8 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                                     <input className="form-control" value={servico?.tipoPintura || "Não informado"} readOnly />
                                                 ) : (
                                                     <select className="form-control form-select">
+                                                        {/* Não esta salvando esse */}
+                                                        {/* Verificar se existe esse campo no banco de dados */}
                                                         <option>Selecione o tipo</option>
                                                     </select>
                                                 )}
@@ -123,9 +213,20 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                             <div className="col-md-6">
                                                 <label>Cor da Pintura *</label>
                                                 {modo === "visualizar" ? (
-                                                    <input className="form-control" value={servico?.corPintura || "Não informada"} readOnly />
+                                                    <input 
+                                                    name="cor"
+                                                    className="form-control" 
+                                                    value={servico?.cor || "Não informada"} 
+                                                    onChange={handleChange}
+                                                    readOnly />
                                                 ) : (
-                                                    <input className="form-control" placeholder="Informe a cor" />
+                                                    <input
+                                                        name="cor"
+                                                        className="form-control"
+                                                        placeholder="Informe a cor"
+                                                        value={formData.cor}
+                                                        onChange={handleChange}
+                                                    />
                                                 )}
                                             </div>
                                         </>
@@ -136,18 +237,34 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                         {modo === "visualizar" ? (
                                             <input className="form-control" value={servico?.preco ? `R$ ${servico.preco}` : "R$ 0,00"} readOnly />
                                         ) : (
-                                            <input className="form-control" placeholder="R$ 0,00" />
+                                            <input
+                                                name="preco_cobrado"
+                                                className="form-control"
+                                                placeholder="R$ 0,00"
+                                                value={formData.preco_cobrado}
+                                                onChange={handleChange}
+                                            />
                                         )}
                                     </div>
 
-                                    {/* OBSERVAÇÕES: Aba Funilaria */}
-                                    {tipoAba === "funilaria" && (
+                                    {/* OBSERVAÇÕES: Aba FUNILARIA */}
+                                    {tipoAba === "FUNILARIA" && (
                                         <div className="col-12">
                                             <label>Observações</label>
                                             {modo === "visualizar" ? (
-                                                <input className="form-control" value={servico?.observacoes || "Nenhuma"} readOnly />
+                                                <input
+                                                    name="observacoes_item"
+                                                    className="form-control"
+                                                    value={formData?.observacoes_item || "Nenhuma"}
+                                                    onChange={handleChange}
+                                                    readOnly />
                                             ) : (
-                                                <textarea className="form-control" />
+                                                <textarea
+                                                    name="observacoes_item"
+                                                    className="form-control"
+                                                    value={formData.observacoes_item}
+                                                    onChange={handleChange}
+                                                />
                                             )}
                                         </div>
                                     )}
@@ -156,7 +273,7 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                 {/* BOTÕES DINÂMICOS */}
                                 {modo === "adicionar" ? (
                                     <div className="botoes-modal mt-4">
-                                        <button className="btn-adicionar">Adicionar</button>
+                                        <button className="btn-adicionar" onClick={handleFinalizar}>Adicionar</button>
                                         <button className="btn-cancel" onClick={onClose}>Cancelar</button>
                                     </div>
                                 ) : (

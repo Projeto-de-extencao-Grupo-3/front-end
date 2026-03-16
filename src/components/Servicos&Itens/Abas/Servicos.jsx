@@ -11,6 +11,8 @@ function Servicos({ dados, pagina, onVisualizar }) {
                     <th className="title">Tipo Serviço</th>
                     <th className="title">Parte</th>
                     <th className="title">Lado</th>
+                    <th className="title">Tipo de Pintura:</th>
+                    <th className="title">Cor</th>
                     <th className="title">Preço</th>
                     <th className="title">Opções</th>
                 </tr>
@@ -21,6 +23,8 @@ function Servicos({ dados, pagina, onVisualizar }) {
                         <td className="dado">{servico.tipo}</td>
                         <td className="dado">{servico.parte}</td>
                         <td className="dado">{servico.lado}</td>
+                        <td className="dado">{servico.tipoPintura}</td>
+                        <td className="dado">{servico.cor}</td>
                         <td className="dado">R${servico.preco}</td>
 
                         {/* aq chama no modo de visualizar */}
@@ -32,7 +36,7 @@ function Servicos({ dados, pagina, onVisualizar }) {
 
                                         <div className="icon" style={{ backgroundImage: `url(${iconLixo})` }}></div>
 
-                                        <div className="icon" style={{ backgroundImage: `url(${iconBook})` }} onClick={() => onVisualizar(servico)}></div>
+                                        {/* <div className="icon" style={{ backgroundImage: `url(${iconBook})` }} onClick={() => onVisualizar(servico)}></div> */}
                                     </>
                                     :
                                     <div className="icon" style={{ backgroundImage: `url(${iconBook})` }} onClick={() => onVisualizar(servico)}></div>
