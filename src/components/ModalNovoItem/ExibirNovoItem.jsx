@@ -59,7 +59,6 @@ function ExibirNovoItem({ isOpen, onClose, dadosDoProduto, onUpdate }) {
                         </div>
 
                         <div className="modal-body">
-                            {/* Quadro interno cinza padronizado */}
                             <div className="p-3 border rounded-3 mb-4" style={{ backgroundColor: '#f8f9fa' }}>
                                 <div className="d-flex align-items-center mb-3 text-muted">
                                     <i className='bx bxs-briefcase me-2' style={{ fontSize: '1.2rem' }}></i>
@@ -163,7 +162,6 @@ function ExibirNovoItem({ isOpen, onClose, dadosDoProduto, onUpdate }) {
                                 </div>
                             </div>
 
-                            {/* Botões de Ação lado a lado */}
                             <div className="d-flex gap-3 mt-2">
                                 <button
                                     className="btn btn-success w-100 fw-medium py-2"

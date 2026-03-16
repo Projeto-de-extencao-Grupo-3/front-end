@@ -65,11 +65,27 @@ function Produtos() {
         }
     };
 
+    const atualizarQuantidadeEstoque = async (id, dadosAtualizados) => {
+        try {
+            const response = await api.patch(`/produtos/quantidade-estoque`, dadosAtualizados);
+            const produtoAtualizado = response.data;
+            setProdutos(prev => prev.map(p => {
+                const isTarget = p.id_peca === id || p.idPeca === id || p.id === id;
+                return isTarget ? produtoAtualizado : p;
+            }));
+            exibirAlertaSucesso("Quantidade atualizado com sucesso!");
+            return produtoAtualizado;
+        } catch (error) {
+            exibirAlertaErro("Erro ao atualizar a quantidade.");
+            throw error;
+        }
+    };
+
     useEffect(() => {
         listarProdutos();
     }, []);
 
-    return { produtos, loading, adicionarProduto, excluirProduto, atualizarProduto };
+    return { produtos, loading, adicionarProduto, excluirProduto, atualizarProduto, atualizarQuantidadeEstoque };
 }
 
 export default Produtos;

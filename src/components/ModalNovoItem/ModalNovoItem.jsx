@@ -97,7 +97,6 @@ function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
                                 Preencha os campos abaixo
                             </p>
 
-                            {/* Nome */}
                             <label className="form-label fw-semibold">Nome</label>
                             <input
                                 type="text"
@@ -108,7 +107,6 @@ function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
                                 placeholder="Ex: Tinta-Azul-Fiat"
                             />
 
-                            {/* Fornecedor */}
                             <label className="form-label fw-semibold">Fornecedor</label>
                             <input
                                 type="text"
@@ -128,11 +126,9 @@ function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
                                 <option value="" disabled>Selecione um serviço...</option>
                                 <option value="FUNILARIA">FUNILARIA</option>
                                 <option value="PINTURA">PINTURA</option>
-                                <option value="MECANICA">MECANICA</option>
                                 <option value="OUTROS">OUTROS</option>
                             </select>
 
-                            {/* Visibilidade */}
                             <label className="form-label fw-semibold">
                                 Visibilidade em Orçamento/Ordem de Serviço
                             </label>
@@ -163,7 +159,6 @@ function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
                                 </div>
                             </div>
 
-                            {/* Preços */}
                             <div className="row mb-3">
                                 <div className="col">
                                     <label className="form-label fw-semibold">
@@ -200,7 +195,6 @@ function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
                                 </div>
                             </div>
 
-                            {/* Quantidade mínima */}
                             <label className="form-label fw-semibold">
                                 Quantidade no estoque
                             </label>
@@ -216,7 +210,6 @@ function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
                                 />
                             </div>
 
-                            {/* Botões */}
                             <div className="d-flex gap-3">
                                 <button
                                     className="btn btn-success w-50 botao-confirmar"

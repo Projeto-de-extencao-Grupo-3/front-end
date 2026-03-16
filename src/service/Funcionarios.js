@@ -28,9 +28,7 @@ function Funcionarios() {
                 telefone: dadosDoFormulario.telefone,
                 email: dadosDoFormulario.email,
                 senha: dadosDoFormulario.senha,
-                fk_oficina: {
-                    id_oficina: 1
-                }
+                fk_oficina: 1
             };
 
             const response = await api.post("/funcionarios", payload);
@@ -66,18 +64,17 @@ function Funcionarios() {
     const atualizarFuncionario = async (id, dadosAtualizados) => {
         try {
             const payload = {
+                id: id,
                 nome: dadosAtualizados.nome,
                 cargo: dadosAtualizados.cargo,
                 especialidade: dadosAtualizados.especialidade,
                 telefone: dadosAtualizados.telefone,
                 email: dadosAtualizados.email,
                 senha: dadosAtualizados.senha,
-                fk_oficina: {
-                    id_oficina: 1
-                }
+                fk_oficina: 1
             };
 
-            const response = await api.put(`/funcionarios/${id}`, payload);
+            const response = await api.put(`/funcionarios`, payload);
             setFuncionarios(prev => prev.map(f =>
                 (f.id_funcionario === id || f.idFuncionario === id) ? response.data : f
             ));

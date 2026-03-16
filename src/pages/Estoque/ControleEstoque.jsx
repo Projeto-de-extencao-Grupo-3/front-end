@@ -5,17 +5,40 @@ import "./ControleEstoque.css";
 import ExibirNovoItem from "../../components/ModalNovoItem/ExibirNovoItem.jsx";
 import ModalNovoItem from "../../components/ModalNovoItem/ModalNovoItem.jsx";
 import ModalDesativarEstoque from "../../components/ModalClientesFuncionarios/ModalDesativarEstoque.jsx";
+import EditarQuantidadeEstoque from "../../components/ModalNovoItem/EditarQuantidadeEstoque.jsx";
 import Produtos from "../../service/Produtos.js";
 
 function ControleEstoque() {
-    const { produtos, excluirProduto, adicionarProduto, atualizarProduto } = Produtos();
+    const { produtos, excluirProduto, adicionarProduto, atualizarProduto, atualizarQuantidadeEstoque } = Produtos();
 
     const [produtosParaEditar, setProdutosParaEditar] = useState(null);
-    const [itemParaDesativar, setItemParaDesativar] = useState(null); // Estado para o item a ser excluído
+    const [itemParaDesativar, setItemParaDesativar] = useState(null);
+    const [itemParaAjustarEstoque, setItemParaAjustarEstoque] = useState(null);
 
     const [mostrarModalAdicionar, setMostrarModalAdicionar] = useState(false);
     const [mostrarModalExibir, setMostrarModalExibir] = useState(false);
-    const [isModalDesativarOpen, setIsModalDesativarOpen] = useState(false); // Controle do modal de desativação
+    const [isModalDesativarOpen, setIsModalDesativarOpen] = useState(false);
+    const [editarQuantidadeEstoque, setEditarQuantidadeEstoque] = useState(false);
+
+    const [filtroTexto, _setFiltroTexto] = useState("");
+    const [categoriaAtiva, setCategoriaAtiva] = useState("TODOS");
+
+    const produtosFiltrados = produtos.filter((produto) => {
+        const matchesTexto = produto.nome.toLowerCase().includes(filtroTexto.toLowerCase());
+        const matchesCategoria = categoriaAtiva === "TODOS" || produto.tipo_servico === categoriaAtiva;
+        return matchesTexto && matchesCategoria;
+    });
+
+    const categorias = [
+        { id: "FUNILARIA", label: "FUNILARIA", icon: "bx-gear" },
+        { id: "PINTURA", label: "PINTURA", icon: "bx-paint-roll" },
+        { id: "OUTROS", label: "OUTROS", icon: "bx-package" },
+    ];
+
+    const lidarComAjusteEstoque = (produto) => {
+        setItemParaAjustarEstoque(produto);
+        setEditarQuantidadeEstoque(true);
+    };
 
     const lidarComEdicao = (produto) => {
         setProdutosParaEditar(produto);
@@ -57,6 +80,23 @@ function ControleEstoque() {
         }
     };
 
+    const confirmarAjusteEstoque = async (novaQuantidade) => {
+        try {
+            const id = itemParaAjustarEstoque.id_peca || itemParaAjustarEstoque.id;
+
+            const dadosParaEnviar = {
+                id: id,
+                quantidade_estoque: parseInt(novaQuantidade)
+            };
+
+            await atualizarQuantidadeEstoque(id, dadosParaEnviar);
+            setEditarQuantidadeEstoque(false);
+            setItemParaAjustarEstoque(null);
+        } catch (error) {
+            console.error("Erro ao ajustar estoque:", error);
+        }
+    };
+
     return (
         <Layout ativo={"estoque"}>
             <div className="header-clientes">
@@ -72,10 +112,32 @@ function ControleEstoque() {
                 </div>
             </div>
 
+            <div className="d-flex gap-2 mb-4 mt-3 flex-wrap">
+                {categorias.map((cat) => (
+                    <button
+                        key={cat.id}
+                        onClick={() => setCategoriaAtiva(categoriaAtiva === cat.id ? "TODOS" : cat.id)}
+                        className={`btn d-flex align-items-center gap-2 px-4 py-2 fw-semibold transition-all shadow-sm`}
+                        style={{
+                            borderRadius: '8px',
+                            border: '1px solid #ccc',
+                            backgroundColor: categoriaAtiva === cat.id ? '#1b4a7d' : '#fff',
+                            color: categoriaAtiva === cat.id ? '#fff' : '#888',
+                            fontSize: '0.9rem',
+                            textTransform: 'uppercase'
+                        }}
+                    >
+                        <i className={`bx ${cat.icon}`} style={{ fontSize: '1.2rem' }}></i>
+                        {cat.label}
+                    </button>
+                ))}
+            </div>
+
             <TabelaEstoque
-                produtos={produtos}
-                excluirProdutos={lidarComDesativacao} // Mudamos para abrir o modal primeiro
+                produtos={produtosFiltrados}
+                excluirProdutos={lidarComDesativacao}
                 editarProdutos={lidarComEdicao}
+                editarQuantidadeEstoque={lidarComAjusteEstoque}
             />
 
             <ModalNovoItem
@@ -95,7 +157,14 @@ function ControleEstoque() {
                 isOpen={isModalDesativarOpen}
                 onClose={() => setIsModalDesativarOpen(false)}
                 onConfirm={confirmarDesativacao}
-                itemParaDesativar={itemParaDesativar} // <--- Passa o objeto completo aqui
+                itemParaDesativar={itemParaDesativar}
+            />
+
+            <EditarQuantidadeEstoque
+                show={editarQuantidadeEstoque}
+                handleClose={() => setEditarQuantidadeEstoque(false)}
+                handleConfirm={confirmarAjusteEstoque}
+                itemParaAjustarEstoque={itemParaAjustarEstoque}
             />
         </Layout>
     );

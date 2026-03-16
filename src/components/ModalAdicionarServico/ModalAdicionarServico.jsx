@@ -17,10 +17,14 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
     });
 
     useEffect(() => {
-        setFormData(prev => ({
-            ...prev,
-            tipo_servico: aba
-        }));
+        const timer = setTimeout(() => {
+            setFormData(prev => ({
+                ...prev,
+                tipo_servico: aba
+            }));
+        }, 0);
+
+        return () => clearTimeout(timer);
     }, [aba]);
 
     if (!isOpen) return null;
@@ -213,12 +217,12 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                             <div className="col-md-6">
                                                 <label>Cor da Pintura *</label>
                                                 {modo === "visualizar" ? (
-                                                    <input 
-                                                    name="cor"
-                                                    className="form-control" 
-                                                    value={servico?.cor || "Não informada"} 
-                                                    onChange={handleChange}
-                                                    readOnly />
+                                                    <input
+                                                        name="cor"
+                                                        className="form-control"
+                                                        value={servico?.cor || "Não informada"}
+                                                        onChange={handleChange}
+                                                        readOnly />
                                                 ) : (
                                                     <input
                                                         name="cor"
