@@ -20,7 +20,7 @@ function ControleEstoque() {
     const [isModalDesativarOpen, setIsModalDesativarOpen] = useState(false);
     const [editarQuantidadeEstoque, setEditarQuantidadeEstoque] = useState(false);
 
-    const [filtroTexto, setFiltroTexto] = useState("");
+    const [filtroTexto, _setFiltroTexto] = useState("");
     const [categoriaAtiva, setCategoriaAtiva] = useState("TODOS");
 
     const produtosFiltrados = produtos.filter((produto) => {

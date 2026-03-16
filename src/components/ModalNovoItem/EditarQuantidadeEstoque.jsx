@@ -9,10 +9,14 @@ function EditarQuantidadeEstoque({ show, handleClose, handleConfirm, itemParaAju
 
     useEffect(() => {
         if (show && itemParaAjustarEstoque) {
-            setForm({
-                ...itemParaAjustarEstoque,
-                quantidade_estoque: itemParaAjustarEstoque.quantidade_estoque || 0
-            });
+            const timer = setTimeout(() => {
+                setForm({
+                    ...itemParaAjustarEstoque,
+                    quantidade_estoque: itemParaAjustarEstoque.quantidade_estoque || 0
+                });
+            }, 0);
+
+            return () => clearTimeout(timer);
         }
     }, [show, itemParaAjustarEstoque]);
 
@@ -39,7 +43,7 @@ function EditarQuantidadeEstoque({ show, handleClose, handleConfirm, itemParaAju
             <div className="modal fade show d-block" style={{ zIndex: 1050 }}>
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content border-0 p-3" style={{ borderRadius: '12px' }}>
-                        
+
                         <div className="modal-header border-0 justify-content-center pb-1">
                             <h2 className="fw-medium text-center" style={{ fontSize: '1.8rem', color: '#000' }}>
                                 Quantidade de Item em Estoque
@@ -47,8 +51,8 @@ function EditarQuantidadeEstoque({ show, handleClose, handleConfirm, itemParaAju
                         </div>
 
                         <div className="modal-body">
-                            <div className="alert border-0 d-flex align-items-start gap-2 py-3 mb-4" 
-                                 style={{ backgroundColor: '#1b4a7d', color: '#fff', borderRadius: '8px' }}>
+                            <div className="alert border-0 d-flex align-items-start gap-2 py-3 mb-4"
+                                style={{ backgroundColor: '#1b4a7d', color: '#fff', borderRadius: '8px' }}>
                                 <i className="bi bi-info-circle-fill mt-1" style={{ fontSize: '1.2rem' }}></i>
                                 <p className="mb-0 small fw-medium">
                                     Atenção! Esta ação vai alterar diretamente a quantidade em Estoque e pode ser desfeita!
