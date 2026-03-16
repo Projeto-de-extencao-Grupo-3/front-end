@@ -1,10 +1,10 @@
 import { useState } from "react";
 import api from "./api";
-import { exibirAlertaSucesso, exibirAlertaErro, exibirAlertaConfirmacao } from './alertas';
+import { exibirAlertaErro } from './alertas';
 
 function Veiculos(){
-    const [veiculos, setVeiculos] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [_veiculos, setVeiculos] = useState([]);
+    const [_loading, setLoading] = useState(true);
 
     const listarVeiculos = async () => {
         try {
