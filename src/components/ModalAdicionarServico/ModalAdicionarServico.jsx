@@ -3,11 +3,11 @@ import OrdemServicoCard from "../ServicoCard/OrdemServicoCard";
 import "./ModalAdicionarServico.css";
 
 // Adicionamos as props 'modo' (padrão é "adicionar") e 'servico' (dados para visualização)
-function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", servico, onSave }) {
+function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", servico, onSave, salvarNaOrdem }) {
     const [aba, setAba] = useState("FUNILARIA");
 
     const [formData, setFormData] = useState({
-        fk_ordem_servico: 1,
+        fk_ordem_servico: salvarNaOrdem,
         preco_cobrado: "",
         parte_veiculo: "",
         lado_veiculo: "",
