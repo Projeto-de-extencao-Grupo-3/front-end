@@ -17,19 +17,22 @@ function ModalEditarCliente({ isOpen, onClose, clienteParaEditar, onSave }) {
     }, []);
 
     useEffect(() => {
-        if (clienteParaEditar) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setDadosEditados({ ...clienteParaEditar });
+        if (clienteParaEditar && isOpen) {
+            const timer = setTimeout(() => {
+                setDadosEditados({ ...clienteParaEditar });
 
-            const idEnd = clienteParaEditar.id_endereco || clienteParaEditar.fk_endereco;
+                const idEnd = clienteParaEditar.id_endereco || clienteParaEditar.fk_endereco;
 
-            if (idEnd && typeof idEnd !== 'object') {
-                buscarEndereco(idEnd);
-            } else if (typeof idEnd === 'object') {
-                setDetalhesEndereco(idEnd);
-            }
+                if (idEnd && typeof idEnd !== 'object') {
+                    buscarEndereco(idEnd);
+                } else if (typeof idEnd === 'object') {
+                    setDetalhesEndereco(idEnd);
+                }
+            }, 0);
+
+            return () => clearTimeout(timer); 
         }
-    }, [clienteParaEditar, buscarEndereco]);
+    }, [clienteParaEditar, isOpen, buscarEndereco]);
 
     if (!isOpen || !dadosEditados) return null;
 
@@ -75,87 +78,129 @@ function ModalEditarCliente({ isOpen, onClose, clienteParaEditar, onSave }) {
             alert("Erro ao salvar alterações.");
         }
     };
+
     const endereco = detalhesEndereco || {};
 
     return (
         <div className="modal-overlay">
-            <div className="modal-content-custom">
-                <div className="modal-header-custom">
-                    <h2>Editar Cliente: {clienteParaEditar.nome}</h2>
+            <div className="modal-content-custom border-0 p-4" style={{ borderRadius: '12px', maxWidth: '650px' }}>
+
+                <div className="modal-header border-0 p-0 mb-4">
+                    <h2 className="fw-medium" style={{ fontSize: '2rem' }}>Edição de Cliente</h2>
                 </div>
 
-                <ul className="nav nav-tabs mb-4">
-                    <li className="nav-item">
-                        <button
-                            className={`nav-link ${abaAtiva === "cliente" ? "active fw-bold text-dark" : ""}`}
-                            onClick={() => setAbaAtiva("cliente")}
-                        >
-                            <i className='bx bx-user me-2'></i>Informações
-                        </button>
-                    </li>
-                    <li className="nav-item">
-                        <button
-                            className={`nav-link ${abaAtiva === "endereco" ? "active fw-bold text-dark" : ""}`}
-                            onClick={() => setAbaAtiva("endereco")}
-                        >
-                            <i className='bx bx-map me-2'></i>Endereço
-                        </button>
-                    </li>
-                </ul>
+                <div className="d-flex p-1 mb-4" style={{ backgroundColor: '#e9ecef', borderRadius: '8px' }}>
+                    <button
+                        className="btn w-100 border-0"
+                        style={{
+                            backgroundColor: abaAtiva === "cliente" ? "#fff" : "transparent",
+                            boxShadow: abaAtiva === "cliente" ? "0 2px 4px rgba(0,0,0,0.1)" : "none",
+                            borderRadius: '6px',
+                            fontWeight: '500',
+                            color: '#000'
+                        }}
+                        onClick={() => setAbaAtiva("cliente")}
+                    >
+                        Dados do Cliente
+                    </button>
+                    <button
+                        className="btn w-100 border-0"
+                        style={{
+                            backgroundColor: abaAtiva === "endereco" ? "#fff" : "transparent",
+                            boxShadow: abaAtiva === "endereco" ? "0 2px 4px rgba(0,0,0,0.1)" : "none",
+                            borderRadius: '6px',
+                            fontWeight: '500',
+                            color: '#000'
+                        }}
+                        onClick={() => setAbaAtiva("endereco")}
+                    >
+                        Dados do Endereço
+                    </button>
+                </div>
 
-                <div className="modal-body-custom">
+                <div className="p-4 border rounded-3 mb-4" style={{ backgroundColor: '#f9f9f9' }}>
+                    <div className="d-flex align-items-center mb-4 text-muted">
+                        <i className={`bx ${abaAtiva === 'cliente' ? 'bx-user' : 'bx-building-house'} me-2`} style={{ fontSize: '1.3rem' }}></i>
+                        <span style={{ fontSize: '1.1rem', fontWeight: '500' }}>
+                            {abaAtiva === 'cliente' ? "Informações do Cliente" : "Informações do Endereço"}
+                        </span>
+                    </div>
+
                     {abaAtiva === "cliente" ? (
                         <div className="row g-3">
-                            <div className="col-md-12">
-                                <label className="form-label">Nome Completo</label>
-                                <input type="text" className="form-control" name="nome" value={dadosEditados.nome || ""} onChange={handleChange} />
+                            <div className="col-12">
+                                <label className="form-label text-dark">Nome</label>
+                                <input type="text" className="form-control bg-light border-0" name="nome" value={dadosEditados.nome || ""} onChange={handleChange} placeholder="Exemplo: Gabriel" />
                             </div>
-                            <div className="col-md-6">
-                                <label className="form-label">CPF/CNPJ</label>
-                                <input type="text" className="form-control" value={dadosEditados.cpfCnpj || dadosEditados.cpf_cnpj || ""} disabled />
+                            <div className="col-6">
+                                <label className="form-label text-dark">CPF/CNPJ</label>
+                                <input type="text" className="form-control bg-light border-0" value={dadosEditados.cpfCnpj || dadosEditados.cpf_cnpj || ""} disabled />
                             </div>
-                            <div className="col-md-6">
-                                <label className="form-label">Telefone</label>
-                                <input type="text" className="form-control" name="telefone" value={dadosEditados.telefone || ""} onChange={handleChange} />
+                            <div className="col-6">
+                                <label className="form-label text-dark">Tipo de Cliente</label>
+                                <select className="form-select bg-light border-0" name="tipo_cliente" value={dadosEditados.tipo_cliente || ""} onChange={handleChange}>
+                                    <option value="PESSOA_FISICA">PESSOA_FISICA</option>
+                                    <option value="PESSOA_JURIDICA">PESSOA_JURIDICA</option>
+                                </select>
                             </div>
-                            <div className="col-md-12">
-                                <label className="form-label">E-mail</label>
-                                <input type="email" className="form-control" name="email" value={dadosEditados.email || ""} onChange={handleChange} />
+                            <div className="col-12">
+                                <label className="form-label text-dark">Email</label>
+                                <input type="email" className="form-control bg-light border-0" name="email" value={dadosEditados.email || ""} onChange={handleChange} />
+                            </div>
+                            <div className="col-12">
+                                <label className="form-label text-dark">Telefone</label>
+                                <input type="text" className="form-control bg-light border-0" name="telefone" value={dadosEditados.telefone || ""} onChange={handleChange} />
                             </div>
                         </div>
                     ) : (
                         <div className="row g-3">
-                            <div className="col-md-4">
-                                <label className="form-label">CEP</label>
-                                <input type="text" className="form-control" name="cep" value={endereco?.cep || "N/A"} disabled />
+                            <div className="col-6">
+                                <label className="form-label text-dark">CEP*</label>
+                                <input type="text" className="form-control bg-light border-0" name="cep" value={endereco.cep || ""} onChange={handleChangeEndereco} placeholder="00000-000" />
                             </div>
-                            <div className="col-md-8">
-                                <label className="form-label">Logradouro</label>
-                                <input type="text" className="form-control" name="logradouro" value={endereco?.logradouro || "Não carregado"} onChange={handleChangeEndereco} />
+                            <div className="col-6">
+                                <label className="form-label text-dark">Número*</label>
+                                <input type="text" className="form-control bg-light border-0" name="numero" value={endereco.numero || ""} onChange={handleChangeEndereco} placeholder="1010" />
                             </div>
-                            <div className="col-md-4">
-                                <label className="form-label">Número</label>
-                                <input type="text" className="form-control" name="numero" value={endereco?.numero || ""} onChange={handleChangeEndereco} />
+                            <div className="col-8">
+                                <label className="form-label text-dark">Logradouro*</label>
+                                <input type="text" className="form-control bg-light border-0" name="logradouro" value={endereco.logradouro || ""} onChange={handleChangeEndereco} />
                             </div>
-                            <div className="col-md-8">
-                                <label className="form-label">Bairro</label>
-                                <input type="text" className="form-control" name="bairro" value={endereco?.bairro || ""} onChange={handleChangeEndereco} />
+                            <div className="col-4">
+                                <label className="form-label text-dark">Bairro*</label>
+                                <input type="text" className="form-control bg-light border-0" name="bairro" value={endereco.bairro || ""} onChange={handleChangeEndereco} />
                             </div>
-                            <div className="col-md-12">
-                                <label className="form-label">Complemento</label>
-                                <input type="text" className="form-control" name="complemento" value={endereco?.complemento || "Não carregado"} onChange={handleChangeEndereco} />
+                            <div className="col-8">
+                                <label className="form-label text-dark">Cidade*</label>
+                                <input type="text" className="form-control bg-light border-0" name="cidade" value={endereco.cidade || ""} onChange={handleChangeEndereco} />
                             </div>
-                            <div className="col-md-12">
-                                <label className="form-label">Cidade/Estado</label>
-                                <input type="text" className="form-control" name="cidade" value={`${endereco?.cidade || ""} - ${endereco?.estado || ""}`} onChange={handleChangeEndereco} />
+                            <div className="col-4">
+                                <label className="form-label text-dark">Estado*</label>
+                                <input type="text" className="form-control bg-light border-0" name="estado" value={endereco.estado || ""} onChange={handleChangeEndereco} />
+                            </div>
+                            <div className="col-12">
+                                <label className="form-label text-dark">Complemento*</label>
+                                <input type="text" className="form-control bg-light border-0" name="complemento" value={endereco.complemento || ""} onChange={handleChangeEndereco} />
                             </div>
                         </div>
                     )}
                 </div>
 
-                <div className="modal-footer-custom mt-4 d-flex justify-content-end gap-2">
-                    <button className="btn btn-secondary" onClick={onClose}>Cancelar</button>
-                    <button className="btn btn-dark" onClick={handleSave}>Salvar Alterações</button>
+                <div className="d-flex gap-3">
+                    <button
+                        className="btn w-100 fw-medium"
+                        onClick={handleSave}
+                        style={{ backgroundColor: '#5cb85c', color: '#fff', height: '45px' }}
+                    >
+                        Editar
+                    </button>
+                    <button
+                        className="btn w-100 fw-medium border"
+                        onClick={onClose}
+                        style={{ backgroundColor: '#fff', color: '#333', height: '45px' }}
+                    >
+                        Cancelar
+                    </button>
                 </div>
             </div>
         </div>

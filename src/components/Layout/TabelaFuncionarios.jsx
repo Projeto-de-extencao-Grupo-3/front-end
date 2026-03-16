@@ -51,7 +51,7 @@ function TabelaFuncionarios({ funcionarios, excluirFuncionario, editarFuncionari
                                         className="btn-acao btn-excluir"
                                         title="Excluir"
                                         onClick={() => {
-                                                excluirFuncionario(funcionario.id_funcionario || funcionario.idFuncionario);
+                                                excluirFuncionario(funcionario);
                                         }}
                                     >
                                         <i className='bx bx-x'></i>
