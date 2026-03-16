@@ -4,8 +4,16 @@ import InformacoesCard from "../../../components/ServicoCard/InformacoesCard";
 import ItemContador from "../../../components/ServicoCard/ItemContador";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import "./EntradaVeiculo.css";
+import RegistroEntrada from "../../../service/RegistroEntrada";
+import Clientes from "../../../service/Clientes";
+import Veiculos from "../../../service/Veiculos";
+
 
 function EntradaVeiculo() {
+    const { adicionarRegistroEntrada } = RegistroEntrada()
+    const { adicionarCliente } = Clientes()
+    const { adicionarVeiculos } = Veiculos()
+
     const itensDaLista = [
         "Geladeira", "Chave de Roda",
         "Macaco", "TV/Monitor",
