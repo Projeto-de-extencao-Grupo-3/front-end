@@ -52,7 +52,7 @@ function TabelaEstoque({ produtos, excluirProdutos, editarProdutos }) {
                                         className="btn-acao"
                                         title='Excluir'
                                         onClick={() => {
-                                                excluirProdutos(produto.id_peca || produto.id);
+                                                excluirProdutos(produto);
                                         }}
                                     >
                                         <i className='bx bx-x'></i>

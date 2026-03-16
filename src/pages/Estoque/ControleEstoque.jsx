@@ -4,38 +4,43 @@ import TabelaEstoque from "../../components/Layout/TabelaEstoque.jsx";
 import "./ControleEstoque.css";
 import ExibirNovoItem from "../../components/ModalNovoItem/ExibirNovoItem.jsx";
 import ModalNovoItem from "../../components/ModalNovoItem/ModalNovoItem.jsx";
+import ModalDesativarEstoque from "../../components/ModalClientesFuncionarios/ModalDesativarEstoque.jsx";
 import Produtos from "../../service/Produtos.js";
 
 function ControleEstoque() {
     const { produtos, excluirProduto, adicionarProduto, atualizarProduto } = Produtos();
+
     const [produtosParaEditar, setProdutosParaEditar] = useState(null);
+    const [itemParaDesativar, setItemParaDesativar] = useState(null); // Estado para o item a ser excluído
 
     const [mostrarModalAdicionar, setMostrarModalAdicionar] = useState(false);
-
     const [mostrarModalExibir, setMostrarModalExibir] = useState(false);
+    const [isModalDesativarOpen, setIsModalDesativarOpen] = useState(false); // Controle do modal de desativação
 
     const lidarComEdicao = (produto) => {
-        console.log("Abrindo modal para editar:", produto);
         setProdutosParaEditar(produto);
         setMostrarModalExibir(true);
     };
 
-    const abrirModalNovo = () => {
-        console.log("Abrindo modal para novo");
-        setProdutosParaEditar(null);
-        setMostrarModalAdicionar(true);
+    const lidarComDesativacao = (produto) => {
+        setItemParaDesativar(produto);
+        setIsModalDesativarOpen(true);
+    };
+
+    const confirmarDesativacao = async () => {
+        try {
+            const id = itemParaDesativar.id_peca || itemParaDesativar.id;
+            await excluirProduto(id);
+            setIsModalDesativarOpen(false);
+            setItemParaDesativar(null);
+        } catch (error) {
+            console.error("Erro ao desativar item:", error);
+        }
     };
 
     const salvarEdicao = async (dados, id) => {
         try {
             const idFinal = id || dados.id_peca || dados.idPeca || dados.id;
-
-            if (!idFinal) {
-                console.error("Erro: ID do produto não encontrado!");
-                alert("Não foi possível identificar o item para atualizar.");
-                return;
-            }
-
             await atualizarProduto(idFinal, dados);
             setMostrarModalExibir(false);
         } catch (error) {
@@ -43,7 +48,6 @@ function ControleEstoque() {
         }
     };
 
-    // Função de Create (usada pelo Modal Adicionar)
     const salvarNovo = async (dados) => {
         try {
             await adicionarProduto(dados);
@@ -61,33 +65,37 @@ function ControleEstoque() {
                     <p>Visão geral dos serviços/estoque</p>
                 </div>
                 <div className="d-flex gap-3 align-items-center">
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Filtrar itens por nome"
-                        aria-label="Filtrar itens"
-                    />
-                    <button className="add_client btn btn-dark d-flex align-items-center" onClick={abrirModalNovo}>
+                    <input type="text" className="form-control" placeholder="Filtrar itens por nome" />
+                    <button className="add_client btn btn-dark d-flex align-items-center" onClick={() => setMostrarModalAdicionar(true)}>
                         Adicionar novo item +
                     </button>
-                    <ModalNovoItem
-                        isOpen={mostrarModalAdicionar}
-                        onClose={() => setMostrarModalAdicionar(false)}
-                        onSave={salvarNovo}
-                        produtosParaEditar={produtosParaEditar}
-                    />
-                    <ExibirNovoItem
-                        isOpen={mostrarModalExibir}
-                        onClose={() => setMostrarModalExibir(false)}
-                        onUpdate={salvarEdicao}
-                        dadosDoProduto={produtosParaEditar}
-                    />
                 </div>
             </div>
+
             <TabelaEstoque
                 produtos={produtos}
-                excluirProdutos={excluirProduto}
+                excluirProdutos={lidarComDesativacao} // Mudamos para abrir o modal primeiro
                 editarProdutos={lidarComEdicao}
+            />
+
+            <ModalNovoItem
+                isOpen={mostrarModalAdicionar}
+                onClose={() => setMostrarModalAdicionar(false)}
+                onSave={salvarNovo}
+            />
+
+            <ExibirNovoItem
+                isOpen={mostrarModalExibir}
+                onClose={() => setMostrarModalExibir(false)}
+                onUpdate={salvarEdicao}
+                dadosDoProduto={produtosParaEditar}
+            />
+
+            <ModalDesativarEstoque
+                isOpen={isModalDesativarOpen}
+                onClose={() => setIsModalDesativarOpen(false)}
+                onConfirm={confirmarDesativacao}
+                itemParaDesativar={itemParaDesativar} // <--- Passa o objeto completo aqui
             />
         </Layout>
     );
