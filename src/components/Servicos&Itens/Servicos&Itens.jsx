@@ -5,10 +5,10 @@ import Servicos from "./Abas/Servicos";
 import Itens from "./Abas/Itens";
 import ModalAdicionarServico from "../ModalAdicionarServico/ModalAdicionarServico";
 import ModalAdicionarItem from "../ModalAdicionarItem/ModalAdicionarItem";
-import ServicosEItensLogic from "../../service/Servicos&Itens.js";
+import ServicosEItensLogic from "../../service/ServicosEItens.js";
 
 function ServicosEItens({ pagina }) {
-    const { adicionarServico } = ServicosEItensLogic();
+    const { adicionarServico, adicionarProduto, buscarOrdem } = ServicosEItensLogic();
     const [_dados, setDados] = useState([]);
     const [abaAtiva, setAbaAtiva] = useState("servicos");
 
@@ -20,75 +20,31 @@ function ServicosEItens({ pagina }) {
     const [modoItem, setModoItem] = useState("adicionar");
     const [itemVisualizar, setItemVisualizar] = useState(null);
 
+    const [ticket, setTicket] = useState(null);
 
-
-    const ticket = {
-        id: 1,
-        cliente: "João",
-        servicos: [
-            {
-                id: 1,
-                tipo: "Pintura",
-                parte: "Para-Choque",
-                lado: "Dianteiro",
-                tipoPintura: "Pintura a Spray",
-                cor: "Azul Marinho",
-                preco: 400.00
-            },
-            {
-                id: 2,
-                tipo: "Funilaria",
-                parte: "Para-Choque",
-                lado: "Dianteiro",
-                preco: 200.00
-            }
-        ],
-        itens: [
-            {
-                id: 1,
-                codigo: "00024",
-                item: "Tinta Azul",
-                visibilidade: "Privado",
-                quantidade: 8,
-                preco: 30.00,
-                status: "Concluido"
-            },
-            {
-                id: 2,
-                codigo: "00025",
-                item: "Primer",
-                visibilidade: "Privado",
-                quantidade: 10,
-                preco: 30.00,
-                status: "Pendente"
-            }
-        ]
-    };
+    const idOrdem = 1;
 
     useEffect(() => {
-        const carregarDados = async () => {
+        const carregarOrdem = async () => {
             try {
-                if (abaAtiva === "servicos") {
-                    const res = await buscarServicos();
-                    const lista = Array.isArray(res.data)
-                        ? res.data
-                        : res.data.content ?? res.data.servicos ?? [];
-                    setDados(lista);
-                } else {
-                    const res = await buscarItens();
-                    const lista = Array.isArray(res.data)
-                        ? res.data
-                        : res.data.content ?? res.data.itens ?? [];
-                    setDados(lista);
-                }
+                const dados = await buscarOrdem(idOrdem);
+                const ticketNormalizado = {
+                    ...dados,
+                    servicos: dados.servicos || [],
+                    itens: dados.itens || []
+                };
+                setTicket(ticketNormalizado);
+                console.log("Dados carregados:", ticketNormalizado);
             } catch (error) {
-                console.error("Erro ao buscar dados:", error);
-                setDados([]);
+                console.error("Erro ao carregar ordem:", error);
             }
         };
+        carregarOrdem();
+    }, []);
 
-        carregarDados();
-    }, [abaAtiva]);
+    if (!ticket) {
+        return <div>Carregando...</div>;
+    }
 
     return (
         <div className="resumo-container">
@@ -170,7 +126,7 @@ function ServicosEItens({ pagina }) {
                     />
                 ) : (
                     <Itens
-                        dados={ticket.itens}
+                        dados={ticket.produtos}
                         pagina={pagina}
                         onVisualizar={(dados) => {
                             setItemVisualizar(dados);
@@ -187,6 +143,7 @@ function ServicosEItens({ pagina }) {
                 modo={modoServico}
                 servico={servicoVisualizar}
                 onSave={adicionarServico}
+                salvarNaOrdem={idOrdem}
             />
 
             <ModalAdicionarItem
@@ -195,7 +152,9 @@ function ServicosEItens({ pagina }) {
                 placa={ticket.placa}
                 modo={modoItem}
                 item={itemVisualizar}
-            />
+                onSave={adicionarProduto}
+                salvarNaOrdem={idOrdem}
+                />
         </div>
     );
 }

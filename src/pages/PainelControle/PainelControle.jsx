@@ -5,6 +5,7 @@ import KpiStatus from "../../components/KpiStatus/KpiStatus";
 import ServicoCard from "../../components/ServicoCard/ServicoCard";
 import ModalEntradaVeiculo from "../../components/ModalEntradaVeiculo/ModalEntradaVeiculo";
 import ModalAgendarEntrada from "../../components/ModalAgendarEntrada/ModalAgendarEntrada";
+import { useNavigate } from "react-router-dom";
 import "./PainelControle.css";
 
 function PainelControle() {
@@ -13,6 +14,7 @@ function PainelControle() {
     const [mostrarModalEntrada, setMostrarModalEntrada] = useState(false);
     const [mostrarModalAgendar, setMostrarModalAgendar] = useState(false);
 
+    const navigate = useNavigate();
 
     const chavesStatus = {
         entrada: "AGUARDANDO_ENTRADA",
@@ -45,19 +47,33 @@ function PainelControle() {
         fetchServicos();
     }, []);
 
+    // FUNÇÃO CORRIGIDA: Parâmetros batendo com as variáveis internas
     function calcularDias(data1, data2) {
-        // quero calcular a diferença de dias entre as duas datas
-        const hoje = new Date();
-        const dt1 = data1 ? new Date(data1) : hoje;
-        const dt2 = data2 ? new Date(data2) : hoje;
+        // Começamos assumindo que ambas as datas são 'hoje'
+        let dataObjeto1 = new Date();
+        let dataObjeto2 = new Date();
 
-        console.log(dt1)
-        console.log(dt2)
+        // Se o usuário passou a primeira data, usamos ela
+        if (data1) {
+            dataObjeto1 = new Date(data1);
+        }
 
-        const diffTime = dt1 - dt2; // diferença em milissegundos
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // converte para dias
+        // Se o usuário passou a segunda data, usamos ela
+        if (data2) {
+            dataObjeto2 = new Date(data2);
+        }
 
-        return diffDays;
+        // Zeramos as horas para garantir que a conta considere apenas o dia do calendário
+        dataObjeto1.setHours(0, 0, 0, 0);
+        dataObjeto2.setHours(0, 0, 0, 0);
+
+        const milissegundosDeDiferenca = dataObjeto1 - dataObjeto2;
+
+        const umDiaEmMilissegundos = 1000 * 60 * 60 * 24;
+
+        const totalDias = Math.round(milissegundosDeDiferenca / umDiaEmMilissegundos);
+
+        return totalDias;
     }
 
     const chaveBack = chavesStatus[kpiAtiva];
@@ -91,16 +107,35 @@ function PainelControle() {
                 />
                 <ModalEntradaVeiculo isOpen={mostrarModalEntrada} onClose={() => setMostrarModalEntrada(false)} />
 
-                {/* KPIS - paremetros de cores*/}
+                {/* KPIS - paremetros de cores baseados na criticidade dos cards internos */}
                 <div className="d-flex gap-3">
                     {Object.keys(chavesStatus).map((id) => {
-                        const qtd = servicos?.[chavesStatus[id]]?.quantidade_ordens || 0;
+                        const dadosStatus = servicos?.[chavesStatus[id]];
+                        const qtd = dadosStatus?.quantidade_ordens || 0;
+                        const ordensInternas = dadosStatus?.ordens_de_servico || [];
+
                         let corKpi = "verde";
 
-                        // Parametrização para KPIs de espera
-                        if (id !== "producao" && id !== "finalizados") {
-                            if (qtd > 10) corKpi = "vermelho";
-                            else if (qtd >= 3) corKpi = "amarelo";
+                        // parametro cores da KPI
+                        // entrada e finalizados sempre verde
+                        if (id !== "entrada" && id !== "finalizados") {
+                            let temVermelho = false;
+                            let temAmarelo = false;
+
+                            ordensInternas.forEach(os => {
+                                const atraso = calcularDias(null, os.data_entrada_efetiva);
+                                if (atraso > 10) { // VALIDAR QTD DIAS PARA SER VERMELHO
+                                    temVermelho = true;
+                                } else if (atraso > 5) { // VALIDAR QTD DIAS PARA SER AMARELO
+                                    temAmarelo = true;
+                                }
+                            });
+
+                            if (temVermelho) {
+                                corKpi = "vermelho";
+                            } else if (temAmarelo) {
+                                corKpi = "amarelo";
+                            }
                         }
 
                         return (
@@ -128,22 +163,17 @@ function PainelControle() {
 
                         const checkEntrada = kpiAtiva === "entrada";
                         const diasAtraso = checkEntrada
-                            ? calcularDias(os.entrada?.data_entrada_prevista, null)
-                            : calcularDias(null, os.entrada?.data_entrada_efetiva);
+                            ? calcularDias(os.data_entrada_prevista, null)
+                            : calcularDias(null, os.data_entrada_efetiva);
 
-                        const _diasRestantes = () => {
-                            if (kpiAtiva === "producao") {
-                                return calcularDias(os.entrada?.data_entrada_efetiva, os.data_saida_prevista);
-                            }
-                        }
-
-                        if (kpiAtiva === "producao" && kpiAtiva !== "finalizados") {
-                            if (diasAtraso > 10) {
+                        // parametro por dias (entrada e finalizados sempre verde)
+                        if (kpiAtiva !== "entrada" && kpiAtiva !== "finalizados") {
+                            if (diasAtraso > 10) { // VALIDAR QTD DIAS PARA SER VERMELHO
                                 corCard = "vermelho";
-                                icone = <i className='bx bx-alert-triangle text-danger fs-3'></i>;
+                                icone = <i className='bxr bx-alert-triangle text-danger fs-3'></i>;
                             } else if (diasAtraso > 5) {
-                                corCard = "amarelo";
-                                icone = <i className='bx bx-alert-triangle text-warning fs-3'></i>;
+                                corCard = "amarelo"; // VALIDAR QTD DIAS PARA SER AMARELO
+                                icone = <i className='bxr bx-alert-triangle text-warning fs-3'></i>;
                             }
                         }
 
@@ -169,114 +199,91 @@ function PainelControle() {
                                 <hr className="my-2" />
 
                                 <div className="mb-3 small">
-                                    {(() => {
-                                        const formattedValor = os.valor_total ? os.valor_total.toLocaleString('pt-BR') : 'N/A';
-                                        switch (kpiAtiva) {
-                                            case 'entrada':
-                                                return (
-                                                    <>
-                                                        <div><b>Dias restantes para Entrada:</b> {diasAtraso} Dias</div>
-                                                        <div><b>Data Agendada:</b> {new Date(os.entrada?.data_entrada_prevista).toLocaleDateString('pt-BR', { timeZone: 'UTC' })}</div>
-                                                    </>
-                                                );
-                                            case 'producao':
-                                                return (
-                                                    <>
-                                                        <div><b>Total do Serviço Orçado:</b> R${formattedValor}</div>
-                                                        <div><b>Dias em produção:</b> {diasAtraso} Dias</div>
-                                                    </>
-                                                );
-                                            case 'finalizados': {
-                                                const data1 = os.data_saida_efetiva ? new Date(os.data_saida_efetiva) : null;
-                                                var data2 = os.entrada?.data_entrada_efetiva ? new Date(os.entrada.data_entrada_efetiva) : null;
+                                    {/* logica plotagem de dados de acordo com kpis */}
+                                    {kpiAtiva === 'entrada' && (
+                                        <>
+                                            <div><b>Dias restantes para Entrada:</b> <b className={`cor-fonte-${corCard}`}>{diasAtraso} Dias</b></div>
+                                            <div><b>Data Agendada:</b> {os.data_entrada_prevista ? new Date(os.data_entrada_prevista).toLocaleDateString('pt-BR', { timeZone: 'UTC' }) : 'N/A'}</div>
+                                        </>
+                                    )}
 
-                                                if (data2 == null) {
-                                                    data2 = new Date(os.entrada?.data_entrada_prevista);
-                                                };
+                                    {kpiAtiva === 'orcamento' && (
+                                        <>
+                                            <div><b>Dias em espera:</b> <b className={`cor-fonte-${corCard}`}>{diasAtraso} Dias</b></div> {/* errado, validar*/}
+                                        </>
+                                    )}
 
-                                                const duracaoServico = calcularDias(data2, data1);
-                                                return (
-                                                    <>
-                                                        <div><b>Total do Serviço Orçado:</b> R${formattedValor}</div>
-                                                        <div><b>Duração do Serviço:</b> {duracaoServico} Dias</div>
-                                                    </>
-                                                );
-                                            }
-                                            default: // 'orcamento', 'autorizacao', 'vaga'
-                                                return (
-                                                    <>
-                                                        <div><b>Total do Serviço Orçado:</b> R${formattedValor}</div>
-                                                        <div><b>Dias em espera:</b> {diasAtraso} Dias</div>
-                                                    </>
-                                                );
-                                        }
-                                    })()}
+                                    {(kpiAtiva === 'autorizacao') && (
+                                        <>
+                                            <div><b>Total do Serviço Orçado:</b> R${os.valor_total?.toLocaleString('pt-BR') || '0,00'}</div>
+                                            <div><b>Dias em espera:</b> <b className={`cor-fonte-${corCard}`}>{diasAtraso} Dias</b></div> {/* errado, validar*/}
+                                        </>
+                                    )}
+
+                                    {(kpiAtiva === 'vaga') && (
+                                        <>
+                                            <div><b>Total do Serviço:</b> R${os.valor_total?.toLocaleString('pt-BR') || '0,00'}</div>
+                                            <div><b>Dias em espera:</b> <b className={`cor-fonte-${corCard}`}>6 Dias</b></div> {/* errado, validar*/}
+                                        </>
+                                    )}
+
+                                    {(kpiAtiva === 'producao') && (
+                                        <>
+                                            <div><b>Total do Serviço:</b> R${os.valor_total?.toLocaleString('pt-BR') || '0,00'}</div>
+                                            <div><b>Dias restantes:</b> <b className={`cor-fonte-${corCard}`}>6 Dias</b></div> {/* errado, validar*/}
+                                        </>
+                                    )}
+
+                                    {kpiAtiva === 'finalizados' && (
+                                        <>
+                                            <div><b>Total do Serviço:</b> R${os.valor_total?.toLocaleString('pt-BR') || '0,00'}</div>
+                                            <div><b>Duração do Serviço:</b> <b className={`cor-fonte-${corCard}`}>{diasAtraso} Dias</b></div> {/* validar*/}
+                                        </>
+                                    )}
+
+
+
+
                                 </div>
-
 
                                 {/* logica plotar botoes de acordo com status */}
                                 <div className="d-flex gap-2">
-                                    {/* BOTAO PARA ENTRADA */}
                                     {kpiAtiva === "entrada" && (
-                                        <button
-                                            className={`btn w-100 fs-5 btn-status-${corCard}`}
-                                        //onClick={navigate(`/painelControle/entrada`)}
-                                        >
+                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => setMostrarModalEntrada(true)}>
                                             Fazer Entrada
                                         </button>
                                     )}
 
-                                    {/* BOTAO PARA ORÇAMENTO*/}
                                     {kpiAtiva === "orcamento" && (
-                                        <button
-                                            className={`btn w-100 fs-5 btn-status-${corCard}`}
-                                        //onClick={navigate(`/painelControle/orcamento`)}
-                                        >
+                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/orcamento/${os.veiculo?.placa}`)}>
                                             Fazer Orçamento
                                         </button>
                                     )}
 
-                                    {/* BOTAO PARA AUTORIZAÇÃO*/}
                                     {kpiAtiva === "autorizacao" && (
-                                        <button
-                                            className={`btn w-100 fs-5 btn-status-${corCard}`}
-                                        //onClick={navigate(`/painelControle/autorizacao`)}
-                                        >
+                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/autorizacao/${os.veiculo?.placa}`)}>
                                             Autorizar
                                         </button>
                                     )}
 
-                                    {/* BOTAO PARA VAGA */}
                                     {kpiAtiva === "vaga" && (
-                                        <button
-                                            className={`btn w-100 fs-5 btn-status-${corCard}`}
-                                        //onClick={navigate(`/painelControle/aguardandoVaga`)}
-                                        >
+                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/aguardandoVaga/${os.veiculo?.placa}`)}>
                                             Enviar para Produção
                                         </button>
                                     )}
 
-                                    {/* BOTAO PARA PRODUÇÃO */}
                                     {kpiAtiva === "producao" && (
-                                        <button
-                                            className={`btn w-100 fs-5 btn-status-${corCard}`}
-                                        //onClick={navigate(`/painelControle/producao`)}
-                                        >
+                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/producao/${os.veiculo?.placa}`)}>
                                             Verificar Andamento
                                         </button>
                                     )}
 
-                                    {/* BOTAO PARA FINALIZADOS */}
                                     {kpiAtiva === "finalizados" && (
-                                        <button
-                                            className={`btn w-100 fs-5 btn-status-${corCard}`}
-                                        //onClick={navigate(`/painelControle/finalizado`)}
-                                        >
+                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/finalizado/${os.veiculo?.placa}`)}>
                                             Analisar Ordem de Serviço
                                         </button>
                                     )}
 
-                                    {/* BOTÃO CANCELAR (Aparece apenas na Entrada) */}
                                     {checkEntrada && (
                                         <button className="btn btn-outline-secondary px-3">
                                             Cancelar

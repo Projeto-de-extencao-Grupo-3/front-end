@@ -28,11 +28,11 @@ function Itens({ dados, pagina }) {
                 {dados.map((item) => (
                     <tr key={item.id} className="config-dados">
                         <td className="dado">{item.codigo}</td>
-                        <td className="dado">{item.item}</td>
-                        <td className="dado">{item.visibilidade}</td>
+                        <td className="dado">{item.nome_produto}</td>
+                        <td className="dado">{item.visivel_orcamento === true ? "Público" : "Privado"}</td>
                         <td className="dado">{item.quantidade} Unid</td>
-                        <td className="dado">R${item.preco}</td>
-                        <td className="dado">{item.status}</td>
+                        <td className="dado">R${item.preco_peca}</td>
+                        <td className="dado">{item.baixado === true ? "Sim" : "Não"}</td>
                         <td className="dado">
                             <div className="box-options">
                                 {pagina === "orcamento" ?
