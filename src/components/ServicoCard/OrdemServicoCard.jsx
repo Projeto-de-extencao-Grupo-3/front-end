@@ -15,7 +15,7 @@ function OrdemServicoCard({ marca, modelo, prefixo, cliente, idOrdemServico, pla
       <div className="divider" />
 
       <div className="section">
-        <p>Empresa: {cliente || "Empresa"}</p>
+        <p>Empresa: {cliente}</p>
         <p>Placa: {placa}</p>
       </div>
     </div>

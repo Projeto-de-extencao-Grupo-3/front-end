@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Layout from "../../../components/Layout/Layout";
 import InformacoesCard from "../../../components/ServicoCard/InformacoesCard";
@@ -8,10 +8,12 @@ import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
 import "./EntradaVeiculo.css";
 import RegistroEntrada from "../../../service/RegistroEntrada";
 import ReconhecimentoPlaca from "../../../service/ReconhecimentoPlaca";
+import Swal from 'sweetalert2';
 
 function EntradaVeiculoCamera() {
 
     const { adicionarRegistroEntrada } = RegistroEntrada()
+
 
     const [registroEntrada, setRegistroEntrada] = useState({
         dataEntrada: new Date().toISOString().split('T')[0], responsavel: "", cpfResponsavel: "",
@@ -22,6 +24,7 @@ function EntradaVeiculoCamera() {
 
     const navigate = useNavigate();
     const location = useLocation();
+    const inicializado = useRef(false);
 
     const { placa: placaDaUrl } = useParams();
 
@@ -32,7 +35,7 @@ function EntradaVeiculoCamera() {
     const [empresa, setEmpresa] = useState();
     const [idCliente, setIdCliente] = useState();
 
-    const [_loading, setLoading] = useState(false);
+    const [processado, setProcessado] = useState(false);
 
     const { reconhecerPlaca } = ReconhecimentoPlaca();
     const [veiculo, setVeiculo] = useState(null);
@@ -77,36 +80,76 @@ function EntradaVeiculoCamera() {
         }
     };
     async function send_to_gateway(arquivo) {
-        setLoading(true);
+        Swal.fire({
+            title: 'Reconhecendo Placa...',
+            text: 'Aguarde enquanto processamos a imagem.',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
         try {
+
             const dadosVeiculo = await reconhecerPlaca(arquivo);
-            console.log("DAdos do veiuclo: ", dadosVeiculo)
+
             if (dadosVeiculo && dadosVeiculo.length > 0) {
                 const principal = dadosVeiculo[0];
-                setPlaca(principal.placa);
-                setMarca(principal.marca)
-                setModelo(principal.modelo)
-                setPrefixo(principal.prefixo)
-                setEmpresa(principal.nome_cliente)
-                setIdCliente(principal.id_cliente)
 
+                setPlaca(principal.placa);
+                setMarca(principal.marca);
+                setModelo(principal.modelo);
+                setPrefixo(principal.prefixo);
+                setEmpresa(principal.nome_cliente);
+                setIdCliente(principal.id_cliente);
                 setVeiculo(principal);
 
-                console.log("Veículo encontrado:", principal);
-                navigate(`/painelControle/entrada/${principal.placa}`, { replace: true });
+                setProcessado(true);
+                Swal.close();
+
+                navigate(`/painelControle/entrada/${principal.placa}`, {
+                    replace: true,
+                    state: { veiculoCarregado: principal }
+                });
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Veículo encontrado!',
+                })
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Veículo não cadastrado',
+                    text: 'A placa reconhecida não foi encontrada no GROTRACK. Por favor, cadastre o veículo primeiro.',
+                    confirmButtonText: 'Voltar ao Painel',
+                    confirmButtonColor: '#d33',
+                })
             }
         } catch (error) {
-            console.error("Erro no fluxo de reconhecimento:", error);
-        } finally {
-            setLoading(false);
+            Swal.fire({
+                icon: 'error',
+                title: 'Veículo não cadastrado',
+                text: 'A placa reconhecida não foi encontrada no Sistema GROTRACK. Por favor, cadastre o veículo primeiro.',
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#d33',
+            }).then(() => {
+                navigate("/painelControle", { replace: true });
+            });
         }
     }
 
     useEffect(() => {
-        if (location.state?.arquivoCapturado) {
-            send_to_gateway(location.state.arquivoCapturado);
+        if (location.state?.arquivoCapturado && !inicializado.current) {
+            inicializado.current = true; 
+
+            const arquivo = location.state.arquivoCapturado;
+
+            navigate(location.pathname, { replace: true, state: {} });
+
+            send_to_gateway(arquivo);
         }
-    }, [location.state]);
+    }, [location.state, navigate]); 
 
     const mapaItens = [
         { label: "Geladeira", key: "geladeira" },
