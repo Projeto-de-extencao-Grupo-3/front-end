@@ -20,12 +20,11 @@ function Clientes() {
     const adicionarCliente = async (dadosDoCliente, dadosDoEndereco) => {
         try {
             const payload = {
-                // Ajustado para bater com o RequestPostCliente.java
                 nome: dadosDoCliente.nome,
-                cpf_cnpj: dadosDoCliente.cpfCnpj.replace(/\D/g, ''), // CamelCase
-                telefone: dadosDoCliente.telefone.replace(/\D/g, ''),
+                cpf_cnpj: dadosDoCliente.cpf_cnpj,
+                telefone: dadosDoCliente.telefone,
                 email: dadosDoCliente.email,
-                tipo_cliente: dadosDoCliente.tipo === "Pessoa Física" ? "PESSOA_FISICA" : "PESSOA_JURIDICA",
+                tipo_cliente: dadosDoCliente.tipo_cliente === "Pessoa Física" ? "PESSOA_FISICA" : "PESSOA_JURIDICA",
                 fk_oficina: 1,
                 fk_endereco: Number(dadosDoEndereco.id_endereco)
             };

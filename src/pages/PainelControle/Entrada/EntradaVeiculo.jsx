@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import Layout from "../../../components/Layout/Layout";
 import InformacoesCard from "../../../components/ServicoCard/InformacoesCard";
 import ItemContador from "../../../components/ServicoCard/ItemContador";
@@ -7,18 +8,117 @@ import "./EntradaVeiculo.css";
 import RegistroEntrada from "../../../service/RegistroEntrada";
 import Clientes from "../../../service/Clientes";
 import Veiculos from "../../../service/Veiculos";
+import useEndereco from "../../../service/Endereco";
 
 
 function EntradaVeiculo() {
+
+    const { adicionarVeiculos } = Veiculos()
     const { adicionarRegistroEntrada } = RegistroEntrada()
     const { adicionarCliente } = Clientes()
-    const { adicionarVeiculos } = Veiculos()
+    const { cadastrarEnderecoVazio } = useEndereco()
 
-    const itensDaLista = [
-        "Geladeira", "Chave de Roda",
-        "Macaco", "TV/Monitor",
-        "Extintor", "Caixa de Ferramentas",
-        "Estepe", "Som/DVD"
+    const [formData, setFormData] = useState({
+        // Veículo
+        marca: "", modelo: "", placa: "", prefixo: "", ano_modelo: "",
+
+        // Cliente
+        cpf_cnpj: "", nome: "", telefone: "", email: "", tipoCliente: "PESSOA_FISICA",
+
+        // Registro
+        dataEntrada: new Date().toISOString().split('T')[0], responsavel: "", cpfResponsavel: "",
+        geladeira: 0, macaco: 0, extinto: 0, estepe: 0,
+        chave_roda: 0, monitor: 0, caixa_ferramentas: 0, som_dvd: 0,
+        observacoes: ""
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleCounterChange = (itemKey, novoValor) => {
+        setFormData(prev => ({ ...prev, [itemKey]: novoValor }));
+    };
+
+    const handleFinalizar = async () => {
+        console.log("Objeto formData completo:", formData);
+        try {
+            const resEndereco = await cadastrarEnderecoVazio();
+            const idGerado = resEndereco.id_endereco;
+
+            const cliente = await adicionarCliente({
+                nome: formData.nome,
+                cpf_cnpj: formData.cpf_cnpj,
+                telefone: formData.telefone,
+                email: formData.email,
+                tipo_cliente: formData.tipoCliente,
+                fk_endereco: idGerado
+            }, {
+                id_endereco: idGerado
+            }
+            );
+
+            console.log("Retorno do serviço de Cliente:", cliente);
+
+            const veiculo = await adicionarVeiculos({
+                placa: formData.placa,
+                marca: formData.marca,
+                modelo: formData.modelo,
+                prefixo: formData.prefixo,
+                ano_modelo: formData.ano_modelo,
+                id_cliente: cliente.id_cliente
+            });
+
+            console.log("Retorno do serviço de Veiculo:", veiculo);
+
+            console.log("Dados que serão enviados para o Registro:", {
+                geladeira: Number(formData.geladeira),
+                macaco: Number(formData.macaco),
+                extintor: Number(formData.extinto),
+                estepe: Number(formData.estepe),
+                chave_roda: Number(formData.chave_roda),
+                monitor: Number(formData.monitor),
+                caixa_ferramentas: Number(formData.caixa_ferramentas),
+                som_dvd: Number(formData.som_dvd),
+            });
+            await adicionarRegistroEntrada({
+                data_entrada_prevista: formData.dataEntrada,
+                data_entrada_efetiva: formData.dataEntrada,
+                nome_responsavel: formData.responsavel,
+                cpf_responsavel: formData.cpfResponsavel,
+                observacoes: formData.observacoes,
+                geladeira: Number(formData.geladeira),
+                macaco: Number(formData.macaco),
+                extintor: Number(formData.extinto),
+                estepe: Number(formData.estepe),
+                chave_roda: Number(formData.chave_roda),
+                monitor: Number(formData.monitor),
+                caixa_ferramentas: Number(formData.caixa_ferramentas),
+                som_dvd: Number(formData.som_dvd),
+                fk_cliente: cliente.id_cliente,
+                fk_veiculo: veiculo.id_veiculo,
+                fk_oficina: 1
+            });
+
+
+            console.log("Cadastro realizado com sucesso!");
+            navigate("/painelControle/orcamento");
+        } catch (error) {
+            console.error("Erro no fluxo de entrada:", error);
+            alert("Ocorreu um erro ao salvar os dados. Verifique o console.");
+        }
+    };
+
+    const mapaItens = [
+        { label: "Geladeira", key: "geladeira" },
+        { label: "Chave de Roda", key: "chave_roda" },
+        { label: "Macaco", key: "macaco" },
+        { label: "TV/Monitor", key: "monitor" },
+        { label: "Extintor", key: "extinto" },
+        { label: "Caixa de Ferramentas", key: "caixa_ferramentas" },
+        { label: "Estepe", key: "estepe" },
+        { label: "Som/DVD", key: "som_dvd" }
     ];
 
     const navigate = useNavigate();
@@ -43,100 +143,99 @@ function EntradaVeiculo() {
 
             <div className="section1">
                 <InformacoesCard titulo="Informações do Veículo" icone="bx bx-list-ul">
-                    <div className="input-field">
-                        <label>Buscar por placa</label>
-                        <input type="text" placeholder="Digite a placa..." />
+                    <div className="input-group-row">
+                        <div className="input-field">
+                            <label>Placa*</label>
+                            <input name="placa" value={formData.placa} onChange={handleChange} placeholder="Ex: ABC-1234" />
+                        </div>
+                        <div className="input-field">
+                            <label>Modelo*</label>
+                            <input name="modelo" value={formData.modelo} onChange={handleChange} placeholder="Ex: G7" />
+                        </div>
                     </div>
                     <div className="input-group-row">
                         <div className="input-field">
                             <label>Marca*</label>
-                            <input placeholder="Ex: Marcopolo" />
-                        </div>
-                        <div className="input-field">
-                            <label>Modelo*</label>
-                            <input placeholder="Ex: G7" />
-                        </div>
-                    </div>
-                    <div className="input-group-row">
-                        <div className="input-field">
-                            <label>Placa*</label>
-                            <input placeholder="Ex: ABC-1234" />
+                            <input name="marca" value={formData.marca} onChange={handleChange} placeholder="Ex: Marcopolo" />
                         </div>
                         <div className="input-field">
                             <label>Prefixo*</label>
-                            <input placeholder="Ex: 1700" />
+                            <input name="prefixo" value={formData.prefixo} onChange={handleChange} placeholder="Ex: 1700" />
                         </div>
                     </div>
                     <div className="input-field">
                         <label>Ano/Modelo</label>
-                        <input type="text" placeholder="Ex: 2020" />
+                        <input name="ano_modelo" value={formData.ano_modelo} onChange={handleChange} placeholder="Ex: 2020" />
                     </div>
                 </InformacoesCard>
 
                 <InformacoesCard titulo="Informações do Cliente" icone="bx bx-user">
                     <div className="input-field">
                         <label>CPF/CNPJ*</label>
-                        <input type="text" placeholder="Ex: 123.456.789-00" />
+                        <input name="cpf_cnpj" value={formData.cpf_cnpj} onChange={handleChange} placeholder="Ex: 123.456.789-00" />
                     </div>
                     <div className="input-field">
                         <label>Nome/Razão Social*</label>
-                        <input type="text" placeholder="Nome ou Razão Social..." />
+                        <input name="nome" value={formData.nome} onChange={handleChange} placeholder="Nome ou Razão Social..." />
                     </div>
                     <div className="input-group-row">
                         <div className="input-field">
                             <label>Telefone*</label>
-                            <input placeholder="Ex: (11) 99999-9999" />
+                            <input name="telefone" value={formData.telefone} onChange={handleChange} placeholder="Ex: (11) 99999-9999" />
                         </div>
                         <div className="input-field">
                             <label>Email*</label>
-                            <input placeholder="Ex: cliente@exemplo.com" />
+                            <input name="email" value={formData.email} onChange={handleChange} placeholder="Ex: cliente@exemplo.com" />
                         </div>
                     </div>
                     <div className="input-field">
                         <label>Tipo de Cliente</label>
                         <div>
-                            <input type="radio" name="tipoCliente" value="Particular" />
-                            <label>Particular</label>
-                            <input type="radio" name="tipoCliente" value="Empresa" />
-                            <label>Empresa</label>
+                            <input type="radio" name="tipoCliente" value="PESSOA_FISICA" checked={formData.tipoCliente === "PESSOA_FISICA"} onChange={handleChange} />
+                            <label>Pessoa Física</label>
+                            <input type="radio" name="tipoCliente" value="PESSOA_JURIDICA" checked={formData.tipoCliente === "PESSOA_JURIDICA"} onChange={handleChange} />
+                            <label>Pessoa Jurídica</label>
                         </div>
-
                     </div>
                 </InformacoesCard>
-
             </div>
+
             <div className="section1">
-                <InformacoesCard titulo="Informações do Veículo" icone="bx bx-bus">
+                <InformacoesCard titulo="Inventário do Veículo" icone="bx bx-bus">
                     <div className="itens-grid">
-                        {itensDaLista.map(item => (
-                            <ItemContador key={item} label={item} />
+                        {mapaItens.map(item => (
+                            <ItemContador
+                                key={item.key}
+                                label={item.label}
+                                valor={formData[item.key]}
+                                setValor={(novo) => handleCounterChange(item.key, novo)}
+                            />
                         ))}
                     </div>
-
                     <div className="observacoes-section">
                         <label>Observações/Itens adicionais</label>
-                        <input type="text" placeholder="Ex: 123.456.789.01" />
+                        <input name="observacoes" value={formData.observacoes} onChange={handleChange} placeholder="Detalhes extras..." />
                     </div>
                 </InformacoesCard>
 
                 <InformacoesCard titulo="Detalhes de Entrada" icone="bx bx-paste">
                     <div className="input-field">
                         <label>Data de Entrada*</label>
-                        <input type="text" placeholder="Ex: 01/01/2025" />
+                        <input type="date" name="dataEntrada" value={formData.dataEntrada} onChange={handleChange} />
                     </div>
                     <div className="input-field">
                         <label>Nome do responsável*</label>
-                        <input type="text" placeholder="Ex: João da Silva" />
+                        <input name="responsavel" value={formData.responsavel} onChange={handleChange} placeholder="Ex: João da Silva" />
                     </div>
                     <div className="input-field">
                         <label>CPF do responsável*</label>
-                        <input type="text" placeholder="Ex: 123.456.789-00" />
+                        <input name="cpfResponsavel" value={formData.cpfResponsavel} onChange={handleChange} placeholder="Ex: 123.456.789-00" />
                     </div>
                 </InformacoesCard>
             </div>
             <div className="section-buttom">
-                <button className="btn-secundario"  onClick={() => navigate("/painelControle")}>Voltar para o painel</button>
-                <button className="btn-primario"  onClick={() => navigate("/painelControle/orcamento")}>Finalizar entrada</button>
+                <button className="btn-secundario" onClick={() => navigate("/painelControle")}>Voltar para o painel</button>
+                <button className="btn-primario" onClick={handleFinalizar}>Finalizar entrada</button>
             </div>
 
         </Layout>

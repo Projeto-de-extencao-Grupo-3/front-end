@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import api from "../../../service/api_python";
 import Layout from "../../../components/Layout/Layout";
 import InformacoesCard from "../../../components/ServicoCard/InformacoesCard";
 import ItemContador from "../../../components/ServicoCard/ItemContador";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
 import "./EntradaVeiculo.css";
+import ReconhecimentoPlaca from "../../../service/ReconhecimentoPlaca";
 
 function EntradaVeiculoCamera() {
     const itensDaLista = [
@@ -22,47 +22,45 @@ function EntradaVeiculoCamera() {
     const { placa: placaDaUrl } = useParams();
 
     const [placa, setPlaca] = useState(placaDaUrl || '');
+    const [marca, setMarca ] = useState();
+    const [modelo, setModelo ] = useState();
+    const [prefixo, setPrefixo ] = useState();
 
     const [_loading, setLoading] = useState(false);
 
+    const { reconhecerPlaca } = ReconhecimentoPlaca();
+    const [veiculo, setVeiculo] = useState(null);
 
-    useEffect(() => {
-        if (location.state?.arquivoCapturado) {
-            send_to_python_api(location.state.arquivoCapturado);
-        }
 
-        else if (placaDaUrl && placaDaUrl !== 'novo') {
-            setPlaca(placaDaUrl);
-        }
-    }, [location.state, placaDaUrl]); 
-
-    async function send_to_python_api(arquivo) {
+    async function send_to_gateway(arquivo) {
         setLoading(true);
-        const formData = new FormData();
-        formData.append('file', arquivo);
-
         try {
-            const response = await api.post('/recognize', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
+            const dadosVeiculo = await reconhecerPlaca(arquivo);
+            console.log("DAdos do veiuclo: ", dadosVeiculo)
+            if (dadosVeiculo && dadosVeiculo.length > 0) {
+                const principal = dadosVeiculo[0];
+                setPlaca(principal.placa);
+                setMarca(principal.marca)
+                setModelo(principal.modelo)
+                setPrefixo(principal.prefixo)
 
-            const data = response.data.data;
-            // Preenche o campo de placa com o retorno da API
-            //setPlaca(response.data.placa);
-            console.log("Placa reconhecida:", data);
-            setPlaca(data.plate);
+                setVeiculo(principal); 
 
-            navigate(`/painelControle/entrada/${data.plate}`, { replace: true });
-
-            localStorage.setItem('TOKEN', response.data.token);
-            localStorage.setItem('PLACA', data.plate);
+                console.log("Veículo encontrado:", principal);
+                navigate(`/painelControle/entrada/${principal.placa}`, { replace: true });
+            }
         } catch (error) {
-            console.error("Erro ao processar imagem:", error);
-            alert("Não foi possível ler a placa. Digite manualmente.");
+            console.error("Erro no fluxo de reconhecimento:", error);
         } finally {
             setLoading(false);
         }
     }
+
+    useEffect(() => {
+        if (location.state?.arquivoCapturado) {
+            send_to_gateway(location.state.arquivoCapturado);
+        }
+    }, [location.state]);
 
     return (
         <Layout ativo={"painel"}>
@@ -82,7 +80,11 @@ function EntradaVeiculoCamera() {
                 ]}
             />
             <div>
-                <OrdemServicoCard placa={placa} />
+                <OrdemServicoCard 
+                marca={marca}
+                prefixo={prefixo}
+                modelo={modelo}
+                placa={placa} />
             </div>
             <div className="section1">
                 <InformacoesCard titulo="Informações do Veículo" icone="bx bx-bus">

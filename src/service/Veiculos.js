@@ -18,7 +18,7 @@ function Veiculos() {
         }
     };
 
-    const cadastrarVeiculos = async () => {
+    const adicionarVeiculos = async (dadosDoFormulario) => {
         try {
             const response = await api.post("/veiculos", dadosDoFormulario);
             setVeiculos(prevVeiculos => [...prevVeiculos, response.data]);
@@ -30,7 +30,7 @@ function Veiculos() {
         }
     }
 
-    return { listarVeiculos, cadastrarVeiculos }
+    return { listarVeiculos, adicionarVeiculos }
 }
 
 export default Veiculos
