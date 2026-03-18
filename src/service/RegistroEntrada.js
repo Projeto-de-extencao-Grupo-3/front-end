@@ -10,10 +10,10 @@ function RegistroEntrada() {
         try {
             const response = await api.post("/entrada", dadosDoFormulario);
             setRegistroEntrada(prevClientes => [...prevClientes, response.data]);
-            exibirAlertaSucesso("Produto adicionado com sucesso!");
+            exibirAlertaSucesso("Registro de Entrada adicionado com sucesso!");
             return response.data;
         } catch (error) {
-            exibirAlertaErro("Erro ao adicionar produto.");
+            exibirAlertaErro("Erro ao adicionar Registro de Entrada.");
             throw error;
         }
     };

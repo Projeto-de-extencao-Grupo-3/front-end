@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Layout from "../../../components/Layout/Layout";
 import InformacoesCard from "../../../components/ServicoCard/InformacoesCard";
@@ -6,61 +6,162 @@ import ItemContador from "../../../components/ServicoCard/ItemContador";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
 import "./EntradaVeiculo.css";
+import RegistroEntrada from "../../../service/RegistroEntrada";
 import ReconhecimentoPlaca from "../../../service/ReconhecimentoPlaca";
+import Swal from 'sweetalert2';
 
 function EntradaVeiculoCamera() {
-    const itensDaLista = [
-        "Geladeira", "Chave de Roda",
-        "Macaco", "TV/Monitor",
-        "Extintor", "Caixa de Ferramentas",
-        "Estepe", "Som/DVD"
-    ];
+
+    const { adicionarRegistroEntrada } = RegistroEntrada()
+
+
+    const [registroEntrada, setRegistroEntrada] = useState({
+        dataEntrada: new Date().toISOString().split('T')[0], responsavel: "", cpfResponsavel: "",
+        geladeira: 0, macaco: 0, extintor: 0, estepe: 0,
+        chave_roda: 0, monitor: 0, caixa_ferramentas: 0, som_dvd: 0,
+        observacoes: ""
+    });
 
     const navigate = useNavigate();
     const location = useLocation();
+    const inicializado = useRef(false);
 
     const { placa: placaDaUrl } = useParams();
 
     const [placa, setPlaca] = useState(placaDaUrl || '');
-    const [marca, setMarca ] = useState();
-    const [modelo, setModelo ] = useState();
-    const [prefixo, setPrefixo ] = useState();
+    const [marca, setMarca] = useState();
+    const [modelo, setModelo] = useState();
+    const [prefixo, setPrefixo] = useState();
+    const [empresa, setEmpresa] = useState();
+    const [idCliente, setIdCliente] = useState();
 
-    const [_loading, setLoading] = useState(false);
+    const [_processado, setProcessado] = useState(false);
 
     const { reconhecerPlaca } = ReconhecimentoPlaca();
-    const [_veiculo, setVeiculo] = useState(null);
+    const [veiculo, setVeiculo] = useState(null);
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setRegistroEntrada(prev => ({ ...prev, [name]: value }));
+    };
 
-    async function send_to_gateway(arquivo) {
-        setLoading(true);
+    const handleCounterChange = (itemKey, novoValor) => {
+        setRegistroEntrada(prev => ({ ...prev, [itemKey]: novoValor }));
+    };
+
+    const handleFinalizar = async () => {
+        console.log("Objeto registroEntrada completo:", registroEntrada);
         try {
+            await adicionarRegistroEntrada({
+                data_entrada_prevista: registroEntrada.dataEntrada,
+                data_entrada_efetiva: registroEntrada.dataEntrada,
+                nome_responsavel: registroEntrada.responsavel,
+                cpf_responsavel: registroEntrada.cpfResponsavel,
+                observacoes: registroEntrada.observacoes,
+                quantidade_geladeira: Number(registroEntrada.geladeira),
+                quantidade_macaco: Number(registroEntrada.macaco),
+                quantidade_extintor: Number(registroEntrada.extintor), // corrigido de extinto para extintor
+                quantidade_estepe: Number(registroEntrada.estepe),
+                quantidade_chave_roda: Number(registroEntrada.chave_roda),
+                quantidade_monitor: Number(registroEntrada.monitor),
+                quantidade_caixa_ferramentas: Number(registroEntrada.caixa_ferramentas),
+                quantidade_som_dvd: Number(registroEntrada.som_dvd),
+                fk_cliente: idCliente,
+                fk_veiculo: veiculo.id_veiculo,
+                fk_oficina: 1
+            });
+
+
+            console.log("Cadastro realizado com sucesso!");
+            navigate("/painelControle/orcamento");
+        } catch (error) {
+            console.error("Erro no fluxo de entrada:", error);
+            alert("Ocorreu um erro ao salvar os dados. Verifique o console.");
+        }
+    };
+    async function send_to_gateway(arquivo) {
+        Swal.fire({
+            title: 'Reconhecendo Placa...',
+            text: 'Aguarde enquanto processamos a imagem.',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        try {
+
             const dadosVeiculo = await reconhecerPlaca(arquivo);
-            console.log("DAdos do veiuclo: ", dadosVeiculo)
+
             if (dadosVeiculo && dadosVeiculo.length > 0) {
                 const principal = dadosVeiculo[0];
+
                 setPlaca(principal.placa);
-                setMarca(principal.marca)
-                setModelo(principal.modelo)
-                setPrefixo(principal.prefixo)
+                setMarca(principal.marca);
+                setModelo(principal.modelo);
+                setPrefixo(principal.prefixo);
+                setEmpresa(principal.nome_cliente);
+                setIdCliente(principal.id_cliente);
+                setVeiculo(principal);
 
-                setVeiculo(principal); 
+                setProcessado(true);
+                Swal.close();
 
-                console.log("Veículo encontrado:", principal);
-                navigate(`/painelControle/entrada/${principal.placa}`, { replace: true });
+                navigate(`/painelControle/entrada/${principal.placa}`, {
+                    replace: true,
+                    state: { veiculoCarregado: principal }
+                });
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Veículo encontrado!',
+                })
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Veículo não cadastrado',
+                    text: 'A placa reconhecida não foi encontrada no GROTRACK. Por favor, cadastre o veículo primeiro.',
+                    confirmButtonText: 'Voltar ao Painel',
+                    confirmButtonColor: '#d33',
+                })
             }
-        } catch (error) {
-            console.error("Erro no fluxo de reconhecimento:", error);
-        } finally {
-            setLoading(false);
+        } catch (e) {
+            console.log("Error: ", e)
+            Swal.fire({
+                icon: 'error',
+                title: 'Veículo não cadastrado',
+                text: 'A placa reconhecida não foi encontrada no Sistema GROTRACK. Por favor, cadastre o veículo primeiro.',
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#d33',
+            }).then(() => {
+                navigate("/painelControle", { replace: true });
+            });
         }
     }
 
     useEffect(() => {
-        if (location.state?.arquivoCapturado) {
-            send_to_gateway(location.state.arquivoCapturado);
+        if (location.state?.arquivoCapturado && !inicializado.current) {
+            inicializado.current = true; 
+
+            const arquivo = location.state.arquivoCapturado;
+
+            navigate(location.pathname, { replace: true, state: {} });
+
+            send_to_gateway(arquivo);
         }
-    }, [location.state]);
+    }, [location.state, navigate]); 
+
+    const mapaItens = [
+        { label: "Geladeira", key: "geladeira" },
+        { label: "Chave de Roda", key: "chave_roda" },
+        { label: "Macaco", key: "macaco" },
+        { label: "TV/Monitor", key: "monitor" },
+        { label: "Extintor", key: "extintor" },
+        { label: "Caixa de Ferramentas", key: "caixa_ferramentas" },
+        { label: "Estepe", key: "estepe" },
+        { label: "Som/DVD", key: "som_dvd" }
+    ];
 
     return (
         <Layout ativo={"painel"}>
@@ -80,44 +181,50 @@ function EntradaVeiculoCamera() {
                 ]}
             />
             <div>
-                <OrdemServicoCard 
-                marca={marca}
-                prefixo={prefixo}
-                modelo={modelo}
-                placa={placa} />
+                <OrdemServicoCard
+                    marca={marca}
+                    prefixo={prefixo}
+                    modelo={modelo}
+                    cliente={empresa}
+                    placa={placa} />
             </div>
             <div className="section1">
                 <InformacoesCard titulo="Informações do Veículo" icone="bx bx-bus">
                     <div className="itens-grid">
-                        {itensDaLista.map(item => (
-                            <ItemContador key={item} label={item} />
+                        {mapaItens.map(item => (
+                            <ItemContador
+                                key={item.key}
+                                label={item.label}
+                                valor={registroEntrada[item.key]}
+                                setValor={(novo) => handleCounterChange(item.key, novo)}
+                            />
                         ))}
                     </div>
 
                     <div className="observacoes-section">
                         <label>Observações/Itens adicionais</label>
-                        <input type="text" placeholder="Ex: 123.456.789.01" />
+                        <input name="observacoes" value={registroEntrada.observacoes} onChange={handleChange} placeholder="Detalhes extras..." />
                     </div>
                 </InformacoesCard>
 
                 <InformacoesCard titulo="Detalhes de Entrada" icone="bx bx-paste">
                     <div className="input-field">
                         <label>Data de Entrada*</label>
-                        <input type="text" placeholder="Ex: 01/01/2025" />
+                        <input type="date" name="dataEntrada" value={registroEntrada.dataEntrada} onChange={handleChange} />
                     </div>
                     <div className="input-field">
                         <label>Nome do responsável*</label>
-                        <input type="text" placeholder="Ex: João da Silva" />
+                        <input name="responsavel" value={registroEntrada.responsavel} onChange={handleChange} placeholder="Ex: João da Silva" />
                     </div>
                     <div className="input-field">
                         <label>CPF do responsável*</label>
-                        <input type="text" placeholder="Ex: 123.456.789-00" />
+                        <input name="cpfResponsavel" value={registroEntrada.cpfResponsavel} onChange={handleChange} placeholder="Ex: 123.456.789-00" />
                     </div>
                 </InformacoesCard>
             </div>
             <div className="section-buttom">
                 <button className="btn-secundario" onClick={() => navigate("/painelControle")}>Voltar para o painel</button>
-                <button className="btn-primario" onClick={() => navigate(`/painelControle/orcamento/${placa}`)}>Finalizar entrada</button>
+                <button className="btn-primario" onClick={handleFinalizar}>Finalizar entrada</button>
             </div>
 
         </Layout >
