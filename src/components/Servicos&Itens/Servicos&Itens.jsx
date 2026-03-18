@@ -1,6 +1,5 @@
 import "./Servicos&Itens.css";
 import { useState, useEffect } from "react";
-import { buscarServicos, buscarItens } from "../../service/api";
 import Servicos from "./Abas/Servicos";
 import Itens from "./Abas/Itens";
 import ModalAdicionarServico from "../ModalAdicionarServico/ModalAdicionarServico";
@@ -9,7 +8,7 @@ import ServicosEItensLogic from "../../service/ServicosEItens.js";
 
 function ServicosEItens({ pagina }) {
     const { adicionarServico, adicionarProduto, buscarOrdem } = ServicosEItensLogic();
-    const [_dados, setDados] = useState([]);
+    const [_dados, _setDados] = useState([]);
     const [abaAtiva, setAbaAtiva] = useState("servicos");
 
     const [mostrarModalServico, setMostrarModalServico] = useState(false);

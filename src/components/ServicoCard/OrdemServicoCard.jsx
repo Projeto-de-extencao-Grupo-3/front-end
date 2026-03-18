@@ -1,6 +1,6 @@
 import "./OrdemServicoCard.css";
 
-function OrdemServicoCard({ placa }) {
+function OrdemServicoCard({ marca, modelo, prefixo, cliente, idOrdemServico, placa }) {
   return (
     <div className="dados-reconhecidos">
       <div className="bus-icon">
@@ -8,14 +8,14 @@ function OrdemServicoCard({ placa }) {
       </div>
 
       <div className="section">
-        <p>Ordem de Serviço #0001</p>
-        <p>Marcopolo G8 - 1200</p>
+        <p>Ordem de Serviço {idOrdemServico || "#0001"}</p>
+        <p>{marca} {modelo} - {prefixo}</p>
       </div>
 
       <div className="divider" />
 
       <div className="section">
-        <p>Empresa: Sussantur</p>
+        <p>Empresa: {cliente || "Empresa"}</p>
         <p>Placa: {placa}</p>
       </div>
     </div>

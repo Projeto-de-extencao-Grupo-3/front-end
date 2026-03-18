@@ -1,8 +1,8 @@
 import { useState } from "react";
 import api from "./api";
-import { exibirAlertaErro } from './alertas';
+import { exibirAlertaErro, exibirAlertaSucesso } from './alertas';
 
-function Veiculos(){
+function Veiculos() {
     const [_veiculos, setVeiculos] = useState([]);
     const [_loading, setLoading] = useState(true);
 
@@ -18,7 +18,19 @@ function Veiculos(){
         }
     };
 
-    return { listarVeiculos }
+    const adicionarVeiculos = async (dadosDoFormulario) => {
+        try {
+            const response = await api.post("/veiculos", dadosDoFormulario);
+            setVeiculos(prevVeiculos => [...prevVeiculos, response.data]);
+            exibirAlertaSucesso("Produto adicionado com sucesso!");
+            return response.data;
+        } catch (error) {
+            exibirAlertaErro("Erro ao adicionar produto.");
+            throw error;
+        }
+    }
+
+    return { listarVeiculos, adicionarVeiculos }
 }
 
 export default Veiculos
