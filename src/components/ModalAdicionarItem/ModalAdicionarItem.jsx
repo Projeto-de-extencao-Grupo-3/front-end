@@ -9,7 +9,7 @@ function ModalAdicionarItem({ isOpen, onClose, placa, onSave, salvarNaOrdem }) {
 
     const [visibilidade, setVisibilidade] = useState(null);
     const [produtos, setProdutos] = useState([]);
-    const [produtoSelecionado, setProdutoSelecionado] = useState(null);
+    const [_produtoSelecionado, setProdutoSelecionado] = useState(null);
 
     const [formData, setFormData] = useState({
         fk_ordem_servico: salvarNaOrdem,

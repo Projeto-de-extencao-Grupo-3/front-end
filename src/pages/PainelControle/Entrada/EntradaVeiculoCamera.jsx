@@ -29,7 +29,7 @@ function EntradaVeiculoCamera() {
     const [_loading, setLoading] = useState(false);
 
     const { reconhecerPlaca } = ReconhecimentoPlaca();
-    const [veiculo, setVeiculo] = useState(null);
+    const [_veiculo, setVeiculo] = useState(null);
 
 
     async function send_to_gateway(arquivo) {
