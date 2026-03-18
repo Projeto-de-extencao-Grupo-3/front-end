@@ -35,7 +35,7 @@ function EntradaVeiculoCamera() {
     const [empresa, setEmpresa] = useState();
     const [idCliente, setIdCliente] = useState();
 
-    const [processado, setProcessado] = useState(false);
+    const [_processado, setProcessado] = useState(false);
 
     const { reconhecerPlaca } = ReconhecimentoPlaca();
     const [veiculo, setVeiculo] = useState(null);
@@ -126,7 +126,8 @@ function EntradaVeiculoCamera() {
                     confirmButtonColor: '#d33',
                 })
             }
-        } catch (error) {
+        } catch (e) {
+            console.log("Error: ", e)
             Swal.fire({
                 icon: 'error',
                 title: 'Veículo não cadastrado',
