@@ -1,10 +1,6 @@
 name: Frontend - CD Deploy to EC2 (Nginx Dist)
 
 on:
-  workflow_run:
-    workflows: ["Frontend - CI Workflow"] 
-    types:
-      - completed
   push:
     branches: [ "main" ]
   pull_request:
