@@ -12,6 +12,7 @@ import AutorizacaoVeiculo from './pages/PainelControle/Autorizacao/AutorizacaoVe
 import GestaoFuncionarios from './pages/Funcionarios/GestaoFuncionarios.jsx';
 import ControleEstoque from './pages/Estoque/ControleEstoque.jsx';
 import GestaoClientes from './pages/Clientes/GestaoClientes.jsx';
+import HistoricoVeiculos from './pages/Clientes/Veiculos/HistoricoVeiculos.jsx';
 import Teste from './pages/Teste.jsx';
 import TesteModal from './components/ModalNovoItem/TesteModal.jsx';
 import TesteModalEditar from './components/ModalEditarItem/TesteModalEditar.jsx';
@@ -46,8 +47,12 @@ function App() {
         
         {/* Roteamento de Clientes */}
         <Route path="/clientes" element={<GestaoClientes />} />
+<<<<<<< Updated upstream
 
         {/* Roteamento de Estoque */}
+=======
+        <Route path="/clientes/veiculos" element={<HistoricoVeiculos />} />
+>>>>>>> Stashed changes
         <Route path="/estoque" element={<ControleEstoque />} />
        
         {/* Roteamento de Funcionários */}
