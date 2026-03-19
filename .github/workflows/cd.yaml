@@ -5,9 +5,10 @@ on:
     workflows: ["Frontend - CI Workflow"] 
     types:
       - completed
-    branches:
-      - main
-      - develop
+  pull_request:
+    branches: [ "main", "develop" ]
+  push:
+    branches: [ "main", "develop" ]
 
 jobs:
   deploy-to-ec2:
