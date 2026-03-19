@@ -1,8 +1,8 @@
-name: Build & Push Imagem Docker
+name: Frontend - Build & Push Imagem Docker
 
 on:
   workflow_run:
-    workflows: ["CI Workflow"] 
+    workflows: ["Frontend - CI Workflow"] 
     types:
       - completed
     branches:
