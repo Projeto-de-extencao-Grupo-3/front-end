@@ -1,13 +1,17 @@
 name: Frontend - CD Deploy to EC2 (Nginx Dist)
 
 on:
-  push:
-    branches: [ "main", "develop" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_run:
+    workflows: ["Frontend - CI Workflow"] 
+    types:
+      - completed
+    branches:
+      - main
+      - develop
 
 jobs:
-  deploy:
+  deploy-to-ec2:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
