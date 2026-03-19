@@ -5,6 +5,9 @@ on:
     workflows: ["Frontend - CI Workflow"] 
     types:
       - completed
+  push:
+    branches: [ "main" ]
+  pull_request:
     branches: [ "main" ]
 
 jobs:
