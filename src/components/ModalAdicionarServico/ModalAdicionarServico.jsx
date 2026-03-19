@@ -13,7 +13,7 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
         lado_veiculo: "",
         cor: "",
         especificacao_servico: "",
-        observacoes_item: "Nenhuma"
+        tipo_pintura : ""
     });
 
     useEffect(() => {
@@ -206,10 +206,17 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                                 {modo === "visualizar" ? (
                                                     <input className="form-control" value={servico?.tipoPintura || "Não informado"} readOnly />
                                                 ) : (
-                                                    <select className="form-control form-select">
+                                                    <select 
+                                                        name="tipo_pintura"
+                                                        className="form-control form-select"
+                                                        value={formData.tipo_pintura}
+                                                        onChange={handleChange}
+                                                    >
                                                         {/* Não esta salvando esse */}
                                                         {/* Verificar se existe esse campo no banco de dados */}
-                                                        <option>Selecione o tipo</option>
+                                                            <option value="" disabled>Selecione o tipo</option>
+                                                            <option value="COMPLETA">Completa</option>
+                                                            <option value="PARCIAL">Parcial</option>
                                                     </select>
                                                 )}
                                             </div>
@@ -251,27 +258,7 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                         )}
                                     </div>
 
-                                    {/* OBSERVAÇÕES: Aba FUNILARIA */}
-                                    {tipoAba === "FUNILARIA" && (
-                                        <div className="col-12">
-                                            <label>Observações</label>
-                                            {modo === "visualizar" ? (
-                                                <input
-                                                    name="observacoes_item"
-                                                    className="form-control"
-                                                    value={formData?.observacoes_item || "Nenhuma"}
-                                                    onChange={handleChange}
-                                                    readOnly />
-                                            ) : (
-                                                <textarea
-                                                    name="observacoes_item"
-                                                    className="form-control"
-                                                    value={formData.observacoes_item}
-                                                    onChange={handleChange}
-                                                />
-                                            )}
-                                        </div>
-                                    )}
+                                    
                                 </div>
 
                                 {/* BOTÕES DINÂMICOS */}
