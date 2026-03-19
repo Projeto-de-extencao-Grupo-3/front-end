@@ -13,12 +13,12 @@ import GestaoFuncionarios from './pages/Funcionarios/GestaoFuncionarios.jsx';
 import ControleEstoque from './pages/Estoque/ControleEstoque.jsx';
 import GestaoClientes from './pages/Clientes/GestaoClientes.jsx';
 import HistoricoVeiculos from './pages/Clientes/Veiculos/HistoricoVeiculos.jsx';
+import HistoricoVeiculosServico from './pages/Clientes/Veiculos/HistoricoVeiculosServiço.jsx';
 import Teste from './pages/Teste.jsx';
 import TesteModal from './components/ModalNovoItem/TesteModal.jsx';
 import TesteModalEditar from './components/ModalEditarItem/TesteModalEditar.jsx';
 
 import EtapaOrcamento from './pages/PainelControle/Orcamento/EtapaOrcamento.jsx';
-import HistoricoVeiculos from './pages/Veiculos/HistoricoVeiculos.jsx';
 
 function App() {
 
@@ -47,19 +47,14 @@ function App() {
         
         {/* Roteamento de Clientes */}
         <Route path="/clientes" element={<GestaoClientes />} />
-<<<<<<< Updated upstream
+        <Route path="/clientes/veiculos" element={<HistoricoVeiculos />} />
+        <Route path="/clientes/veiculos/servico/:placa" element={<HistoricoVeiculosServico />} />
 
         {/* Roteamento de Estoque */}
-=======
-        <Route path="/clientes/veiculos" element={<HistoricoVeiculos />} />
->>>>>>> Stashed changes
         <Route path="/estoque" element={<ControleEstoque />} />
        
         {/* Roteamento de Funcionários */}
         <Route path="/funcionarios" element={<GestaoFuncionarios />} />
-        
-        {/* Roteamento do Histórico de Veículos */}
-        <Route path="/veiculos" element={<HistoricoVeiculos/>} />
 
         {/* Roteamento de Análise Financeira */}
         <Route path="/analiseFinanceira" element={<AnaliseFinanceira />} />
