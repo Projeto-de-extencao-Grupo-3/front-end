@@ -249,7 +249,7 @@ function PainelControle() {
                                 {/* logica plotar botoes de acordo com status */}
                                 <div className="d-flex gap-2">
                                     {kpiAtiva === "entrada" && (
-                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => setMostrarModalEntrada(true)}>
+                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/entrada/${os.veiculo?.placa}`)}>
                                             Fazer Entrada
                                         </button>
                                     )}

@@ -9,7 +9,7 @@ const IconeOlho = () => (
   </svg>
 );
 
-function TabelaVeiculos() {
+function TabelaVeiculosServico() {
   const [veiculos, setVeiculos] = useState([]);
   const [loading, setLoading]   = useState(true);
   const [erro, setErro]         = useState(null);
@@ -138,6 +138,7 @@ function TabelaVeiculos() {
                 Ver Histórico <span style={{ opacity: 0.7 }}>›</span>
               </a>
             </div>
+
           </div>
         ))}
       </div>
@@ -145,4 +146,4 @@ function TabelaVeiculos() {
   );
 }
 
-export default TabelaVeiculos;
+export default TabelaVeiculosServico;

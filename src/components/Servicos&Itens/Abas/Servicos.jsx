@@ -24,8 +24,8 @@ function Servicos({ dados, pagina, onVisualizar }) {
                         <td className="dado">{formatarTexto(servico.tipo_servico)}</td>
                         <td className="dado">{formatarTexto(servico.parte_veiculo)}</td>
                         <td className="dado">{formatarTexto(servico.lado_veiculo)}</td>
-                        <td className="dado">{servico.tipoPintura}</td>
-                        <td className="dado">{servico.cor}</td>
+                        <td className="dado">{formatarTexto(servico.tipo_pintura) || "-"}</td>
+                        <td className="dado">{formatarTexto(servico.cor) || "-"}</td>
                         <td className="dado">R${servico.preco_cobrado}</td>
 
                         {/* aq chama no modo de visualizar */}
@@ -37,7 +37,7 @@ function Servicos({ dados, pagina, onVisualizar }) {
 
                                         <div className="icon" style={{ backgroundImage: `url(${iconLixo})` }}></div>
 
-                                        {/* <div className="icon" style={{ backgroundImage: `url(${iconBook})` }} onClick={() => onVisualizar(servico)}></div> */}
+                                        <div className="icon" style={{ backgroundImage: `url(${iconBook})` }} onClick={() => onVisualizar(servico)}></div>
                                     </>
                                     :
                                     <div className="icon" style={{ backgroundImage: `url(${iconBook})` }} onClick={() => onVisualizar(servico)}></div>

@@ -1,0 +1,56 @@
+/* TabelaVeiculos.module.css — apenas o que Bootstrap não cobre */
+
+.vehicle-card {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.vehicle-card:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.11);
+  transform: translateY(-1px);
+}
+
+.avatar {
+  width: 58px;
+  height: 58px;
+  letter-spacing: -1px;
+}
+
+.avatar-navy { background-color: #1b2a45; }
+.avatar-gold  { background-color: #d4a422; }
+
+.btn-navy {
+  background-color: #1b2a45;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.45rem 1.1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background 0.18s ease;
+}
+
+.btn-navy:hover {
+  background-color: #243654;
+  color: #fff;
+}
+
+.btn-outline-navy {
+  background-color: transparent;
+  color: #1b2a45;
+  border: 1.5px solid #1b2a45;
+  border-radius: 8px;
+  padding: 0.45rem 1.1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.btn-outline-navy:hover {
+  background-color: #1b2a45;
+  color: #fff;
+}
