@@ -6,7 +6,7 @@ import "./HistoricoVeiculos.css";
 function HistoricoVeiculos() {
     
     return (
-        <Layout ativo={"clientes"}>
+        <Layout ativo={"veiculos"}>
             <div className="header-clientes">
                 <div>
                     <h1>Veículos cadastrados</h1>
