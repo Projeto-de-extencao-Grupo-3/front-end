@@ -18,7 +18,6 @@ import TesteModal from './components/ModalNovoItem/TesteModal.jsx';
 import TesteModalEditar from './components/ModalEditarItem/TesteModalEditar.jsx';
 
 import EtapaOrcamento from './pages/PainelControle/Orcamento/EtapaOrcamento.jsx';
-import HistoricoVeiculos from './pages/Veiculos/HistoricoVeiculos.jsx';
 
 function App() {
 
@@ -47,20 +46,12 @@ function App() {
         
         {/* Roteamento de Clientes */}
         <Route path="/clientes" element={<GestaoClientes />} />
-<<<<<<< Updated upstream
-
-        {/* Roteamento de Estoque */}
-=======
         <Route path="/clientes/veiculos" element={<HistoricoVeiculos />} />
->>>>>>> Stashed changes
         <Route path="/estoque" element={<ControleEstoque />} />
        
         {/* Roteamento de Funcionários */}
         <Route path="/funcionarios" element={<GestaoFuncionarios />} />
         
-        {/* Roteamento do Histórico de Veículos */}
-        <Route path="/veiculos" element={<HistoricoVeiculos/>} />
-
         {/* Roteamento de Análise Financeira */}
         <Route path="/analiseFinanceira" element={<AnaliseFinanceira />} />
         
