@@ -5,17 +5,15 @@ import InformacoesCard from "../../../components/ServicoCard/InformacoesCard";
 import ItemContador from "../../../components/ServicoCard/ItemContador";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import "./EntradaVeiculo.css";
-import RegistroEntrada from "../../../service/RegistroEntrada";
 import Clientes from "../../../service/Clientes";
-import Veiculos from "../../../service/Veiculos";
 import useEndereco from "../../../service/Endereco";
+import Jornada from "../../../service/Jornada";
 
 
 function EntradaVeiculo() {
 
-    const { adicionarVeiculos } = Veiculos()
-    const { adicionarRegistroEntrada } = RegistroEntrada()
     const { adicionarCliente } = Clientes()
+    const { adicionarVeiculoRegistroEntradaSemCadastro } = Jornada()
     const { cadastrarEnderecoVazio } = useEndereco()
 
     const [formData, setFormData] = useState({
@@ -42,10 +40,9 @@ function EntradaVeiculo() {
     };
 
     const handleFinalizar = async () => {
-        console.log("Objeto formData completo:", formData);
         try {
             const resEndereco = await cadastrarEnderecoVazio();
-            const idGerado = resEndereco.id_endereco;
+            const idEnderecoGerado = resEndereco.id_endereco;
 
             const cliente = await adicionarCliente({
                 nome: formData.nome,
@@ -53,60 +50,49 @@ function EntradaVeiculo() {
                 telefone: formData.telefone,
                 email: formData.email,
                 tipo_cliente: formData.tipoCliente,
-                fk_endereco: idGerado
-            }, {
-                id_endereco: idGerado
-            }
+                fk_endereco: idEnderecoGerado
+            },
+                {
+                    id_endereco: idEnderecoGerado
+                }
             );
 
-            console.log("Retorno do serviço de Cliente:", cliente);
-
-            const veiculo = await adicionarVeiculos({
-                placa: formData.placa,
-                marca: formData.marca,
-                modelo: formData.modelo,
-                prefixo: formData.prefixo,
-                ano_modelo: formData.ano_modelo,
-                id_cliente: cliente.id_cliente
+            const resultadoJornada = await adicionarVeiculoRegistroEntradaSemCadastro({
+                veiculo: {
+                    placa: formData.placa,
+                    marca: formData.marca,
+                    modelo: formData.modelo,
+                    prefixo: formData.prefixo,
+                    ano_modelo: formData.ano_modelo,
+                    id_cliente: cliente.id_cliente
+                },
+                entrada: {
+                    dataEntradaPrevista: formData.dataEntrada,
+                    dataEntradaEfetiva: formData.dataEntrada,
+                    responsavel: formData.responsavel,
+                    cpf: formData.cpfResponsavel,
+                    observacoes: formData.observacoes,
+                    geladeira: Number(formData.geladeira),
+                    macaco: Number(formData.macaco),
+                    extintor: Number(formData.extinto),
+                    estepe: Number(formData.estepe),
+                    chave_roda: Number(formData.chave_roda),
+                    monitor: Number(formData.monitor),
+                    caixa_ferramentas: Number(formData.caixa_ferramentas),
+                    som_dvd: Number(formData.som_dvd),
+                    fk_oficina: 1
+                }
             });
 
-            console.log("Retorno do serviço de Veiculo:", veiculo);
+            console.log("ID do Veículo criado:", resultadoJornada.id_veiculo);
+            console.log("ID do Registro de Entrada:", resultadoJornada.id_registro_entrada);
 
-            console.log("Dados que serão enviados para o Registro:", {
-                geladeira: Number(formData.geladeira),
-                macaco: Number(formData.macaco),
-                extintor: Number(formData.extinto),
-                estepe: Number(formData.estepe),
-                chave_roda: Number(formData.chave_roda),
-                monitor: Number(formData.monitor),
-                caixa_ferramentas: Number(formData.caixa_ferramentas),
-                som_dvd: Number(formData.som_dvd),
-            });
-            await adicionarRegistroEntrada({
-                data_entrada_prevista: formData.dataEntrada,
-                data_entrada_efetiva: formData.dataEntrada,
-                nome_responsavel: formData.responsavel,
-                cpf_responsavel: formData.cpfResponsavel,
-                observacoes: formData.observacoes,
-                quantidade_geladeira: Number(formData.geladeira),
-                quantidade_macaco: Number(formData.macaco),
-                quantidade_extintor: Number(formData.extinto),
-                quantidade_estepe: Number(formData.estepe),
-                quantidade_chave_roda: Number(formData.chave_roda),
-                quantidade_monitor: Number(formData.monitor),
-                quantidade_caixa_ferramentas: Number(formData.caixa_ferramentas),
-                quantidade_som_dvd: Number(formData.som_dvd),
-                fk_cliente: cliente.id_cliente,
-                fk_veiculo: veiculo.id_veiculo,
-                fk_oficina: 1
-            });
-
-
-            console.log("Cadastro realizado com sucesso!");
+            alert("Cadastro realizado com sucesso!");
             navigate("/painelControle/orcamento");
+
         } catch (error) {
             console.error("Erro no fluxo de entrada:", error);
-            alert("Ocorreu um erro ao salvar os dados. Verifique o console.");
+            alert("Ocorreu um erro ao salvar os dados.");
         }
     };
 
