@@ -9,10 +9,11 @@ import "./EntradaVeiculo.css";
 import RegistroEntrada from "../../../service/RegistroEntrada";
 import ReconhecimentoPlaca from "../../../service/ReconhecimentoPlaca";
 import Swal from 'sweetalert2';
+import Jornada from "../../../service/Jornada";
 
 function EntradaVeiculoCamera() {
 
-    const { adicionarRegistroEntrada } = RegistroEntrada()
+    const { adicionarRegistroEntrada } = Jornada()
 
 
     const [registroEntrada, setRegistroEntrada] = useState({
@@ -53,22 +54,25 @@ function EntradaVeiculoCamera() {
         console.log("Objeto registroEntrada completo:", registroEntrada);
         try {
             await adicionarRegistroEntrada({
-                data_entrada_prevista: registroEntrada.dataEntrada,
-                data_entrada_efetiva: registroEntrada.dataEntrada,
-                nome_responsavel: registroEntrada.responsavel,
-                cpf_responsavel: registroEntrada.cpfResponsavel,
-                observacoes: registroEntrada.observacoes,
-                quantidade_geladeira: Number(registroEntrada.geladeira),
-                quantidade_macaco: Number(registroEntrada.macaco),
-                quantidade_extintor: Number(registroEntrada.extintor), // corrigido de extinto para extintor
-                quantidade_estepe: Number(registroEntrada.estepe),
-                quantidade_chave_roda: Number(registroEntrada.chave_roda),
-                quantidade_monitor: Number(registroEntrada.monitor),
-                quantidade_caixa_ferramentas: Number(registroEntrada.caixa_ferramentas),
-                quantidade_som_dvd: Number(registroEntrada.som_dvd),
-                fk_cliente: idCliente,
-                fk_veiculo: veiculo.id_veiculo,
-                fk_oficina: 1
+                veiculo: veiculo.id_veiculo,
+                entrada: {
+                    data_entrada_prevista: registroEntrada.dataEntrada,
+                    data_entrada_efetiva: registroEntrada.dataEntrada,
+                    responsavel: registroEntrada.responsavel,
+                    cpf: registroEntrada.cpfResponsavel,
+                    observacoes: registroEntrada.observacoes,
+                    geladeira: Number(registroEntrada.geladeira),
+                    macaco: Number(registroEntrada.macaco),
+                    extintor: Number(registroEntrada.extintor), // corrigido de extinto para extintor
+                    estepe: Number(registroEntrada.estepe),
+                    chave_roda: Number(registroEntrada.chave_roda),
+                    monitor: Number(registroEntrada.monitor),
+                    caixa_ferramentas: Number(registroEntrada.caixa_ferramentas),
+                    som_dvd: Number(registroEntrada.som_dvd),
+                    fk_cliente: idCliente,
+                    fk_veiculo: veiculo.id_veiculo,
+                    fk_oficina: 1
+                }
             });
 
 

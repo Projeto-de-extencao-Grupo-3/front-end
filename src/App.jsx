@@ -48,14 +48,11 @@ function App() {
         {/* Roteamento de Clientes */}
         <Route path="/clientes" element={<GestaoClientes />} />
         <Route path="/clientes/veiculos" element={<HistoricoVeiculos />} />
-        <Route path="/clientes/veiculos/servico/:placa" element={<HistoricoVeiculosServico />} />
-
-        {/* Roteamento de Estoque */}
         <Route path="/estoque" element={<ControleEstoque />} />
        
         {/* Roteamento de Funcionários */}
         <Route path="/funcionarios" element={<GestaoFuncionarios />} />
-
+        
         {/* Roteamento de Análise Financeira */}
         <Route path="/analiseFinanceira" element={<AnaliseFinanceira />} />
         
