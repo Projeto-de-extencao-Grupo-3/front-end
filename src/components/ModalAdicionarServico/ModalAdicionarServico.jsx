@@ -11,9 +11,9 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
         preco_cobrado: "",
         parte_veiculo: "",
         lado_veiculo: "",
-        cor: "",
+        cor: "-",
         especificacao_servico: "",
-        tipo_pintura : ""
+        tipo_pintura : "COMPLETA"
     });
 
     useEffect(() => {
