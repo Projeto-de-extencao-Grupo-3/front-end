@@ -54,7 +54,7 @@ function EntradaVeiculoCamera() {
         console.log("Objeto registroEntrada completo:", registroEntrada);
         try {
             await adicionarRegistroEntrada({
-                veiculo: veiculo.id_veiculo,
+                fk_veiculo: veiculo.id_veiculo,
                 entrada: {
                     data_entrada_prevista: registroEntrada.dataEntrada,
                     data_entrada_efetiva: registroEntrada.dataEntrada,
@@ -63,7 +63,7 @@ function EntradaVeiculoCamera() {
                     observacoes: registroEntrada.observacoes,
                     geladeira: Number(registroEntrada.geladeira),
                     macaco: Number(registroEntrada.macaco),
-                    extintor: Number(registroEntrada.extintor), // corrigido de extinto para extintor
+                    extintor: Number(registroEntrada.extintor), 
                     estepe: Number(registroEntrada.estepe),
                     chave_roda: Number(registroEntrada.chave_roda),
                     monitor: Number(registroEntrada.monitor),
