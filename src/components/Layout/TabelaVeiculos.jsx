@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import styles from "./TabelaVeiculos.module.css";
 // import { buscarVeiculos } from '../../services/veiculosService';
+import { useNavigate } from 'react-router-dom';
 
 const IconeOlho = () => (
   <svg style={{ width: 15, height: 15, fill: 'currentColor', flexShrink: 0 }} viewBox="0 0 24 24">
@@ -13,6 +14,7 @@ function TabelaVeiculos() {
   const [veiculos, setVeiculos] = useState([]);
   const [loading, setLoading]   = useState(true);
   const [erro, setErro]         = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function carregarVeiculos() {
@@ -129,11 +131,14 @@ function TabelaVeiculos() {
             {/* Botões */}
             <div className="d-flex gap-2 flex-shrink-0">
               {veiculo.emProducao && (
-                <a href="#" className={`${styles['btn-outline-navy']} d-flex align-items-center gap-1`}>
+                <a href="#" onClick={(e) => {
+                  e.preventDefault(); // Previne o comportamento padrão do link
+                  navigate('/clientes/veiculos/servico', { state: { modelo: veiculo.modelo, placa: veiculo.placa } });
+                }} className={`${styles['btn-outline-navy']} d-flex align-items-center gap-1`}>
                   Ver Carro em Produção <span style={{ opacity: 0.7 }}>›</span>
                 </a>
               )}
-              <a href="#" className={`${styles['btn-navy']} d-flex align-items-center gap-1`}>
+              <a className={`${styles['btn-navy']} d-flex align-items-center gap-1`}>
                 <IconeOlho />
                 Ver Histórico <span style={{ opacity: 0.7 }}>›</span>
               </a>
