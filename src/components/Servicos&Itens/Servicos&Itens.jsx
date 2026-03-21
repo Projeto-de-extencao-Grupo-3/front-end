@@ -23,21 +23,22 @@ function ServicosEItens({ pagina }) {
 
     const idOrdem = 1;
 
+    const carregarOrdem = async () => {
+        try {
+            const dados = await buscarOrdem(idOrdem);
+            const ticketNormalizado = {
+                ...dados,
+                servicos: dados.servicos || [],
+                itens: dados.itens || []
+            };
+            setTicket(ticketNormalizado);
+            console.log("Dados carregados:", ticketNormalizado);
+        } catch (error) {
+            console.error("Erro ao carregar ordem:", error);
+        }
+    };
+
     useEffect(() => {
-        const carregarOrdem = async () => {
-            try {
-                const dados = await buscarOrdem(idOrdem);
-                const ticketNormalizado = {
-                    ...dados,
-                    servicos: dados.servicos || [],
-                    itens: dados.itens || []
-                };
-                setTicket(ticketNormalizado);
-                console.log("Dados carregados:", ticketNormalizado);
-            } catch (error) {
-                console.error("Erro ao carregar ordem:", error);
-            }
-        };
         carregarOrdem();
     }, []);
 
@@ -141,7 +142,10 @@ function ServicosEItens({ pagina }) {
                 placa={ticket.placa}
                 modo={modoServico}
                 servico={servicoVisualizar}
-                onSave={adicionarServico}
+                onSave={async (dados) => {
+                    await adicionarServico(dados);
+                    await carregarOrdem(); // 🔥 ATUALIZA LISTA
+                }}
                 salvarNaOrdem={idOrdem}
             />
 
@@ -151,9 +155,12 @@ function ServicosEItens({ pagina }) {
                 placa={ticket.placa}
                 modo={modoItem}
                 item={itemVisualizar}
-                onSave={adicionarProduto}
+                onSave={async (dados) => {
+                    await adicionarProduto(dados);
+                    await carregarOrdem(); // 🔥 ATUALIZA LISTA
+                }}
                 salvarNaOrdem={idOrdem}
-                />
+            />
         </div>
     );
 }

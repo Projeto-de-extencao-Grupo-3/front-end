@@ -27,7 +27,7 @@ function ServicosItens() {
 
     const adicionarServico = async (dadosNecessarios) => {
         try {
-            const response = await api.post("/itens-servicos", dadosNecessarios);
+            const response = await api.post(`/jornada/${dadosNecessarios.fk_ordem_servico}/servicos`, dadosNecessarios);
             exibirAlertaSucesso("Serviço adicionado com sucesso!");
             return response.data;
         } catch (error) {
@@ -38,7 +38,7 @@ function ServicosItens() {
 
     const adicionarProduto = async (dadosNecessarios) => {
         try {
-            const response = await api.post("/itens-produtos", dadosNecessarios);
+            const response = await api.post(`/jornada/${dadosNecessarios.fk_ordem_servico}/produtos`, dadosNecessarios);
             exibirAlertaSucesso("Produto adicionado com sucesso!");
             return response.data;
         } catch (error) {
@@ -46,11 +46,38 @@ function ServicosItens() {
             throw error;
         }
     };
+
+    const excluirServico = async (idServico) => {
+        try {
+            const response = await api.delete(`/itens-servicos/${idServico}`);
+            exibirAlertaSucesso("Serviço excluído com sucesso!");
+            return true;
+        } catch (error) {
+            exibirAlertaErro("Erro ao excluir serviço.");
+            console.error("Erro ao excluir serviço:", error);
+            throw error;
+        }
+    };
+
+    const excluirProduto = async (idProduto) => {
+        try {
+            const response = await api.delete(`/itens-produtos/${idProduto}`);
+            exibirAlertaSucesso("Produto excluído com sucesso!");
+            return true;
+        } catch (error) {
+            exibirAlertaErro("Erro ao excluir produto.");
+            console.error("Erro ao excluir produto:", error);
+            throw error;
+        }
+    };
+
     return {
         buscarOrdem,
         buscarProdutos,
         adicionarServico,
-        adicionarProduto
+        adicionarProduto,
+        excluirServico,
+        excluirProduto
     };
 }
 

@@ -14,6 +14,7 @@ export const exibirAlertaErro = (mensagem) => {
     Swal.fire({
         icon: 'error',
         title: 'Erro!',
+        timer: 3000,
         text: mensagem,
     });
 };
