@@ -1,8 +1,7 @@
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import Layout from "../../../components/Layout/Layout";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import "./AguardandoVaga.css";
-
 import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
 import ServicosEItens from "../../../components/Servicos&Itens/Servicos&Itens";
 import ResumoOrcamento from "../../../components/Resumo/ResumoDoOrcamento";
@@ -12,6 +11,8 @@ import "../../componentesInferiores.css";
 
 function AguardandoVaga() {
     const { placa } = useParams();
+    const location = useLocation();
+    const dadosRecuperados = location.state?.ordemServicoDados || {};
     const paginaAtual = "aguardar";
 
 
@@ -32,14 +33,19 @@ function AguardandoVaga() {
                     { id: "finalizado", label: "Finalizado", icon: "bx bx-check-circle", status: "pendente" },
                 ]}
             />
-            <div> 
-                <OrdemServicoCard placa={placa}/>
+            <div>
+                <OrdemServicoCard
+                    marca={dadosRecuperados.marca}
+                    prefixo={dadosRecuperados.prefixo}
+                    modelo={dadosRecuperados.modelo}
+                    cliente={dadosRecuperados.empresa}
+                    placa={placa} />            
             </div>
             <div className="componentesInferiores">
                 <ServicosEItens pagina={paginaAtual} />
                 <div className="componentesDireita">
                     <ResumoOrcamento pagina={paginaAtual} />
-                    <Botoes pagina={paginaAtual} placa={placa} />
+                    <Botoes pagina={paginaAtual} placa={placa} ordemServicoDados={dadosRecuperados} />
                 </div>
             </div>
 

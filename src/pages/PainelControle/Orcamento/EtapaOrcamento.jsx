@@ -5,12 +5,15 @@ import Botoes from "../../../components/Botoes/botoes";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
 import "./EtapaOrcamento.css";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 
 function EtapaOrcamento() {
 
     const { placa } = useParams();
+    const location = useLocation();
+    const dadosRecuperados = location.state?.veiculoDados || {};
+
     return (
         <Layout ativo={"painel"}>
 
@@ -38,14 +41,22 @@ function EtapaOrcamento() {
                 ]}
             />
             <div>
-                <OrdemServicoCard placa={placa} />
-            </div>
-                
+                <OrdemServicoCard
+                    placa={placa}
+                    marca={dadosRecuperados.marca}
+                    prefixo={dadosRecuperados.prefixo}
+                    modelo={dadosRecuperados.modelo}
+                    cliente={dadosRecuperados.empresa}
+                />            </div>
+
             <div className="painelteste">
                 <ServicosEItens pagina={"orcamento"} />
                 <div className="teste2">
                     <ResumoOrcamento />
-                    <Botoes pagina={"orcar"} placa={placa} />
+                    <Botoes 
+                    pagina={"orcar"} 
+                    placa={placa} 
+                    ordemServicoDados={dadosRecuperados}/>
                 </div>
             </div>
 

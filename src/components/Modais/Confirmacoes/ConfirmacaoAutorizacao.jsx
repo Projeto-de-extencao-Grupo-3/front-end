@@ -4,8 +4,7 @@ import OrdemServicoCard from "../../ServicoCard/OrdemServicoCard";
 import "./ConfirmacaoAutorizacao.css"; 
 import TempoEstimado from "../TempoEstimado";
 
-// 1. Adicione a prop 'placa' aqui
-function ConfirmacaoAutorizacao({ onClose, _onConfirm, placa }) {
+function ConfirmacaoAutorizacao({ onClose, _onConfirm, placa, ordemServicoDados }) {
     const navigate = useNavigate();
     
     return (
@@ -13,14 +12,22 @@ function ConfirmacaoAutorizacao({ onClose, _onConfirm, placa }) {
             <div className="modal-content">
                 <h2>Deseja realmente aprovar este orçamento?</h2>
                 
-                <OrdemServicoCard placa={placa} />
+                <OrdemServicoCard 
+                    placa={placa} 
+                    marca={ordemServicoDados?.marca}
+                    prefixo={ordemServicoDados?.prefixo}
+                    modelo={ordemServicoDados?.modelo}
+                    cliente={ordemServicoDados?.empresa}
+                />
                 
                 <TempoEstimado dias={14}/>
                 <ResumoDoOrcamento/>
                 
                 <div className="confirmacao-buttons">
                     <button className="btn-confirmar" onClick={() => {
-                        navigate(`/painelControle/aguardandoVaga/${placa}`);
+                        navigate(`/painelControle/aguardandoVaga/${placa}`, {
+                            state: { ordemServicoDados: ordemServicoDados }
+                        });
                         onClose();
                     }}>Confirmar</button>
                     

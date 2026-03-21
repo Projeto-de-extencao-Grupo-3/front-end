@@ -77,7 +77,17 @@ function EntradaVeiculoCamera() {
 
 
             console.log("Cadastro realizado com sucesso!");
-            navigate("/painelControle/orcamento");
+            navigate(`/painelControle/orcamento/${placa}`, { 
+            state: { 
+                veiculoDados: {
+                    marca,
+                    prefixo,
+                    modelo,
+                    empresa,
+                    placa
+                }
+            }
+        });
         } catch (error) {
             console.error("Erro no fluxo de entrada:", error);
             alert("Ocorreu um erro ao salvar os dados. Verifique o console.");

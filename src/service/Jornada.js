@@ -10,10 +10,10 @@ function Jornada() {
         try {
             const response = await api.post("/jornada/entrada-efetiva-sem-cadastro", dados);
             setJornada(prevJornada => [...prevJornada, response.data]);
-            exibirAlertaSucesso("Produto adicionado com sucesso!");
+            exibirAlertaSucesso("Registro de Entrada adicionado com sucesso!");
             return response.data;
         } catch (error) {
-            exibirAlertaErro("Erro ao adicionar produto.");
+            exibirAlertaErro("Erro ao adicionar registro de entrada.");
             throw error;
         }
     }
@@ -23,10 +23,10 @@ function Jornada() {
         try {
             const response = await api.post("/jornada/entrada-efetiva", dados);
             setJornada(prevJornada => [...prevJornada, response.data]);
-            exibirAlertaSucesso("Produto adicionado com sucesso!");
+            exibirAlertaSucesso("Registro de Entrada adicionado com sucesso!");
             return response.data;
         } catch (error) {
-            exibirAlertaErro("Erro ao adicionar produto.");
+            exibirAlertaErro("Erro ao adicionar registro de entrada.");
             throw error;
         }
     }
