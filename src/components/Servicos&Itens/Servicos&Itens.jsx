@@ -6,8 +6,8 @@ import ModalAdicionarServico from "../ModalAdicionarServico/ModalAdicionarServic
 import ModalAdicionarItem from "../ModalAdicionarItem/ModalAdicionarItem";
 import ServicosEItensLogic from "../../service/ServicosEItens.js";
 
-function ServicosEItens({ pagina }) {
-    const { adicionarServico, adicionarProduto, buscarOrdem } = ServicosEItensLogic();
+function ServicosEItens({ pagina, ticket, atualizarLista }) {
+    const { adicionarServico, adicionarProduto } = ServicosEItensLogic();
     const [_dados, _setDados] = useState([]);
     const [abaAtiva, setAbaAtiva] = useState("servicos");
 
@@ -19,31 +19,8 @@ function ServicosEItens({ pagina }) {
     const [modoItem, setModoItem] = useState("adicionar");
     const [itemVisualizar, setItemVisualizar] = useState(null);
 
-    const [ticket, setTicket] = useState(null);
-
-    const idOrdem = 1;
-
-    const carregarOrdem = async () => {
-        try {
-            const dados = await buscarOrdem(idOrdem);
-            const ticketNormalizado = {
-                ...dados,
-                servicos: dados.servicos || [],
-                itens: dados.itens || []
-            };
-            setTicket(ticketNormalizado);
-            console.log("Dados carregados:", ticketNormalizado);
-        } catch (error) {
-            console.error("Erro ao carregar ordem:", error);
-        }
-    };
-
-    useEffect(() => {
-        carregarOrdem();
-    }, []);
-
     if (!ticket) {
-        return <div>Carregando...</div>;
+        return <div className="resumo-container">Carregando...</div>;
     }
 
     return (
@@ -123,6 +100,7 @@ function ServicosEItens({ pagina }) {
                             setServicoVisualizar(dados);
                             setMostrarModalServico(true);
                         }}
+                        carregarOrdem={atualizarLista}
                     />
                 ) : (
                     <Itens
@@ -132,6 +110,7 @@ function ServicosEItens({ pagina }) {
                             setItemVisualizar(dados);
                             setMostrarModalItem(true);
                         }}
+                        carregarOrdem={atualizarLista}
                     />
                 )}
             </div>
@@ -144,9 +123,9 @@ function ServicosEItens({ pagina }) {
                 servico={servicoVisualizar}
                 onSave={async (dados) => {
                     await adicionarServico(dados);
-                    await carregarOrdem(); // 🔥 ATUALIZA LISTA
+                    await atualizarLista();
                 }}
-                salvarNaOrdem={idOrdem}
+                salvarNaOrdem={ticket.id_ordem_servico}
             />
 
             <ModalAdicionarItem
@@ -157,9 +136,9 @@ function ServicosEItens({ pagina }) {
                 item={itemVisualizar}
                 onSave={async (dados) => {
                     await adicionarProduto(dados);
-                    await carregarOrdem(); // 🔥 ATUALIZA LISTA
+                    await atualizarLista(); // 🔥
                 }}
-                salvarNaOrdem={idOrdem}
+                salvarNaOrdem={ticket.id_ordem_servico}
             />
         </div>
     );

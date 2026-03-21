@@ -1,5 +1,6 @@
 import "./servicos.css";
 import { useState } from "react";
+import { formatarTexto, formatarMoedaBR } from "../../../utils/formatarTexto.js";
 
 import ModalConfirmacao from "../../Modais/Confirmacoes/confirmacoes.jsx";
 import RegistroSaidaMaterial from "../../Modais/RegistrarSaida/RegistroSaidaMaterial.jsx"
@@ -11,7 +12,7 @@ import iconEdit from "../../../assets/icons/EditIcon.png";
 
 import ServicosEItensLogic from "../../../service/ServicosEItens.js";
 
-function Itens({ dados, pagina }) {
+function Itens({ dados, pagina , carregarOrdem}) {
     const [modalSaida, setModalSaida] = useState(false);
     const [dadosSaida, setDadosSaida] = useState(null);
 
@@ -23,6 +24,7 @@ function Itens({ dados, pagina }) {
         try {
             await excluirProduto(produtoSelecionado.id_registro_peca);
             setProdutoSelecionado(false);
+            await carregarOrdem();
         } catch (error) {
             console.error("Erro ao excluir produto:", error);
         }
@@ -49,7 +51,7 @@ function Itens({ dados, pagina }) {
                             <td className="dado">{item.nome_produto}</td>
                             <td className="dado">{item.visivel_orcamento === true ? "Público" : "Privado"}</td>
                             <td className="dado">{item.quantidade} Unid</td>
-                            <td className="dado">R${item.preco_peca}</td>
+                            <td className="dado">{formatarMoedaBR(item.preco_peca)}</td>
                             <td className="dado">{item.baixado === true ? "Sim" : "Não"}</td>
                             <td className="dado">
                                 <div className="box-options">

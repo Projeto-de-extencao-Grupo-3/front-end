@@ -13,7 +13,7 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
         lado_veiculo: "",
         cor: "-",
         especificacao_servico: "",
-        tipo_pintura : "COMPLETA"
+        tipo_pintura : "NAO_APLICAVEL"
     });
 
     useEffect(() => {

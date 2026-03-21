@@ -4,12 +4,12 @@ import iconBook from "../../../assets/icons/bookService icon.png";
 import iconLixo from "../../../assets/icons/lixoService Icon.png";
 import iconEdit from "../../../assets/icons/EditIcon.png";
 import deleteServicoIcon from "../../../assets/icons/deleteServico icon.png";
-import { formatarTexto } from "../../../utils/formatarTexto.js";
+import { formatarTexto, formatarMoedaBR } from "../../../utils/formatarTexto.js";
 import { useState } from "react";
 import ServicosEItensLogic from "../../../service/ServicosEItens.js";
 
 
-function Servicos({ dados, pagina, onVisualizar }) {
+function Servicos({ dados, pagina, onVisualizar, carregarOrdem}) {
     const [modalExcluirServico, setModalExcluirServico] = useState(false);
     const [servicoSelecionado, setServicoSelecionado] = useState(null);
     const { excluirServico } = ServicosEItensLogic();
@@ -18,6 +18,7 @@ function Servicos({ dados, pagina, onVisualizar }) {
         try {
             await excluirServico(servicoSelecionado.id_registro_servico);
             setServicoSelecionado(false);
+            await carregarOrdem();
         } catch (error) {
             console.error("Erro ao excluir serviço:", error);
         }
@@ -44,7 +45,7 @@ function Servicos({ dados, pagina, onVisualizar }) {
                             <td className="dado">{formatarTexto(servico.lado_veiculo)}</td>
                             <td className="dado">{formatarTexto(servico.tipo_pintura) || "-"}</td>
                             <td className="dado">{formatarTexto(servico.cor) || "-"}</td>
-                            <td className="dado">R${servico.preco_cobrado}</td>
+                            <td className="dado">{formatarMoedaBR(servico.preco_cobrado)}</td>
 
                             {/* aq chama no modo de visualizar */}
                             <td className="dado">

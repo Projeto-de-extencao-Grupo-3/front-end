@@ -1,9 +1,12 @@
 import "./ResumoDoOrcamento.css";
+import { formatarTexto, formatarMoedaBR } from "../../utils/formatarTexto.js";
+
 import resumoIcon from "../../assets/icons/resumo icon.png";
 
-
-function ResumoDoOrcamento( { pagina }) {
-    console.log("Página atual no Resumo:", pagina);
+function ResumoDoOrcamento( { pagina, ticket, atualizarLista  }) {
+    pagina = "analisar"
+    const totalItens = ticket?.produtos?.length || 0;
+    const itensBaixados = ticket?.produtos?.filter(p => p.baixado === true).length || 0;
     return (
         <div className="resumo-orcamento">
 
@@ -37,21 +40,21 @@ function ResumoDoOrcamento( { pagina }) {
                 </div>
 
                 <div className="box-valores">
-                    <span className="valoresTexto">R$600,00</span>
-                    <span className="valoresTexto">R$60,00</span>
+                    <span className="valoresTexto">{formatarMoedaBR(ticket?.valor_total_servicos)}</span>
+                    <span className="valoresTexto">{formatarMoedaBR(ticket?.valor_total_produtos)}</span>
 
                     {pagina === "produzir" || pagina === "finalizar" || pagina === "analisar" ?
-                        <span className="valoresTexto">0/18 Itens</span>
+                        <span className="valoresTexto">{itensBaixados}/{totalItens} Itens</span>
                         : null
                     }
 
                     {pagina === "analisar" ?
-                        <span className="valoresTexto">Pendente</span>
+                        <span className="valoresTexto">{ticket?.pagt_realizado === true ? "Realizada" : "Pendente"}</span>
                         : null
                     }
 
                     {pagina === "analisar" ?
-                        <span className="valoresTexto">Pendente</span>
+                        <span className="valoresTexto">{ticket?.nf_realizada === true ? "Realizada" : "Pendente"}</span>
                         : null
                     }
                 </div>
@@ -59,7 +62,7 @@ function ResumoDoOrcamento( { pagina }) {
 
             <div className="box-total">
                 <span className="titleTotal">Total Geral:</span>
-                <span className="valorTotal">R$660,00</span>
+                <span className="valorTotal">{formatarMoedaBR(ticket?.valor_total)}</span>
             </div>
         </div>
     );

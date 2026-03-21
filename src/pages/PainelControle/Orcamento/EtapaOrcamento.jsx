@@ -4,11 +4,37 @@ import ResumoOrcamento from "../../../components/Resumo/ResumoDoOrcamento";
 import Botoes from "../../../components/Botoes/botoes";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
-import "./EtapaOrcamento.css";
-import { useParams } from "react-router-dom";
 
+import ServicosEItensLogic from "../../../service/ServicosEItens.js";
+
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+import "./EtapaOrcamento.css";
 
 function EtapaOrcamento() {
+    const { buscarOrdem } = ServicosEItensLogic();
+    const [ticket, setTicket] = useState(null);
+
+    const idOrdem = 1;
+
+    const carregarOrdem = async () => {
+        try {
+            const dados = await buscarOrdem(idOrdem);
+            setTicket({
+                ...dados,
+                servicos: dados.servicos || [],
+                produtos: dados.produtos || []
+            });
+            console.log("Ordem de Serviço carregada:", dados);
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    useEffect(() => {
+        carregarOrdem();
+    }, []);
 
     const { placa } = useParams();
     return (
@@ -40,11 +66,19 @@ function EtapaOrcamento() {
             <div>
                 <OrdemServicoCard placa={placa} />
             </div>
-                
+
             <div className="painelteste">
-                <ServicosEItens pagina={"orcamento"} />
+                <ServicosEItens
+                    pagina="orcamento"
+                    ticket={ticket}
+                    atualizarLista={carregarOrdem}
+                />
                 <div className="teste2">
-                    <ResumoOrcamento />
+                    <ResumoOrcamento
+                        pagina="orcamento"
+                        ticket={ticket}
+                        atualizarLista={carregarOrdem}
+                    />
                     <Botoes pagina={"orcar"} placa={placa} />
                 </div>
             </div>
