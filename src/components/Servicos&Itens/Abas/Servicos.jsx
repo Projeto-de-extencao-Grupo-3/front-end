@@ -7,22 +7,42 @@ import deleteServicoIcon from "../../../assets/icons/deleteServico icon.png";
 import { formatarTexto, formatarMoedaBR } from "../../../utils/formatarTexto.js";
 import { useState } from "react";
 import ServicosEItensLogic from "../../../service/ServicosEItens.js";
+import ModalEditarServico from "../../ModalAdicionarServico/ModalEditarServico.jsx";
+import ModalAdicionarServico from "../../ModalAdicionarServico/ModalAdicionarServico.jsx";
 
 
-function Servicos({ dados, pagina, onVisualizar, carregarOrdem}) {
+function Servicos({ dados, pagina, onVisualizar, carregarOrdem, placa }) {
+    const [modalVisualizarServico, setModalVisualizarServico] = useState(false);
+    const [modalEditarServico, setModalEditarServico] = useState(false);
     const [modalExcluirServico, setModalExcluirServico] = useState(false);
     const [servicoSelecionado, setServicoSelecionado] = useState(null);
-    const { excluirServico } = ServicosEItensLogic();
+    const [servicoVisualizar, setServicoVisualizar] = useState(null);
+    const [modoModal, setModoModal] = useState("editar");
+
+    const { excluirServico, editarServico, adicionarServico } = ServicosEItensLogic();
+
+    const handleAtualizar = async (dadosEditados) => {
+        try {
+            await editarServico(dadosEditados.id_registro_servico, dadosEditados);
+
+            setModalEditarServico(false); // Fecha o modal
+            setServicoSelecionado(null); // Limpa seleção
+            await carregarOrdem(); // Atualiza a lista na tela
+        } catch (error) {
+            console.error("Erro ao processar atualização no componente:", error);
+        }
+    };
 
     const handleExcluir = async () => {
         try {
             await excluirServico(servicoSelecionado.id_registro_servico);
-            setServicoSelecionado(false);
+            setServicoSelecionado(null);
             await carregarOrdem();
         } catch (error) {
             console.error("Erro ao excluir serviço:", error);
         }
     };
+
     return (
         <>
             <table className="tabela">
@@ -39,7 +59,7 @@ function Servicos({ dados, pagina, onVisualizar, carregarOrdem}) {
                 </thead>
                 <tbody className="dados">
                     {dados.map((servico) => (
-                        <tr key={servico.id_ordem_servico} className="config-dados">
+                        <tr key={servico.id_registro_servico} className="config-dados">
                             <td className="dado">{formatarTexto(servico.tipo_servico)}</td>
                             <td className="dado">{formatarTexto(servico.parte_veiculo)}</td>
                             <td className="dado">{formatarTexto(servico.lado_veiculo)}</td>
@@ -47,12 +67,19 @@ function Servicos({ dados, pagina, onVisualizar, carregarOrdem}) {
                             <td className="dado">{formatarTexto(servico.cor) || "-"}</td>
                             <td className="dado">{formatarMoedaBR(servico.preco_cobrado)}</td>
 
-                            {/* aq chama no modo de visualizar */}
                             <td className="dado">
                                 <div className="box-options">
-                                    {pagina === "orcamento" ?
+                                    {pagina === "orcamento" ? (
                                         <>
-                                            <div className="icon" style={{ backgroundImage: `url(${iconEdit})` }}></div>
+                                            <div
+                                                className="icon"
+                                                style={{ backgroundImage: `url(${iconEdit})` }}
+                                                onClick={() => {
+                                                    setServicoSelecionado(servico);
+                                                    setModoModal("editar");
+                                                    setModalEditarServico(true);
+                                                }}
+                                            ></div>
 
                                             <div
                                                 className="icon"
@@ -60,21 +87,49 @@ function Servicos({ dados, pagina, onVisualizar, carregarOrdem}) {
                                                 onClick={() => {
                                                     setServicoSelecionado(servico);
                                                     setModalExcluirServico(true);
-                                                }}>
-                                            </div>
-
-                                            <div className="icon" style={{ backgroundImage: `url(${iconBook})` }} onClick={() => onVisualizar(servico)}></div>
+                                                }}
+                                            ></div>
                                         </>
-                                        :
-                                        <div className="icon" style={{ backgroundImage: `url(${iconBook})` }} onClick={() => onVisualizar(servico)}></div>
-                                    }
+                                    ) : null}
+
+                                    <div
+                                        className="icon"
+                                        style={{ backgroundImage: `url(${iconBook})` }}
+                                        onClick={() => {
+                                            setServicoVisualizar(servico);
+                                            setModoModal("visualizar");
+                                            setModalVisualizarServico(true);
+                                        }}
+                                    ></div>
                                 </div>
                             </td>
-
                         </tr>
                     ))}
                 </tbody>
             </table>
+
+            <ModalAdicionarServico
+                isOpen={modalVisualizarServico}
+                onClose={() => {
+                    setModalVisualizarServico(false);
+                    setServicoVisualizar(null);
+                }}
+                placa={placa}
+                modo="visualizar" // Forçamos o modo visualizar
+                servico={servicoVisualizar}
+                salvarNaOrdem={placa} // Passe o ID da ordem aqui se necessário
+            />
+            <ModalEditarServico
+                isOpen={modalEditarServico}
+                onClose={() => {
+                    setModalEditarServico(false);
+                    setServicoSelecionado(null);
+                }}
+                placa={placa}
+                servico={servicoSelecionado}
+                onUpdate={handleAtualizar}
+            />
+
             <ModalConfirmacao
                 aberto={modalExcluirServico}
                 aoConfirmar={() => {

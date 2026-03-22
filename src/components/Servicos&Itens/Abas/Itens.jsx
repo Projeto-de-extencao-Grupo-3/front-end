@@ -47,10 +47,10 @@ function Itens({ dados, pagina , carregarOrdem}) {
                 <tbody className="dados">
                     {dados.map((item) => (
                         <tr key={item.id} className="config-dados">
-                            <td className="dado">{item.codigo}</td>
-                            <td className="dado">{item.nome_produto}</td>
+                            <td className="dado">{formatarTexto(item.codigo)}</td>
+                            <td className="dado">{formatarTexto(item.nome_produto)}</td>
                             <td className="dado">{item.visivel_orcamento === true ? "Público" : "Privado"}</td>
-                            <td className="dado">{item.quantidade} Unid</td>
+                            <td className="dado">{item.quantidade}</td>
                             <td className="dado">{formatarMoedaBR(item.preco_peca)}</td>
                             <td className="dado">{item.baixado === true ? "Sim" : "Não"}</td>
                             <td className="dado">

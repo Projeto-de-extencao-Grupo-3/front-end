@@ -3,8 +3,7 @@ import { formatarTexto, formatarMoedaBR } from "../../utils/formatarTexto.js";
 
 import resumoIcon from "../../assets/icons/resumo icon.png";
 
-function ResumoDoOrcamento( { pagina, ticket, atualizarLista  }) {
-    pagina = "analisar"
+function ResumoDoOrcamento( { pagina, ticket }) {
     const totalItens = ticket?.produtos?.length || 0;
     const itensBaixados = ticket?.produtos?.filter(p => p.baixado === true).length || 0;
     return (

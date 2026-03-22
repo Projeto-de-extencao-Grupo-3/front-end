@@ -1,7 +1,19 @@
 export function formatarTexto(texto) {
     if (!texto) return "";
 
-    return texto
+    let textoCorrigido = texto;
+
+    try {
+        // Tenta corrigir problemas de encoding (ISO-8859-1 para UTF-8)
+        // O decodeURIComponent(escape(s)) é o "truque" padrão para isso no JS
+        textoCorrigido = decodeURIComponent(escape(texto));
+    } catch (e) {
+        // Se der erro, significa que o texto já está em UTF-8 ou é incompatível,
+        // então mantemos o original para não quebrar a função.
+        textoCorrigido = texto;
+    }
+
+    return textoCorrigido
         .replaceAll("_", " ")
         .toLowerCase()
         .replace(/\b\w/g, (letra) => letra.toUpperCase());

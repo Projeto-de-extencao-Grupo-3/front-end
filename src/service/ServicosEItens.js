@@ -28,6 +28,7 @@ function ServicosItens() {
     const adicionarServico = async (dadosNecessarios) => {
         try {
             const response = await api.post(`/jornada/${dadosNecessarios.fk_ordem_servico}/servicos`, dadosNecessarios);
+            console.log("Dados recebidos para adicionar serviço:", dadosNecessarios);
             exibirAlertaSucesso("Serviço adicionado com sucesso!");
             return response.data;
         } catch (error) {
@@ -43,6 +44,19 @@ function ServicosItens() {
             return response.data;
         } catch (error) {
             exibirAlertaErro("Erro ao adicionar produto.");
+            throw error;
+        }
+    };
+
+    const editarServico = async (idServico, dadosEditados) => {
+        try {
+            const response = await api.put(`/itens-servicos/${idServico}`, dadosEditados);
+
+            exibirAlertaSucesso("Serviço atualizado com sucesso!");
+            return response.data;
+        } catch (error) {
+            exibirAlertaErro("Erro ao atualizar serviço.");
+            console.error("Erro na API ao editar serviço:", error);
             throw error;
         }
     };
@@ -76,6 +90,7 @@ function ServicosItens() {
         buscarProdutos,
         adicionarServico,
         adicionarProduto,
+        editarServico,
         excluirServico,
         excluirProduto
     };
