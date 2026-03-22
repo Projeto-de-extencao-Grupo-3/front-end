@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import OrdemServicoCard from "../ServicoCard/OrdemServicoCard";
 import "./ModalAdicionarItem.css";
 import ServicosEItensLogic from "../../service/ServicosEItens.js";
+import { formatarTexto, formatarMoedaBR } from "../../utils/formatarTexto.js";
 
 function ModalAdicionarItem({ isOpen, onClose, placa, onSave, salvarNaOrdem }) {
 
@@ -145,7 +146,7 @@ function ModalAdicionarItem({ isOpen, onClose, placa, onSave, salvarNaOrdem }) {
                                             </option>
                                             {produtos.map(produto => (
                                                 <option key={produto.id_peca} value={produto.id_peca}>
-                                                    {produto.nome}
+                                                    {formatarTexto(produto.nome)}
                                                 </option>
                                             ))}
                                         </select>

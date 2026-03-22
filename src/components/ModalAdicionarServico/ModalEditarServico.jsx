@@ -3,72 +3,51 @@ import OrdemServicoCard from "../ServicoCard/OrdemServicoCard";
 import "./ModalAdicionarServico.css";
 import { formatarTexto, formatarMoedaBR } from "../../utils/formatarTexto.js";
 
-function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", servico, onSave, salvarNaOrdem }) {
-    const [aba, setAba] = useState("FUNILARIA");
-
+function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
     const [formData, setFormData] = useState({
-        fk_ordem_servico: salvarNaOrdem,
+        id_registro_servico: "",
         preco_cobrado: "",
         parte_veiculo: "",
         lado_veiculo: "",
         cor: "",
         especificacao_servico: "",
-        tipo_pintura: "NAO_APLICAVEL"
+        tipo_servico: "",
+        tipo_pintura: ""
     });
 
     useEffect(() => {
-        if (isOpen) {
-            if (modo === "visualizar" && servico) {
-                // Preenche o formulário com os dados existentes
-                setAba(servico.tipo_servico?.toUpperCase() || "FUNILARIA");
-                setFormData({
-                    fk_ordem_servico: salvarNaOrdem,
-                    preco_cobrado: formatarMoedaBR(servico.preco_cobrado) || "",
-                    parte_veiculo: formatarTexto(servico.parte_veiculo) || "",
-                    lado_veiculo: formatarTexto(servico.lado_veiculo) || "",
-                    cor: formatarTexto(servico.cor) || "-",
-                    especificacao_servico: formatarTexto(servico.especificacao_servico) || "",
-                    tipo_pintura: formatarTexto(servico.tipo_pintura) || "NAO_APLICAVEL"
-                });
-            } else {
-                // RESET MANUAL (Corrigido: removido o estadoInicial inexistente)
-                setAba("FUNILARIA");
-                setFormData({
-                    fk_ordem_servico: salvarNaOrdem,
-                    preco_cobrado: "",
-                    parte_veiculo: "",
-                    lado_veiculo: "",
-                    cor: "",
-                    especificacao_servico: "",
-                    tipo_pintura: "NAO_APLICAVEL"
-                });
-            }
+        if (isOpen && servico) {
+            setFormData({
+                id_registro_servico: servico.id_registro_servico,
+                preco_cobrado: servico.preco_cobrado || "",
+                parte_veiculo: formatarTexto(servico.parte_veiculo) || "",
+                lado_veiculo: formatarTexto(servico.lado_veiculo) || "",
+                cor: formatarTexto(servico.cor) || "-",
+                especificacao_servico: formatarTexto(servico.especificacao_servico) || "",
+                tipo_servico: servico.tipo_servico || "FUNILARIA",
+                tipo_pintura: formatarTexto(servico.tipo_pintura) || "NAO_APLICAVEL"
+            });
         }
-    }, [isOpen, modo, servico, salvarNaOrdem]);
+    }, [isOpen, servico]);
 
     if (!isOpen) return null;
-
-    const tipoAba = aba; // Agora usa o estado 'aba' sincronizado no useEffect
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleFinalizar = async () => {
+    const handleSalvar = async () => {
         try {
-            const dados = {
+            // Garante que o tipo_pintura vá preenchido corretamente
+            const dadosParaSalvar = {
                 ...formData,
-                tipo_pintura: formData.tipo_pintura && formData.tipo_pintura !== ""
-                    ? formData.tipo_pintura
-                    : "NAO_APLICAVEL",
-                tipo_servico: aba,
-                placa: placa
+                tipo_pintura: formData.tipo_servico === "PINTURA" ? formData.tipo_pintura : "NAO_APLICAVEL"
             };
-            await onSave(dados);
+            await onUpdate(dadosParaSalvar);
             onClose();
         } catch (error) {
-            console.error("Erro ao salvar:", error);
+            console.error("Erro ao atualizar serviço:", error);
         }
     };
 
@@ -78,48 +57,25 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
             <div className="modal fade show d-block d-flex align-items-center justify-content-center" tabIndex="-1">
                 <div className="modal-dialog modal-lg">
                     <div className="modal-content modal-servico border-0">
+                        <div className="modal-header border-0 pb-0">
+                            <h5 className="modal-title titulo-modal">Editar Serviço</h5>
+                            <button className="btn-close" onClick={onClose}></button>
+                        </div>
 
-                        {modo === "adicionar" && (
-                            <div className="modal-header border-0 pb-0">
-                                <h5 className="modal-title titulo-modal">Adicionar Serviço</h5>
-                                <button className="btn-close" onClick={onClose}></button>
-                            </div>
-                        )}
-
-                        <div className={`modal-body ${modo === "visualizar" ? "p-3" : "pt-2"}`}>
+                        <div className="modal-body pt-2">
                             <OrdemServicoCard placa={placa} />
 
-                            <div className={`card-info-servico text-start ${modo === "visualizar" ? "mt-3" : ""}`}>
+                            <div className="card-info-servico text-start mt-3">
                                 <div className="titulo-servico mb-2">
-                                    <i className={`bx ${modo === "visualizar" ? 'bx-info-circle' : 'bx-wrench'}`}></i>
-                                    Informações do Serviço
+                                    <i className='bx bx-edit-alt'></i> Informações Registradas
                                 </div>
 
-                                {modo === "adicionar" ? (
-                                    <div className="tabs-servico">
-                                        <button className={aba === "FUNILARIA" ? "ativo" : ""} onClick={() => setAba("FUNILARIA")}>Funilaria</button>
-                                        <button className={aba === "PINTURA" ? "ativo" : ""} onClick={() => setAba("PINTURA")}>Pintura</button>
-                                        <button className={aba === "OUTROS" ? "ativo" : ""} onClick={() => setAba("OUTROS")}>Outros</button>
-                                    </div>
-                                ) : (
-                                    <div className="badge-tipo-servico mb-3">{aba}</div>
-                                )}
+                                <div className="badge-tipo-servico mb-3">
+                                    {formData.tipo_servico}
+                                </div>
 
                                 <div className="row g-3">
-                                    {tipoAba === "OUTROS" && (
-                                        <div className="col-12">
-                                            <label>Serviço*</label>
-                                            <input
-                                                name="tipo_servico"
-                                                className="form-control"
-                                                placeholder="OUTROS"
-                                                value={formData.tipo_servico || "OUTROS"}
-                                                onChange={handleChange}
-                                                readOnly={modo === "visualizar"}
-                                            />
-                                        </div>
-                                    )}
-
+                                    {/* Campos Comuns: Parte e Lado */}
                                     <div className="col-md-6">
                                         <label>Parte do Veículo *</label>
                                         <select
@@ -127,9 +83,7 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                             className="form-control form-select"
                                             value={formData.parte_veiculo}
                                             onChange={handleChange}
-                                            disabled={modo === "visualizar"}
                                         >
-                                            <option value="" disabled>Selecione a parte</option>
                                             <option value="PARACHOQUE">PARACHOQUE</option>
                                             <option value="GRADE">GRADE</option>
                                             <option value="CAPO">CAPO</option>
@@ -152,9 +106,7 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                             className="form-control form-select"
                                             value={formData.lado_veiculo}
                                             onChange={handleChange}
-                                            disabled={modo === "visualizar"}
                                         >
-                                            <option value="" disabled>Selecione o lado</option>
                                             <option value="DIANTEIRO">DIANTEIRO</option>
                                             <option value="TRASEIRO">TRASEIRO</option>
                                             <option value="COMPLETO">COMPLETO</option>
@@ -168,18 +120,8 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                         </select>
                                     </div>
 
-                                    <div className="col-12">
-                                        <label>Descrição *</label>
-                                        <textarea
-                                            name="especificacao_servico"
-                                            className="form-control"
-                                            value={formData.especificacao_servico}
-                                            onChange={handleChange}
-                                            readOnly={modo === "visualizar"}
-                                        />
-                                    </div>
-
-                                    {tipoAba === "PINTURA" && (
+                                    {/* Campos específicos de PINTURA */}
+                                    {formData.tipo_servico === "PINTURA" && (
                                         <>
                                             <div className="col-md-6">
                                                 <label>Tipo de Pintura *</label>
@@ -188,9 +130,8 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                                     className="form-control form-select"
                                                     value={formData.tipo_pintura}
                                                     onChange={handleChange}
-                                                    disabled={modo === "visualizar"}
                                                 >
-                                                    <option value="NAO_APLICAVEL" disabled>Selecione o tipo</option>
+                                                    <option value="NAO_APLICAVEL" disabled>Selecione</option>
                                                     <option value="COMPLETA">Completa</option>
                                                     <option value="PARCIAL">Parcial</option>
                                                 </select>
@@ -202,33 +143,39 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                                     className="form-control"
                                                     value={formData.cor}
                                                     onChange={handleChange}
-                                                    readOnly={modo === "visualizar"}
                                                 />
                                             </div>
                                         </>
                                     )}
 
+                                    {/* Descrição: Editável para todos, mas essencial para OUTROS */}
                                     <div className="col-12">
-                                        <label>Preço (R$) *</label>
+                                        <label>Descrição {formData.tipo_servico === "OUTROS" ? "*" : ""}</label>
+                                        <textarea
+                                            name="especificacao_servico"
+                                            className="form-control"
+                                            value={formData.especificacao_servico}
+                                            onChange={handleChange}
+                                            placeholder="Descreva os detalhes do serviço"
+                                        />
+                                    </div>
+
+                                    <div className="col-12">
+                                        <label>Preço Cobrado *</label>
                                         <input
                                             name="preco_cobrado"
                                             className="form-control"
                                             value={formData.preco_cobrado}
                                             onChange={handleChange}
-                                            readOnly={modo === "visualizar"}
                                         />
                                     </div>
                                 </div>
 
-                                <div className="mt-4">
-                                    {modo === "adicionar" ? (
-                                        <div className="botoes-modal">
-                                            <button className="btn-adicionar" onClick={handleFinalizar}>Adicionar</button>
-                                            <button className="btn-cancel" onClick={onClose}>Cancelar</button>
-                                        </div>
-                                    ) : (
-                                        <button className="btn-cancel w-100" onClick={onClose}>Fechar</button>
-                                    )}
+                                <div className="botoes-modal mt-4">
+                                    <button className="btn-adicionar" onClick={handleSalvar}>
+                                        Salvar Alterações
+                                    </button>
+                                    <button className="btn-cancel" onClick={onClose}>Cancelar</button>
                                 </div>
                             </div>
                         </div>
@@ -239,4 +186,4 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
     );
 }
 
-export default ModalAdicionarServico;
+export default ModalEditarServico;

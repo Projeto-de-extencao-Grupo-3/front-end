@@ -7,8 +7,36 @@ import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
 import "./EtapaOrcamento.css";
 import { useLocation, useParams } from "react-router-dom";
 
+import ServicosEItensLogic from "../../../service/ServicosEItens.js";
+
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+import "./EtapaOrcamento.css";
 
 function EtapaOrcamento() {
+    const { buscarOrdem } = ServicosEItensLogic();
+    const [ticket, setTicket] = useState(null);
+
+    const idOrdem = 1;
+
+    const carregarOrdem = async () => {
+        try {
+            const dados = await buscarOrdem(idOrdem);
+            setTicket({
+                ...dados,
+                servicos: dados.servicos || [],
+                produtos: dados.produtos || []
+            });
+            console.log("Ordem de Serviço carregada:", dados);
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    useEffect(() => {
+        carregarOrdem();
+    }, []);
 
     const { placa } = useParams();
     const location = useLocation();
@@ -50,13 +78,18 @@ function EtapaOrcamento() {
                 />            </div>
 
             <div className="painelteste">
-                <ServicosEItens pagina={"orcamento"} />
+                <ServicosEItens
+                    pagina="orcamento"
+                    ticket={ticket}
+                    atualizarLista={carregarOrdem}
+                />
                 <div className="teste2">
-                    <ResumoOrcamento />
-                    <Botoes 
-                    pagina={"orcar"} 
-                    placa={placa} 
-                    ordemServicoDados={dadosRecuperados}/>
+                    <ResumoOrcamento
+                        pagina="orcamento"
+                        ticket={ticket}
+                        atualizarLista={carregarOrdem}
+                    />
+                    <Botoes pagina={"orcar"} placa={placa} ordemServicoDados={dadosRecuperados} />
                 </div>
             </div>
 

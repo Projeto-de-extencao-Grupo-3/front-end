@@ -6,7 +6,7 @@ function TabelaServicos({ fromProduction }) {
   const [servicos, setServicos]   = useState([]);
   const [loading, setLoading]     = useState(true);
   const [erro, setErro]           = useState(null);
-  const [filtro, setFiltro]       = useState(fromProduction ? '1mes' : '3meses');
+  const [filtro, setFiltro]       = useState(() => (fromProduction ? '1mes' : '3meses'));
  
   const opcoesFiltro = [
     { value: '1mes',   label: 'Último mês'    },
@@ -14,6 +14,7 @@ function TabelaServicos({ fromProduction }) {
     { value: '6meses', label: 'Últimos 6 meses' },
     { value: '1ano',   label: 'Último ano'    },
   ];
+  console.log('TabelaServicos - fromProduction prop:', fromProduction, 'Initial filtro state:', filtro);
  
   useEffect(() => {
     async function carregarServicos() {
