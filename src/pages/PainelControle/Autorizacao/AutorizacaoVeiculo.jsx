@@ -10,7 +10,7 @@ import "../../componentesInferiores.css";
 
 function AutorizacaoVeiculo() {
     const paginaAtual = "aprovar";
-    const { placa } = useParams();
+    const { placa, idOrdemServico } = useParams();
     const location = useLocation();
     const dadosRecuperados = location.state?.ordemServicoDados || {};
 
@@ -37,13 +37,14 @@ function AutorizacaoVeiculo() {
                     prefixo={dadosRecuperados.prefixo}
                     modelo={dadosRecuperados.modelo}
                     cliente={dadosRecuperados.empresa}
+                    idOrdemServico={idOrdemServico}
                     placa={placa} />
             </div>
             <div className="componentesInferiores">
                 <ServicosEItens pagina={paginaAtual} />
                 <div className="componentesDireita">
                     <ResumoOrcamento pagina={paginaAtual} />
-                    <Botoes pagina={paginaAtual} placa={placa} ordemServicoDados={dadosRecuperados} />
+                    <Botoes pagina={paginaAtual} placa={placa} ordemServicoDados={dadosRecuperados} idOrdemServico={idOrdemServico} />
                 </div>
             </div>
         </Layout>

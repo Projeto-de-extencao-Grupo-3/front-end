@@ -6,23 +6,21 @@ import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
 import "./EtapaOrcamento.css";
 import { useLocation, useParams } from "react-router-dom";
-
-import ServicosEItensLogic from "../../../service/ServicosEItens.js";
-
-import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import ServicosEItensLogic from "../../../service/ServicosEItens.js";
 
 import "./EtapaOrcamento.css";
 
 function EtapaOrcamento() {
     const { buscarOrdem } = ServicosEItensLogic();
     const [ticket, setTicket] = useState(null);
-
-    const idOrdem = 1;
+    const { placa, idOrdemServico } = useParams();
+    const location = useLocation();
+    const dadosRecuperados = location.state?.veiculoDados || {};
 
     const carregarOrdem = async () => {
         try {
-            const dados = await buscarOrdem(idOrdem);
+            const dados = await buscarOrdem(idOrdemServico);
             setTicket({
                 ...dados,
                 servicos: dados.servicos || [],
@@ -36,11 +34,7 @@ function EtapaOrcamento() {
 
     useEffect(() => {
         carregarOrdem();
-    }, []);
-
-    const { placa } = useParams();
-    const location = useLocation();
-    const dadosRecuperados = location.state?.veiculoDados || {};
+    }, [idOrdemServico]);
 
     return (
         <Layout ativo={"painel"}>
@@ -75,8 +69,9 @@ function EtapaOrcamento() {
                     prefixo={dadosRecuperados.prefixo}
                     modelo={dadosRecuperados.modelo}
                     cliente={dadosRecuperados.empresa}
-                />            </div>
-
+                    idOrdemServico={idOrdemServico}
+                />
+            </div>
             <div className="painelteste">
                 <ServicosEItens
                     pagina="orcamento"
@@ -89,7 +84,7 @@ function EtapaOrcamento() {
                         ticket={ticket}
                         atualizarLista={carregarOrdem}
                     />
-                    <Botoes pagina={"orcar"} placa={placa} ordemServicoDados={dadosRecuperados} />
+                    <Botoes pagina={"orcar"} placa={placa} ordemServicoDados={dadosRecuperados} idOrdemServico={idOrdemServico} />
                 </div>
             </div>
 

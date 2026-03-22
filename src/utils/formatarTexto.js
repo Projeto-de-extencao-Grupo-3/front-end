@@ -4,13 +4,10 @@ export function formatarTexto(texto) {
     let textoCorrigido = texto;
 
     try {
-        // Tenta corrigir problemas de encoding (ISO-8859-1 para UTF-8)
-        // O decodeURIComponent(escape(s)) é o "truque" padrão para isso no JS
         textoCorrigido = decodeURIComponent(escape(texto));
-    } catch (e) {
-        // Se der erro, significa que o texto já está em UTF-8 ou é incompatível,
-        // então mantemos o original para não quebrar a função.
+    } catch (error) {
         textoCorrigido = texto;
+        throw new Error(`Erro ao decodificar o texto: ${error.message}`);
     }
 
     return textoCorrigido

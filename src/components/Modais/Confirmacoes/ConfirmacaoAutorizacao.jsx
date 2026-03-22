@@ -4,7 +4,7 @@ import OrdemServicoCard from "../../ServicoCard/OrdemServicoCard";
 import "./ConfirmacaoAutorizacao.css"; 
 import TempoEstimado from "../TempoEstimado";
 
-function ConfirmacaoAutorizacao({ onClose, _onConfirm, placa, ordemServicoDados }) {
+function ConfirmacaoAutorizacao({ onClose, _onConfirm, placa, idOrdemServico, ordemServicoDados }) {
     const navigate = useNavigate();
     
     return (
@@ -16,6 +16,7 @@ function ConfirmacaoAutorizacao({ onClose, _onConfirm, placa, ordemServicoDados 
                     placa={placa} 
                     marca={ordemServicoDados?.marca}
                     prefixo={ordemServicoDados?.prefixo}
+                    idOrdemServico={idOrdemServico}
                     modelo={ordemServicoDados?.modelo}
                     cliente={ordemServicoDados?.empresa}
                 />
@@ -25,7 +26,7 @@ function ConfirmacaoAutorizacao({ onClose, _onConfirm, placa, ordemServicoDados 
                 
                 <div className="confirmacao-buttons">
                     <button className="btn-confirmar" onClick={() => {
-                        navigate(`/painelControle/aguardandoVaga/${placa}`, {
+                        navigate(`/painelControle/aguardandoVaga/${placa}/${idOrdemServico}`, {
                             state: { ordemServicoDados: ordemServicoDados }
                         });
                         onClose();

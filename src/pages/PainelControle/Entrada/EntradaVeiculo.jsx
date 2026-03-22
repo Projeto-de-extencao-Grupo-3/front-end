@@ -87,8 +87,18 @@ function EntradaVeiculo() {
             console.log("ID do Veículo criado:", resultadoJornada.id_veiculo);
             console.log("ID do Registro de Entrada:", resultadoJornada.id_registro_entrada);
 
-            alert("Cadastro realizado com sucesso!");
-            navigate("/painelControle/orcamento");
+            navigate(`/painelControle/orcamento/${formData.placa}/${resultadoJornada.id_registro_entrada}`, {
+                state: {
+                    idOrdemServico: resultadoJornada.id_registro_entrada,
+                    veiculoDados: {
+                        marca: formData.marca,
+                        prefixo: formData.prefixo,
+                        modelo: formData.modelo,
+                        empresa: cliente.nome,
+                        placa: formData.placa
+                    }
+                }
+            });
 
         } catch (error) {
             console.error("Erro no fluxo de entrada:", error);

@@ -1,5 +1,5 @@
 import "./Servicos&Itens.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Servicos from "./Abas/Servicos";
 import Itens from "./Abas/Itens";
 import ModalAdicionarServico from "../ModalAdicionarServico/ModalAdicionarServico";

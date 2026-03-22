@@ -63,7 +63,7 @@ function ServicosItens() {
 
     const excluirServico = async (idServico) => {
         try {
-            const response = await api.delete(`/itens-servicos/${idServico}`);
+            const _response = await api.delete(`/itens-servicos/${idServico}`);
             exibirAlertaSucesso("Serviço excluído com sucesso!");
             return true;
         } catch (error) {
@@ -75,7 +75,7 @@ function ServicosItens() {
 
     const excluirProduto = async (idProduto) => {
         try {
-            const response = await api.delete(`/itens-produtos/${idProduto}`);
+            const _response = await api.delete(`/itens-produtos/${idProduto}`);
             exibirAlertaSucesso("Produto excluído com sucesso!");
             return true;
         } catch (error) {
