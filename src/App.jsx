@@ -18,6 +18,8 @@ import TesteModalEditar from './components/ModalEditarItem/TesteModalEditar.jsx'
 import TesteModalQtd from './components/ModalQtdItem/TesteModalQtd.jsx';
 import EtapaOrcamento from './pages/PainelControle/Orcamento/EtapaOrcamento.jsx';
 import PagamentoPendente from './pages/AnaliseServico/PagamentoPendente.jsx';
+import PagamentoRealizado from './pages/AnaliseServico/PagamentoRealizado.jsx';
+import NotaFiscal from './pages/AnaliseServico/NotaFiscal.jsx';
 import Servicos from './components/Servicos&Itens/Abas/Servicos.jsx';
 
 
@@ -60,6 +62,8 @@ function App() {
         <Route path="/TesteModalEditar" element={<TesteModalEditar />} />
         <Route path="/TesteModalQtd" element={<TesteModalQtd />} />
         <Route path="/PagamentoPendente" element={<PagamentoPendente />} />
+        <Route path="/PagamentoRealizado" element={<PagamentoRealizado />} />
+        <Route path="/NotaFiscal" element={<NotaFiscal />} />
         <Route path="/Servicos&Itens/Servicos" element={<Servicos />} />
 
 
