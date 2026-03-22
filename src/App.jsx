@@ -31,19 +31,20 @@ function App() {
 
         {/* Roteamento do Painel de Controle */}
         <Route path="/painelControle" element={<PainelControle />} />
-        <Route path="/painelControle/entrada" element={<EntradaVeiculo />} />
         <Route path="/painelControle/entradaCamera" element={<EntradaVeiculoCamera />} />
+        <Route path="/painelControle/entrada" element={<EntradaVeiculo />} />
         <Route path="/painelControle/entrada/:placa" element={<EntradaVeiculoCamera />} />
+        <Route path="/painelControle/entrada/:placa/:idOrdemServico" element={<EntradaVeiculoCamera />} />
         <Route path="/painelControle/orcamento" element={<EtapaOrcamento />} />
-        <Route path="/painelControle/orcamento/:placa" element={<EtapaOrcamento />} />
+        <Route path="/painelControle/orcamento/:placa/:idOrdemServico" element={<EtapaOrcamento />} />
         <Route path="/painelControle/autorizacao" element={<AutorizacaoVeiculo />} />
-        <Route path="/painelControle/autorizacao/:placa" element={<AutorizacaoVeiculo />} />
+        <Route path="/painelControle/autorizacao/:placa/:idOrdemServico" element={<AutorizacaoVeiculo />} />
         <Route path="/painelControle/aguardandoVaga" element={<AguardandoVaga />} />
-        <Route path="/painelControle/aguardandoVaga/:placa" element={<AguardandoVaga />} />
+        <Route path="/painelControle/aguardandoVaga/:placa/:idOrdemServico" element={<AguardandoVaga />} />
         <Route path="/painelControle/producao" element={<Producao />} />
-        <Route path="/painelControle/producao/:placa" element={<Producao />} />
+        <Route path="/painelControle/producao/:placa/:idOrdemServico" element={<Producao />} />
         <Route path="/painelControle/finalizado" element={<Finalizado />} />
-        <Route path="/painelControle/finalizado/:placa" element={<Finalizado />} />
+        <Route path="/painelControle/finalizado/:placa/:idOrdemServico" element={<Finalizado />} />
         
         {/* Roteamento de Clientes */}
         <Route path="/clientes" element={<GestaoClientes />} />

@@ -4,23 +4,23 @@ import ResumoOrcamento from "../../../components/Resumo/ResumoDoOrcamento";
 import Botoes from "../../../components/Botoes/botoes";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
-
-import ServicosEItensLogic from "../../../service/ServicosEItens.js";
-
-import { useParams } from "react-router-dom";
+import "./EtapaOrcamento.css";
+import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import ServicosEItensLogic from "../../../service/ServicosEItens.js";
 
 import "./EtapaOrcamento.css";
 
 function EtapaOrcamento() {
     const { buscarOrdem } = ServicosEItensLogic();
     const [ticket, setTicket] = useState(null);
-
-    const idOrdem = 1;
+    const { placa, idOrdemServico } = useParams();
+    const location = useLocation();
+    const dadosRecuperados = location.state?.veiculoDados || {};
 
     const carregarOrdem = async () => {
         try {
-            const dados = await buscarOrdem(idOrdem);
+            const dados = await buscarOrdem(idOrdemServico);
             setTicket({
                 ...dados,
                 servicos: dados.servicos || [],
@@ -34,9 +34,8 @@ function EtapaOrcamento() {
 
     useEffect(() => {
         carregarOrdem();
-    }, []);
+    }, [idOrdemServico]);
 
-    const { placa } = useParams();
     return (
         <Layout ativo={"painel"}>
 
@@ -64,9 +63,15 @@ function EtapaOrcamento() {
                 ]}
             />
             <div>
-                <OrdemServicoCard placa={placa} />
+                <OrdemServicoCard
+                    placa={placa}
+                    marca={dadosRecuperados.marca}
+                    prefixo={dadosRecuperados.prefixo}
+                    modelo={dadosRecuperados.modelo}
+                    cliente={dadosRecuperados.empresa}
+                    idOrdemServico={idOrdemServico}
+                />
             </div>
-
             <div className="painelteste">
                 <ServicosEItens
                     pagina="orcamento"
@@ -79,7 +84,7 @@ function EtapaOrcamento() {
                         ticket={ticket}
                         atualizarLista={carregarOrdem}
                     />
-                    <Botoes pagina={"orcar"} placa={placa} />
+                    <Botoes pagina={"orcar"} placa={placa} ordemServicoDados={dadosRecuperados} idOrdemServico={idOrdemServico} />
                 </div>
             </div>
 

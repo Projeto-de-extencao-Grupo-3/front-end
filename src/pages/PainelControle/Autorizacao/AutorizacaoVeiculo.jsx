@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import Layout from "../../../components/Layout/Layout";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import "./AutorizacaoVeiculo.css";
@@ -10,7 +10,9 @@ import "../../componentesInferiores.css";
 
 function AutorizacaoVeiculo() {
     const paginaAtual = "aprovar";
-    const { placa } = useParams();
+    const { placa, idOrdemServico } = useParams();
+    const location = useLocation();
+    const dadosRecuperados = location.state?.ordemServicoDados || {};
 
     return (
         <Layout ativo={"painel"}>
@@ -29,14 +31,20 @@ function AutorizacaoVeiculo() {
                     { id: "finalizado", label: "Finalizado", icon: "bx bx-check-circle", status: "pendente" },
                 ]}
             />
-            <div> 
-                <OrdemServicoCard placa={placa}/>
+            <div>
+                <OrdemServicoCard
+                    marca={dadosRecuperados.marca}
+                    prefixo={dadosRecuperados.prefixo}
+                    modelo={dadosRecuperados.modelo}
+                    cliente={dadosRecuperados.empresa}
+                    idOrdemServico={idOrdemServico}
+                    placa={placa} />
             </div>
             <div className="componentesInferiores">
                 <ServicosEItens pagina={paginaAtual} />
                 <div className="componentesDireita">
                     <ResumoOrcamento pagina={paginaAtual} />
-                    <Botoes pagina={paginaAtual} placa={placa} />
+                    <Botoes pagina={paginaAtual} placa={placa} ordemServicoDados={dadosRecuperados} idOrdemServico={idOrdemServico} />
                 </div>
             </div>
         </Layout>

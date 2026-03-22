@@ -8,7 +8,7 @@ function OrdemServicoCard({ marca, modelo, prefixo, cliente, idOrdemServico, pla
       </div>
 
       <div className="section">
-        <p>Ordem de Serviço {idOrdemServico || "#0001"}</p>
+        <p>Ordem de Serviço: #{idOrdemServico || "Gerando Protocolo..."}</p>
         <p>{marca} {modelo} - {prefixo}</p>
       </div>
 

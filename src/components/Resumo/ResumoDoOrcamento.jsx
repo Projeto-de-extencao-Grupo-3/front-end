@@ -1,5 +1,5 @@
 import "./ResumoDoOrcamento.css";
-import { formatarTexto, formatarMoedaBR } from "../../utils/formatarTexto.js";
+import { formatarMoedaBR } from "../../utils/formatarTexto.js";
 
 import resumoIcon from "../../assets/icons/resumo icon.png";
 

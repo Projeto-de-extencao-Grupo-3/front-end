@@ -17,34 +17,39 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
     });
 
     useEffect(() => {
+        let timer;
+
         if (isOpen) {
-            if (modo === "visualizar" && servico) {
-                // Preenche o formulário com os dados existentes
-                setAba(servico.tipo_servico?.toUpperCase() || "FUNILARIA");
-                setFormData({
-                    fk_ordem_servico: salvarNaOrdem,
-                    preco_cobrado: formatarMoedaBR(servico.preco_cobrado) || "",
-                    parte_veiculo: formatarTexto(servico.parte_veiculo) || "",
-                    lado_veiculo: formatarTexto(servico.lado_veiculo) || "",
-                    cor: formatarTexto(servico.cor) || "-",
-                    especificacao_servico: formatarTexto(servico.especificacao_servico) || "",
-                    tipo_pintura: formatarTexto(servico.tipo_pintura) || "NAO_APLICAVEL"
-                });
-            } else {
-                // RESET MANUAL (Corrigido: removido o estadoInicial inexistente)
-                setAba("FUNILARIA");
-                setFormData({
-                    fk_ordem_servico: salvarNaOrdem,
-                    preco_cobrado: "",
-                    parte_veiculo: "",
-                    lado_veiculo: "",
-                    cor: "",
-                    especificacao_servico: "",
-                    tipo_pintura: "NAO_APLICAVEL"
-                });
-            }
+            timer = setTimeout(() => {
+                if (modo === "visualizar" && servico) {
+                    setAba(servico.tipo_servico?.toUpperCase() || "FUNILARIA");
+                    setFormData({
+                        fk_ordem_servico: salvarNaOrdem,
+                        preco_cobrado: formatarMoedaBR(servico.preco_cobrado) || "",
+                        parte_veiculo: formatarTexto(servico.parte_veiculo) || "",
+                        lado_veiculo: formatarTexto(servico.lado_veiculo) || "",
+                        cor: formatarTexto(servico.cor) || "-",
+                        especificacao_servico: formatarTexto(servico.especificacao_servico) || "",
+                        tipo_pintura: formatarTexto(servico.tipo_pintura) || "NAO_APLICAVEL"
+                    });
+                } else {
+                    setAba("FUNILARIA");
+                    setFormData({
+                        fk_ordem_servico: salvarNaOrdem,
+                        preco_cobrado: "",
+                        parte_veiculo: "",
+                        lado_veiculo: "",
+                        cor: "",
+                        especificacao_servico: "",
+                        tipo_pintura: "NAO_APLICAVEL"
+                    });
+                }
+            }, 0);
         }
-    }, [isOpen, modo, servico, salvarNaOrdem]);
+
+        return () => clearTimeout(timer);
+
+    }, [isOpen, modo, servico, salvarNaOrdem, formatarMoedaBR, formatarTexto]);
 
     if (!isOpen) return null;
 

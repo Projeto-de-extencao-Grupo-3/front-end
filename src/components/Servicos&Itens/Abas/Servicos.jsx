@@ -11,15 +11,15 @@ import ModalEditarServico from "../../ModalAdicionarServico/ModalEditarServico.j
 import ModalAdicionarServico from "../../ModalAdicionarServico/ModalAdicionarServico.jsx";
 
 
-function Servicos({ dados, pagina, onVisualizar, carregarOrdem, placa }) {
+function Servicos({ dados, pagina, _onVisualizar, carregarOrdem, placa }) {
     const [modalVisualizarServico, setModalVisualizarServico] = useState(false);
     const [modalEditarServico, setModalEditarServico] = useState(false);
     const [modalExcluirServico, setModalExcluirServico] = useState(false);
     const [servicoSelecionado, setServicoSelecionado] = useState(null);
     const [servicoVisualizar, setServicoVisualizar] = useState(null);
-    const [modoModal, setModoModal] = useState("editar");
+    const [_modoModal, setModoModal] = useState("editar");
 
-    const { excluirServico, editarServico, adicionarServico } = ServicosEItensLogic();
+    const { excluirServico, editarServico } = ServicosEItensLogic();
 
     const handleAtualizar = async (dadosEditados) => {
         try {

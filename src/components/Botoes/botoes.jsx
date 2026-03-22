@@ -23,7 +23,7 @@ import iconConcluido from "../../assets/icons/concluido icon.png";
 import iconPagGreen from "../../assets/icons/pag green icon.png";
 import iconRevisar from "../../assets/icons/revisar icon.png";
 
-function Botoes({ pagina, placa }) {
+function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico }) {
     const navigate = useNavigate();
 
     // Estados dos modais
@@ -39,7 +39,9 @@ function Botoes({ pagina, placa }) {
     // Função centralizada de navegação
     const navegarPara = (rotaBase) => {
         if (placa) {
-            navigate(`${rotaBase}/${placa}`);
+            navigate(`${rotaBase}/${placa}/${idOrdemServico}`, {
+                state: { ordemServicoDados: ordemServicoDados }
+            });
         } else {
             navigate(rotaBase);
         }
@@ -122,7 +124,7 @@ function Botoes({ pagina, placa }) {
             </div>
 
             {/* MODAIS */}
-            {showModal && <ConfirmacaoAutorizacao onClose={() => setShowModal(false)} placa={placa} />}
+            {showModal && <ConfirmacaoAutorizacao onClose={() => setShowModal(false)} placa={placa} ordemServicoDados={ordemServicoDados} idOrdemServico={idOrdemServico}/>}
 
             <VeiculoEEmpresa aberto={modalVeiculo} aoFechar={() => setModalVeiculo(false)} />
             <EntradaVeiculo aberto={modalEntrada} aoFechar={() => setModalEntrada(false)} />

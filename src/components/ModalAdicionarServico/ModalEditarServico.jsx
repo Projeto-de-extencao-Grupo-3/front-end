@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import OrdemServicoCard from "../ServicoCard/OrdemServicoCard";
 import "./ModalAdicionarServico.css";
-import { formatarTexto, formatarMoedaBR } from "../../utils/formatarTexto.js";
+import { formatarTexto } from "../../utils/formatarTexto.js";
 
 function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
     const [formData, setFormData] = useState({
@@ -16,19 +16,26 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
     });
 
     useEffect(() => {
+        let timer;
+
         if (isOpen && servico) {
-            setFormData({
-                id_registro_servico: servico.id_registro_servico,
-                preco_cobrado: servico.preco_cobrado || "",
-                parte_veiculo: formatarTexto(servico.parte_veiculo) || "",
-                lado_veiculo: formatarTexto(servico.lado_veiculo) || "",
-                cor: formatarTexto(servico.cor) || "-",
-                especificacao_servico: formatarTexto(servico.especificacao_servico) || "",
-                tipo_servico: servico.tipo_servico || "FUNILARIA",
-                tipo_pintura: formatarTexto(servico.tipo_pintura) || "NAO_APLICAVEL"
-            });
+            timer = setTimeout(() => {
+                setFormData({
+                    id_registro_servico: servico.id_registro_servico,
+                    preco_cobrado: servico.preco_cobrado || "",
+                    parte_veiculo: formatarTexto(servico.parte_veiculo) || "",
+                    lado_veiculo: formatarTexto(servico.lado_veiculo) || "",
+                    cor: formatarTexto(servico.cor) || "-",
+                    especificacao_servico: formatarTexto(servico.especificacao_servico) || "",
+                    tipo_servico: servico.tipo_servico || "FUNILARIA",
+                    tipo_pintura: formatarTexto(servico.tipo_pintura) || "NAO_APLICAVEL"
+                });
+            }, 0);
         }
-    }, [isOpen, servico]);
+
+        return () => clearTimeout(timer);
+
+    }, [isOpen, servico, formatarTexto]);
 
     if (!isOpen) return null;
 

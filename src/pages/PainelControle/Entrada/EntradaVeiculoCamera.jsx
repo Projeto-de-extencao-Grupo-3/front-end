@@ -35,6 +35,7 @@ function EntradaVeiculoCamera() {
     const [prefixo, setPrefixo] = useState();
     const [empresa, setEmpresa] = useState();
     const [idCliente, setIdCliente] = useState();
+    const [idOrdemServico, setIdOrdemServico] = useState();
 
     const [_processado, setProcessado] = useState(false);
 
@@ -53,8 +54,8 @@ function EntradaVeiculoCamera() {
     const handleFinalizar = async () => {
         console.log("Objeto registroEntrada completo:", registroEntrada);
         try {
-            await adicionarRegistroEntrada({
-                veiculo: veiculo.id_veiculo,
+            const resposta = await adicionarRegistroEntrada({
+                fk_veiculo: veiculo.id_veiculo,
                 entrada: {
                     data_entrada_prevista: registroEntrada.dataEntrada,
                     data_entrada_efetiva: registroEntrada.dataEntrada,
@@ -63,7 +64,7 @@ function EntradaVeiculoCamera() {
                     observacoes: registroEntrada.observacoes,
                     geladeira: Number(registroEntrada.geladeira),
                     macaco: Number(registroEntrada.macaco),
-                    extintor: Number(registroEntrada.extintor), // corrigido de extinto para extintor
+                    extintor: Number(registroEntrada.extintor), 
                     estepe: Number(registroEntrada.estepe),
                     chave_roda: Number(registroEntrada.chave_roda),
                     monitor: Number(registroEntrada.monitor),
@@ -71,13 +72,26 @@ function EntradaVeiculoCamera() {
                     som_dvd: Number(registroEntrada.som_dvd),
                     fk_cliente: idCliente,
                     fk_veiculo: veiculo.id_veiculo,
+                    fk_ordem_servico: registroEntrada.fk_ordem_servico,
                     fk_oficina: 1
                 }
             });
-
-
+            const novoId = resposta.entrada?.fkOrdemServico || resposta.fk_ordem_servico;
+            setIdOrdemServico(novoId);
+            console.log("Resposta da API após adicionar registro de entrada:", resposta);
             console.log("Cadastro realizado com sucesso!");
-            navigate("/painelControle/orcamento");
+            navigate(`/painelControle/orcamento/${placa}/${novoId}`, { 
+            state: { 
+                idOrdemServico: novoId,
+                veiculoDados: {
+                    marca,
+                    prefixo,
+                    modelo,
+                    empresa,
+                    placa
+                }
+            }
+        });
         } catch (error) {
             console.error("Erro no fluxo de entrada:", error);
             alert("Ocorreu um erro ao salvar os dados. Verifique o console.");
@@ -190,6 +204,7 @@ function EntradaVeiculoCamera() {
                     prefixo={prefixo}
                     modelo={modelo}
                     cliente={empresa}
+                    idOrdemServico={idOrdemServico}
                     placa={placa} />
             </div>
             <div className="section1">

@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import Layout from "../../../components/Layout/Layout";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import "./Producao.css";
@@ -10,7 +10,9 @@ import Botoes from "../../../components/Botoes/botoes";
 import "../../componentesInferiores.css";
 
 function Producao() {
-    const { placa } = useParams()
+    const { placa, idOrdemServico } = useParams()
+    const location = useLocation();
+    const dadosRecuperados = location.state?.ordemServicoDados || {};
     const paginaAtual = "produzir";
 
 
@@ -32,13 +34,19 @@ function Producao() {
                 ]}
             />
             <div> 
-                <OrdemServicoCard placa={placa}/>
+                <OrdemServicoCard
+                    marca={dadosRecuperados.marca}
+                    prefixo={dadosRecuperados.prefixo}
+                    modelo={dadosRecuperados.modelo}
+                    cliente={dadosRecuperados.empresa}
+                    idOrdemServico={idOrdemServico}
+                    placa={placa} />
             </div>
             <div className="componentesInferiores">
                 <ServicosEItens pagina={paginaAtual} />
                 <div className="componentesDireita">
                     <ResumoOrcamento pagina={paginaAtual} />
-                    <Botoes pagina={paginaAtual} placa={placa} />
+                    <Botoes pagina={paginaAtual} placa={placa} ordemServicoDados={dadosRecuperados} idOrdemServico={idOrdemServico} />
                 </div>
             </div>
 
