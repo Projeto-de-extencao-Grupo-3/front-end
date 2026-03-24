@@ -28,7 +28,7 @@ function PagamentoPendente() {
       <div className="painelteste">
         <ServicosEItens pagina={"analisar"} />
         <div className="teste2">
-          {/* Mantendo estático como você pediu */}
+          {}
           <ResumoOrcamento pagina={"analisar"} />
           <Botoes pagina={"analisar1"} placa={placa} />
         </div>
