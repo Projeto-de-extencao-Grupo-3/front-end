@@ -12,7 +12,7 @@ function AutorizacaoVeiculo() {
     const paginaAtual = "aprovar";
     const { placa, idOrdemServico } = useParams();
     const location = useLocation();
-    const dadosRecuperados = location.state?.ordemServicoDados || {};
+    const dadosRecuperados = location.state?.veiculoDados || {};
 
     return (
         <Layout ativo={"painel"}>
@@ -36,7 +36,7 @@ function AutorizacaoVeiculo() {
                     marca={dadosRecuperados.marca}
                     prefixo={dadosRecuperados.prefixo}
                     modelo={dadosRecuperados.modelo}
-                    cliente={dadosRecuperados.empresa}
+                    cliente={dadosRecuperados.nome}
                     idOrdemServico={idOrdemServico}
                     placa={placa} />
             </div>

@@ -12,7 +12,7 @@ import "../../componentesInferiores.css";
 function Finalizado() {
     const { placa, idOrdemServico } = useParams();
     const location = useLocation();
-    const dadosRecuperados = location.state?.ordemServicoDados || {};
+    const dadosRecuperados = location.state?.veiculoDados || {};
     const paginaAtual = "finalizar";
 
     return (
@@ -37,7 +37,7 @@ function Finalizado() {
                     marca={dadosRecuperados.marca}
                     prefixo={dadosRecuperados.prefixo}
                     modelo={dadosRecuperados.modelo}
-                    cliente={dadosRecuperados.empresa}
+                    cliente={dadosRecuperados.nome}
                     idOrdemServico={idOrdemServico}
                     placa={placa} />               
                     </div>

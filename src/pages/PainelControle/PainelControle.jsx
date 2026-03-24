@@ -259,31 +259,76 @@ function PainelControle() {
                                     )}
 
                                     {kpiAtiva === "orcamento" && (
-                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/orcamento/${os.veiculo?.placa}`)}>
+                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/orcamento/${os.veiculo?.placa}/${os.id_ordem_servico}`, {
+                                            state: {
+                                                veiculoDados: {
+                                                    marca: os.veiculo?.marca,
+                                                    modelo: os.veiculo?.modelo,
+                                                    prefixo: os.veiculo?.prefixo,
+                                                    nome: os.cliente?.nome,
+                                                },
+                                            }
+                                        })}>
                                             Fazer Orçamento
                                         </button>
                                     )}
 
                                     {kpiAtiva === "autorizacao" && (
-                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/autorizacao/${os.veiculo?.placa}`)}>
+                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/autorizacao/${os.veiculo?.placa}/${os.id_ordem_servico}`, {
+                                            state: {
+                                                veiculoDados: {
+                                                    marca: os.veiculo?.marca,
+                                                    modelo: os.veiculo?.modelo,
+                                                    prefixo: os.veiculo?.prefixo,
+                                                    nome: os.cliente?.nome,
+                                                },
+                                            }
+                                        })}>
                                             Autorizar
                                         </button>
                                     )}
 
                                     {kpiAtiva === "vaga" && (
-                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/aguardandoVaga/${os.veiculo?.placa}`)}>
+                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/aguardandoVaga/${os.veiculo?.placa}/${os.id_ordem_servico}`, {
+                                            state: {
+                                                veiculoDados: {
+                                                    marca: os.veiculo?.marca,
+                                                    modelo: os.veiculo?.modelo,
+                                                    prefixo: os.veiculo?.prefixo,
+                                                    nome: os.cliente?.nome,
+                                                },
+                                            }
+                                        })}>
                                             Enviar para Produção
                                         </button>
                                     )}
 
                                     {kpiAtiva === "producao" && (
-                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/producao/${os.veiculo?.placa}`)}>
+                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/producao/${os.veiculo?.placa}/${os.id_ordem_servico}`, {
+                                            state: {
+                                                veiculoDados: {
+                                                    marca: os.veiculo?.marca,
+                                                    modelo: os.veiculo?.modelo,
+                                                    prefixo: os.veiculo?.prefixo,
+                                                    nome: os.cliente?.nome,
+                                                },
+                                            }
+                                        })}>
                                             Verificar Andamento
                                         </button>
                                     )}
 
                                     {kpiAtiva === "finalizados" && (
-                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/finalizado/${os.veiculo?.placa}`)}>
+                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/finalizado/${os.veiculo?.placa}/${os.id_ordem_servico}`, {
+                                            state: {
+                                                veiculoDados: {
+                                                    marca: os.veiculo?.marca,
+                                                    modelo: os.veiculo?.modelo,
+                                                    prefixo: os.veiculo?.prefixo,
+                                                    nome: os.cliente?.nome,
+                                                },
+                                            }
+                                        })}>
                                             Analisar Ordem de Serviço
                                         </button>
                                     )}

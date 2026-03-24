@@ -68,7 +68,7 @@ function EtapaOrcamento() {
                     marca={dadosRecuperados.marca}
                     prefixo={dadosRecuperados.prefixo}
                     modelo={dadosRecuperados.modelo}
-                    cliente={dadosRecuperados.empresa}
+                    cliente={dadosRecuperados.nome}
                     idOrdemServico={idOrdemServico}
                 />
             </div>
