@@ -27,9 +27,7 @@ function EntradaVeiculoCamera() {
     const location = useLocation();
     const inicializado = useRef(false);
 
-    const { placa: placaDaUrl } = useParams();
-
-    const [placa, setPlaca] = useState(placaDaUrl || '');
+    const [placa, setPlaca] = useState();
     const [marca, setMarca] = useState();
     const [modelo, setModelo] = useState();
     const [prefixo, setPrefixo] = useState();
@@ -80,9 +78,9 @@ function EntradaVeiculoCamera() {
             setIdOrdemServico(novoId);
             console.log("Resposta da API após adicionar registro de entrada:", resposta);
             console.log("Cadastro realizado com sucesso!");
-            navigate(`/painelControle/orcamento/${placa}/${novoId}`, {
+            navigate(`/painelControle/orcamento/${novoId}`, {
                 state: {
-                    idOrdemServico: novoId,
+                    idOrdemServico: idOrdemServico,
                     veiculoDados: {
                         marca,
                         prefixo,
@@ -128,7 +126,7 @@ function EntradaVeiculoCamera() {
 
                 navigate(`/painelControle/entrada/${principal.placa}`, {
                     replace: true,
-                    state: { veiculoCarregado: principal }
+                    state: { veiculoDados: principal.placa }
                 });
 
                 Swal.fire({
@@ -170,6 +168,7 @@ function EntradaVeiculoCamera() {
             setEmpresa(os.cliente?.nome || "");
             setIdCliente(os.cliente?.id_cliente);
             setVeiculo(os.veiculo);
+            setPlaca(os.veiculo?.placa || "");
             setIdOrdemServico(os.fk_ordem_servico);
 
             setRegistroEntrada(prev => ({

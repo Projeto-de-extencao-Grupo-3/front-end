@@ -14,7 +14,7 @@ import "./EtapaOrcamento.css";
 function EtapaOrcamento() {
     const { buscarOrdem } = ServicosEItensLogic();
     const [ticket, setTicket] = useState(null);
-    const { placa, idOrdemServico } = useParams();
+    const { idOrdemServico } = useParams();
     const location = useLocation();
     const dadosRecuperados = location.state?.veiculoDados || {};
 
@@ -64,7 +64,7 @@ function EtapaOrcamento() {
             />
             <div>
                 <OrdemServicoCard
-                    placa={placa}
+                    placa={dadosRecuperados.placa}
                     marca={dadosRecuperados.marca}
                     prefixo={dadosRecuperados.prefixo}
                     modelo={dadosRecuperados.modelo}
@@ -84,7 +84,7 @@ function EtapaOrcamento() {
                         ticket={ticket}
                         atualizarLista={carregarOrdem}
                     />
-                    <Botoes pagina={"orcar"} placa={placa} ordemServicoDados={dadosRecuperados} idOrdemServico={idOrdemServico} />
+                    <Botoes pagina={"orcar"} placa={dadosRecuperados.placa} ordemServicoDados={dadosRecuperados} idOrdemServico={idOrdemServico} />
                 </div>
             </div>
 

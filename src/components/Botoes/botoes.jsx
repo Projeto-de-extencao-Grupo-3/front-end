@@ -39,7 +39,7 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico }) {
     // Função centralizada de navegação
     const navegarPara = (rotaBase) => {
         if (placa) {
-            navigate(`${rotaBase}/${placa}/${idOrdemServico}`, {
+            navigate(`${rotaBase}/${idOrdemServico}`, {
                 state: { veiculoDados: ordemServicoDados }
             });
         } else {

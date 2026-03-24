@@ -259,9 +259,10 @@ function PainelControle() {
                                     )}
 
                                     {kpiAtiva === "orcamento" && (
-                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/orcamento/${os.veiculo?.placa}/${os.id_ordem_servico}`, {
+                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/orcamento/${os.id_ordem_servico}`, {
                                             state: {
                                                 veiculoDados: {
+                                                    placa: os.veiculo?.placa,
                                                     marca: os.veiculo?.marca,
                                                     modelo: os.veiculo?.modelo,
                                                     prefixo: os.veiculo?.prefixo,
@@ -274,9 +275,10 @@ function PainelControle() {
                                     )}
 
                                     {kpiAtiva === "autorizacao" && (
-                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/autorizacao/${os.veiculo?.placa}/${os.id_ordem_servico}`, {
+                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/autorizacao/${os.id_ordem_servico}`, {
                                             state: {
                                                 veiculoDados: {
+                                                    placa: os.veiculo?.placa,
                                                     marca: os.veiculo?.marca,
                                                     modelo: os.veiculo?.modelo,
                                                     prefixo: os.veiculo?.prefixo,
@@ -289,9 +291,10 @@ function PainelControle() {
                                     )}
 
                                     {kpiAtiva === "vaga" && (
-                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/aguardandoVaga/${os.veiculo?.placa}/${os.id_ordem_servico}`, {
+                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/aguardandoVaga/${os.id_ordem_servico}`, {
                                             state: {
                                                 veiculoDados: {
+                                                    placa: os.veiculo?.placa,
                                                     marca: os.veiculo?.marca,
                                                     modelo: os.veiculo?.modelo,
                                                     prefixo: os.veiculo?.prefixo,
@@ -304,9 +307,10 @@ function PainelControle() {
                                     )}
 
                                     {kpiAtiva === "producao" && (
-                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/producao/${os.veiculo?.placa}/${os.id_ordem_servico}`, {
+                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/producao/${os.id_ordem_servico}`, {
                                             state: {
                                                 veiculoDados: {
+                                                    placa: os.veiculo?.placa,
                                                     marca: os.veiculo?.marca,
                                                     modelo: os.veiculo?.modelo,
                                                     prefixo: os.veiculo?.prefixo,
@@ -319,9 +323,10 @@ function PainelControle() {
                                     )}
 
                                     {kpiAtiva === "finalizados" && (
-                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/finalizado/${os.veiculo?.placa}/${os.id_ordem_servico}`, {
+                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/finalizado/${os.id_ordem_servico}`, {
                                             state: {
                                                 veiculoDados: {
+                                                    placa: os.veiculo?.placa,
                                                     marca: os.veiculo?.marca,
                                                     modelo: os.veiculo?.modelo,
                                                     prefixo: os.veiculo?.prefixo,

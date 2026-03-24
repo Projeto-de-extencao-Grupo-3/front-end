@@ -41,17 +41,17 @@ function App() {
         <Route path="/painelControle/entradaCamera" element={<EntradaVeiculoCamera />} />
         <Route path="/painelControle/entrada" element={<EntradaVeiculo />} />
         <Route path="/painelControle/entrada/:placa" element={<EntradaVeiculoCamera />} />
-        <Route path="/painelControle/entrada/:placa/:idOrdemServico" element={<EntradaVeiculoCamera />} />
+        <Route path="/painelControle/entrada/:idOrdemServico" element={<EntradaVeiculoCamera />} />
         <Route path="/painelControle/orcamento" element={<EtapaOrcamento />} />
-        <Route path="/painelControle/orcamento/:placa/:idOrdemServico" element={<EtapaOrcamento />} />
+        <Route path="/painelControle/orcamento/:idOrdemServico" element={<EtapaOrcamento />} />
         <Route path="/painelControle/autorizacao" element={<AutorizacaoVeiculo />} />
-        <Route path="/painelControle/autorizacao/:placa/:idOrdemServico" element={<AutorizacaoVeiculo />} />
+        <Route path="/painelControle/autorizacao/:idOrdemServico" element={<AutorizacaoVeiculo />} />
         <Route path="/painelControle/aguardandoVaga" element={<AguardandoVaga />} />
-        <Route path="/painelControle/aguardandoVaga/:placa/:idOrdemServico" element={<AguardandoVaga />} />
+        <Route path="/painelControle/aguardandoVaga/:idOrdemServico" element={<AguardandoVaga />} />
         <Route path="/painelControle/producao" element={<Producao />} />
-        <Route path="/painelControle/producao/:placa/:idOrdemServico" element={<Producao />} />
+        <Route path="/painelControle/producao/:idOrdemServico" element={<Producao />} />
         <Route path="/painelControle/finalizado" element={<Finalizado />} />
-        <Route path="/painelControle/finalizado/:placa/:idOrdemServico" element={<Finalizado />} />
+        <Route path="/painelControle/finalizado/:idOrdemServico" element={<Finalizado />} />
         
         {/* Roteamento de Clientes */}
         <Route path="/clientes" element={<GestaoClientes />} />

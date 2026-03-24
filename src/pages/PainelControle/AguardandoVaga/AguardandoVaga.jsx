@@ -10,7 +10,7 @@ import "../../componentesInferiores.css";
 
 
 function AguardandoVaga() {
-    const { placa, idOrdemServico } = useParams();
+    const { idOrdemServico } = useParams();
     const location = useLocation();
     const dadosRecuperados = location.state?.veiculoDados || {};
     const paginaAtual = "aguardar";
@@ -40,13 +40,13 @@ function AguardandoVaga() {
                     modelo={dadosRecuperados.modelo}
                     cliente={dadosRecuperados.nome}
                     idOrdemServico={idOrdemServico}
-                    placa={placa} />            
+                    placa={dadosRecuperados.placa} />            
             </div>
             <div className="componentesInferiores">
                 <ServicosEItens pagina={paginaAtual} />
                 <div className="componentesDireita">
                     <ResumoOrcamento pagina={paginaAtual} />
-                    <Botoes pagina={paginaAtual} placa={placa} ordemServicoDados={dadosRecuperados} idOrdemServico={idOrdemServico} />
+                    <Botoes pagina={paginaAtual} placa = {dadosRecuperados.placa} ordemServicoDados={dadosRecuperados} idOrdemServico={idOrdemServico} />
                 </div>
             </div>
 
