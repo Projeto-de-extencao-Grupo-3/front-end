@@ -87,7 +87,7 @@ function EntradaVeiculoCamera() {
                         marca,
                         prefixo,
                         modelo,
-                        empresa,
+                        nome: empresa,
                         placa
                     }
                 }

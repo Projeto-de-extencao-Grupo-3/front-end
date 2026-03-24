@@ -27,7 +27,7 @@ function ConfirmacaoAutorizacao({ onClose, _onConfirm, placa, idOrdemServico, or
                 <div className="confirmacao-buttons">
                     <button className="btn-confirmar" onClick={() => {
                         navigate(`/painelControle/aguardandoVaga/${placa}/${idOrdemServico}`, {
-                            state: { ordemServicoDados: ordemServicoDados }
+                            state: { veiculoDados: ordemServicoDados }
                         });
                         onClose();
                     }}>Confirmar</button>

@@ -40,7 +40,7 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico }) {
     const navegarPara = (rotaBase) => {
         if (placa) {
             navigate(`${rotaBase}/${placa}/${idOrdemServico}`, {
-                state: { ordemServicoDados: ordemServicoDados }
+                state: { veiculoDados: ordemServicoDados }
             });
         } else {
             navigate(rotaBase);
