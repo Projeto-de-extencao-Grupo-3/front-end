@@ -64,7 +64,7 @@ function EntradaVeiculoCamera() {
                     observacoes: registroEntrada.observacoes,
                     geladeira: Number(registroEntrada.geladeira),
                     macaco: Number(registroEntrada.macaco),
-                    extintor: Number(registroEntrada.extintor), 
+                    extintor: Number(registroEntrada.extintor),
                     estepe: Number(registroEntrada.estepe),
                     chave_roda: Number(registroEntrada.chave_roda),
                     monitor: Number(registroEntrada.monitor),
@@ -80,18 +80,18 @@ function EntradaVeiculoCamera() {
             setIdOrdemServico(novoId);
             console.log("Resposta da API após adicionar registro de entrada:", resposta);
             console.log("Cadastro realizado com sucesso!");
-            navigate(`/painelControle/orcamento/${placa}/${novoId}`, { 
-            state: { 
-                idOrdemServico: novoId,
-                veiculoDados: {
-                    marca,
-                    prefixo,
-                    modelo,
-                    empresa,
-                    placa
+            navigate(`/painelControle/orcamento/${placa}/${novoId}`, {
+                state: {
+                    idOrdemServico: novoId,
+                    veiculoDados: {
+                        marca,
+                        prefixo,
+                        modelo,
+                        empresa,
+                        placa
+                    }
                 }
-            }
-        });
+            });
         } catch (error) {
             console.error("Erro no fluxo de entrada:", error);
             alert("Ocorreu um erro ao salvar os dados. Verifique o console.");
@@ -159,16 +159,37 @@ function EntradaVeiculoCamera() {
     }
 
     useEffect(() => {
-        if (location.state?.arquivoCapturado && !inicializado.current) {
-            inicializado.current = true; 
+        // 1. Prioridade: Veio do Painel de Controle (Botão "Fazer Entrada")
+        if (location.state?.dadosOS) {
+            const os = location.state.dadosOS;
 
+            // Preenche os dados básicos do cabeçalho
+            setMarca(os.veiculo?.marca || "");
+            setModelo(os.veiculo?.modelo || "");
+            setPrefixo(os.veiculo?.prefixo || "");
+            setEmpresa(os.cliente?.nome || "");
+            setIdCliente(os.cliente?.id_cliente);
+            setVeiculo(os.veiculo);
+            setIdOrdemServico(os.fk_ordem_servico);
+
+            setRegistroEntrada(prev => ({
+                ...prev,
+                fk_ordem_servico: os.fk_ordem_servico
+            }));
+
+            return; // Interrompe aqui, não precisa rodar o reconhecimento de imagem
+        }
+
+        // 2. Segunda opção: Veio da Câmera (Reconhecimento de Placa)
+        if (location.state?.arquivoCapturado && !inicializado.current) {
+            inicializado.current = true;
             const arquivo = location.state.arquivoCapturado;
 
             navigate(location.pathname, { replace: true, state: {} });
 
             send_to_gateway(arquivo);
         }
-    }, [location.state, navigate]); 
+    }, [location.state, navigate]);
 
     const mapaItens = [
         { label: "Geladeira", key: "geladeira" },
