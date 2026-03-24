@@ -17,8 +17,15 @@ import HistoricoVeiculosServico from './pages/Clientes/Veiculos/HistoricoVeiculo
 import Teste from './pages/Teste.jsx';
 import TesteModal from './components/ModalNovoItem/TesteModal.jsx';
 import TesteModalEditar from './components/ModalEditarItem/TesteModalEditar.jsx';
-
+import TesteModalQtd from './components/ModalQtdItem/TesteModalQtd.jsx';
 import EtapaOrcamento from './pages/PainelControle/Orcamento/EtapaOrcamento.jsx';
+import PagamentoPendente from './pages/AnaliseServico/PagamentoPendente.jsx';
+import PagamentoPendentePecas from './pages/AnaliseServico/PagamentoPendentePecas.jsx';
+import PagamentoRealizado from './pages/AnaliseServico/PagamentoRealizado.jsx';
+import NotaFiscal from './pages/AnaliseServico/NotaFiscal.jsx';
+import Servicos from './components/Servicos&Itens/Abas/Servicos.jsx';
+
+
 
 function App() {
 
@@ -61,6 +68,15 @@ function App() {
         {/* Roteamento de Teste */}
         <Route path="/TesteModal" element={<TesteModal />} />
         <Route path="/TesteModalEditar" element={<TesteModalEditar />} />
+        <Route path="/TesteModalQtd" element={<TesteModalQtd />} />
+        <Route path="/PagamentoPendente" element={<PagamentoPendente />} />
+        <Route path="/PagamentoPendentePecas" element={<PagamentoPendentePecas />} />
+        <Route path="/PagamentoRealizado" element={<PagamentoRealizado />} />
+        <Route path="/NotaFiscal" element={<NotaFiscal />} />
+        <Route path="/Servicos&Itens/Servicos" element={<Servicos />} />
+
+
+
       </Routes>
 
     </BrowserRouter>
