@@ -13,7 +13,7 @@ import Jornada from "../../../service/Jornada";
 
 function EntradaVeiculoCamera() {
 
-    const { adicionarRegistroEntrada } = Jornada()
+    const { adicionarRegistroEntrada, confirmarEntradaAgendada } = Jornada()
 
 
     const [registroEntrada, setRegistroEntrada] = useState({
@@ -50,49 +50,72 @@ function EntradaVeiculoCamera() {
     };
 
     const handleFinalizar = async () => {
-        console.log("Objeto registroEntrada completo:", registroEntrada);
+        // Montamos o payload base que ambos os endpoints usam
+
+        const idOSAtual = idOrdemServico || location.state?.dadosOS?.id_ordem_servico;
+        const idRegAtual = registroEntrada.id_registro_entrada || location.state?.dadosOS?.entrada?.id_registro_entrada;
+
+        const dadosEntrada = {
+            data_entrada_prevista: registroEntrada.dataEntrada,
+            data_entrada_efetiva: registroEntrada.dataEntrada,
+            responsavel: registroEntrada.responsavel,
+            cpf: registroEntrada.cpfResponsavel,
+            observacoes: registroEntrada.observacoes,
+            geladeira: Number(registroEntrada.geladeira),
+            macaco: Number(registroEntrada.macaco),
+            extintor: Number(registroEntrada.extintor),
+            estepe: Number(registroEntrada.estepe),
+            chave_roda: Number(registroEntrada.chave_roda),
+            monitor: Number(registroEntrada.monitor),
+            caixa_ferramentas: Number(registroEntrada.caixa_ferramentas),
+            som_dvd: Number(registroEntrada.som_dvd),
+            fk_cliente: idCliente ,
+            fk_veiculo: veiculo.id_veiculo ,
+            fk_oficina: 1
+        };
+
+        console.log("Estado atual do registroEntrada antes de enviar:", registroEntrada);
+
         try {
-            const resposta = await adicionarRegistroEntrada({
-                fk_veiculo: veiculo.id_veiculo,
-                entrada: {
-                    data_entrada_prevista: registroEntrada.dataEntrada,
-                    data_entrada_efetiva: registroEntrada.dataEntrada,
-                    responsavel: registroEntrada.responsavel,
-                    cpf: registroEntrada.cpfResponsavel,
-                    observacoes: registroEntrada.observacoes,
-                    geladeira: Number(registroEntrada.geladeira),
-                    macaco: Number(registroEntrada.macaco),
-                    extintor: Number(registroEntrada.extintor),
-                    estepe: Number(registroEntrada.estepe),
-                    chave_roda: Number(registroEntrada.chave_roda),
-                    monitor: Number(registroEntrada.monitor),
-                    caixa_ferramentas: Number(registroEntrada.caixa_ferramentas),
-                    som_dvd: Number(registroEntrada.som_dvd),
-                    fk_cliente: idCliente,
+            let resposta;
+
+            if (idOSAtual && idRegAtual) {
+                const payloadConfirmacao = {
+                    fk_registro: idRegAtual,
+                    entrada: dadosEntrada
+                };
+                console.log("Efetivando entrada de agendamento existente:", payloadConfirmacao);
+                resposta = await confirmarEntradaAgendada(payloadConfirmacao);
+            } else {
+                console.log("Registrando nova entrada via reconhecimento de placa");
+                resposta = await adicionarRegistroEntrada({
                     fk_veiculo: veiculo.id_veiculo,
-                    fk_ordem_servico: registroEntrada.fk_ordem_servico,
-                    fk_oficina: 1
-                }
+                    entrada: dadosEntrada
+                });
+            }
+
+            const novoId = idOrdemServico || resposta.entrada?.fkOrdemServico || resposta.fk_ordem_servico;
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Entrada realizada!',
+                text: 'Dados salvos com sucesso.'
             });
-            const novoId = resposta.entrada?.fkOrdemServico || resposta.fk_ordem_servico;
-            setIdOrdemServico(novoId);
-            console.log("Resposta da API após adicionar registro de entrada:", resposta);
-            console.log("Cadastro realizado com sucesso!");
+
             navigate(`/painelControle/orcamento/${novoId}`, {
                 state: {
-                    idOrdemServico: idOrdemServico,
-                    veiculoDados: {
-                        marca,
-                        prefixo,
-                        modelo,
-                        nome: empresa,
-                        placa
-                    }
+                    idOrdemServico: novoId,
+                    veiculoDados: { marca, prefixo, modelo, nome: empresa, placa, idOrdemServico: novoId }
                 }
             });
+
         } catch (error) {
-            console.error("Erro no fluxo de entrada:", error);
-            alert("Ocorreu um erro ao salvar os dados. Verifique o console.");
+            console.error("Erro ao processar entrada:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Erro no servidor',
+                text: 'Não foi possível salvar os dados da entrada.'
+            });
         }
     };
     async function send_to_gateway(arquivo) {
@@ -160,6 +183,11 @@ function EntradaVeiculoCamera() {
         // 1. Prioridade: Veio do Painel de Controle (Botão "Fazer Entrada")
         if (location.state?.dadosOS) {
             const os = location.state.dadosOS;
+            const idReg = os.fk_entrada;
+            console.log("Dados: ", os)
+
+            console.log("DEBUG GROTRACK - ID OS:", os.id_ordem_servico);
+            console.log("DEBUG GROTRACK - ID Registro Capturado:", idReg);
 
             // Preenche os dados básicos do cabeçalho
             setMarca(os.veiculo?.marca || "");
@@ -169,11 +197,12 @@ function EntradaVeiculoCamera() {
             setIdCliente(os.cliente?.id_cliente);
             setVeiculo(os.veiculo);
             setPlaca(os.veiculo?.placa || "");
-            setIdOrdemServico(os.fk_ordem_servico);
+            setIdOrdemServico(os.id_ordem_servico);
 
+            console.log("Dados recebidos do Painel de Controle:", os);
             setRegistroEntrada(prev => ({
                 ...prev,
-                fk_ordem_servico: os.fk_ordem_servico
+                id_registro_entrada: idReg
             }));
 
             return; // Interrompe aqui, não precisa rodar o reconhecimento de imagem

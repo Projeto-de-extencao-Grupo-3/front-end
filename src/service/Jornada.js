@@ -3,7 +3,7 @@ import api from "./api";
 import { exibirAlertaErro, exibirAlertaSucesso } from './alertas';
 
 function Jornada() {
-    
+
     const [_jornada, setJornada] = useState([]);
 
     const adicionarVeiculoRegistroEntradaSemCadastro = async (dados) => {
@@ -31,7 +31,19 @@ function Jornada() {
         }
     }
 
-    return { adicionarRegistroEntrada, adicionarVeiculoRegistroEntradaSemCadastro }
+    const confirmarEntradaAgendada = async (dados) => {
+        try {
+            const response = await api.patch(`/jornada/confirmar-entrada`, dados);
+
+            setJornada(prevJornada => [...prevJornada, response.data]);
+            exibirAlertaSucesso("Registro de Entrada atualizado com sucesso!");
+            return response.data;
+        } catch (error) {
+            exibirAlertaErro("Erro ao atualizar registro de entrada.");
+            throw error;
+        }
+    }
+    return { adicionarRegistroEntrada, adicionarVeiculoRegistroEntradaSemCadastro, confirmarEntradaAgendada }
 }
 
 export default Jornada;
