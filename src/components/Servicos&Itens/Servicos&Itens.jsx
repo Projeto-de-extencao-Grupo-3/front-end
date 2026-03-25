@@ -8,7 +8,6 @@ import ServicosEItensLogic from "../../service/ServicosEItens.js";
 
 function ServicosEItens({ pagina, ticket, atualizarLista }) {
     const { adicionarServico, adicionarProduto } = ServicosEItensLogic();
-    const [_dados, _setDados] = useState([]);
     const [abaAtiva, setAbaAtiva] = useState("servicos");
 
     const [mostrarModalServico, setMostrarModalServico] = useState(false);
@@ -18,6 +17,7 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
     const [mostrarModalItem, setMostrarModalItem] = useState(false);
     const [modoItem, setModoItem] = useState("adicionar");
     const [itemVisualizar, setItemVisualizar] = useState(null);
+    
 
     if (!ticket) {
         return <div className="resumo-container">Carregando...</div>;
@@ -118,7 +118,7 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
             <ModalAdicionarServico
                 isOpen={mostrarModalServico}
                 onClose={() => setMostrarModalServico(false)}
-                placa={ticket.placa}
+                placa={ticket}
                 modo={modoServico}
                 servico={servicoVisualizar}
                 onSave={async (dados) => {
@@ -131,12 +131,12 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
             <ModalAdicionarItem
                 isOpen={mostrarModalItem}
                 onClose={() => setMostrarModalItem(false)}
-                placa={ticket.placa}
+                placa={ticket}
                 modo={modoItem}
                 item={itemVisualizar}
                 onSave={async (dados) => {
                     await adicionarProduto(dados);
-                    await atualizarLista(); // 🔥
+                    await atualizarLista(); 
                 }}
                 salvarNaOrdem={ticket.id_ordem_servico}
             />

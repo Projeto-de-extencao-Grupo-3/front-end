@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import OrdemServicoCard from "../ServicoCard/OrdemServicoCard";
 import "./ModalAdicionarServico.css";
 import { formatarTexto, formatarMoedaBR } from "../../utils/formatarTexto.js";
+import { useParams } from "react-router-dom";
 
 function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", servico, onSave, salvarNaOrdem }) {
     const [aba, setAba] = useState("FUNILARIA");
+    const { idOrdemServico } = useParams();
 
     const [formData, setFormData] = useState({
         fk_ordem_servico: salvarNaOrdem,
@@ -92,7 +94,13 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                         )}
 
                         <div className={`modal-body ${modo === "visualizar" ? "p-3" : "pt-2"}`}>
-                            <OrdemServicoCard placa={placa} />
+                            <OrdemServicoCard 
+                            placa={infosOrdem.placa}
+                            marca={infosOrdem.marca}
+                            prefixo={infosOrdem.prefixo}
+                            modelo={infosOrdem.modelo}
+                            cliente={infosOrdem.cliente} 
+                            idOrdemServico = {infosOrdem.idOrdem}/>
 
                             <div className={`card-info-servico text-start ${modo === "visualizar" ? "mt-3" : ""}`}>
                                 <div className="titulo-servico mb-2">

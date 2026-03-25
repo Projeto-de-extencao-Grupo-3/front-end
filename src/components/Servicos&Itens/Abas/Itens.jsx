@@ -9,7 +9,6 @@ import deleteProdutoIcon from "../../../assets/icons/deleteProduto icon.png";
 import iconBox from "../../../assets/icons/boxItens icon.png";
 import iconLixo from "../../../assets/icons/lixoService Icon.png";
 import iconEdit from "../../../assets/icons/EditIcon.png";
-
 import ServicosEItensLogic from "../../../service/ServicosEItens.js";
 
 function Itens({ dados, pagina , carregarOrdem}) {

@@ -23,12 +23,12 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
                 setFormData({
                     id_registro_servico: servico.id_registro_servico,
                     preco_cobrado: servico.preco_cobrado || "",
-                    parte_veiculo: formatarTexto(servico.parte_veiculo) || "",
-                    lado_veiculo: formatarTexto(servico.lado_veiculo) || "",
-                    cor: formatarTexto(servico.cor) || "-",
-                    especificacao_servico: formatarTexto(servico.especificacao_servico) || "",
+                    parte_veiculo: servico.parte_veiculo || "",
+                    lado_veiculo: servico.lado_veiculo || "",
+                    cor: servico.cor || "-",
+                    especificacao_servico: servico.especificacao_servico || "",
                     tipo_servico: servico.tipo_servico || "FUNILARIA",
-                    tipo_pintura: formatarTexto(servico.tipo_pintura) || "NAO_APLICAVEL"
+                    tipo_pintura: servico.tipo_pintura || "NAO_APLICAVEL"
                 });
             }, 0);
         }
@@ -71,6 +71,7 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
 
                         <div className="modal-body pt-2">
                             <OrdemServicoCard placa={placa} />
+                            {console.log("placa:", placa)}
 
                             <div className="card-info-servico text-start mt-3">
                                 <div className="titulo-servico mb-2">
@@ -161,7 +162,7 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
                                         <textarea
                                             name="especificacao_servico"
                                             className="form-control"
-                                            value={formData.especificacao_servico}
+                                            value={formatarTexto(formData.especificacao_servico)}
                                             onChange={handleChange}
                                             placeholder="Descreva os detalhes do serviço"
                                         />
