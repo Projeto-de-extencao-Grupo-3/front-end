@@ -118,7 +118,7 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
             <ModalAdicionarServico
                 isOpen={mostrarModalServico}
                 onClose={() => setMostrarModalServico(false)}
-                placa={ticket}
+                placa={ticket .placa}
                 modo={modoServico}
                 servico={servicoVisualizar}
                 onSave={async (dados) => {
@@ -131,7 +131,7 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
             <ModalAdicionarItem
                 isOpen={mostrarModalItem}
                 onClose={() => setMostrarModalItem(false)}
-                placa={ticket}
+                placa={ticket.placa}
                 modo={modoItem}
                 item={itemVisualizar}
                 onSave={async (dados) => {
