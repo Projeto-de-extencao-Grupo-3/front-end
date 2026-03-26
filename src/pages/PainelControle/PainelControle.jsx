@@ -234,6 +234,7 @@ function PainelControle() {
                                                     marca: os.veiculo?.marca,
                                                     modelo: os.veiculo?.modelo,
                                                     prefixo: os.veiculo?.prefixo,
+                                                    nome: os.cliente?.nome,
                                                 }
                                             }
                                         })}>
@@ -249,6 +250,7 @@ function PainelControle() {
                                                     marca: os.veiculo?.marca,
                                                     modelo: os.veiculo?.modelo,
                                                     prefixo: os.veiculo?.prefixo,
+                                                    nome: os.cliente?.nome,
                                                 }
                                             }
                                         })}>
@@ -264,6 +266,7 @@ function PainelControle() {
                                                     marca: os.veiculo?.marca,
                                                     modelo: os.veiculo?.modelo,
                                                     prefixo: os.veiculo?.prefixo,
+                                                    nome: os.cliente?.nome,
                                                 }
                                             }
                                         })}>
@@ -279,6 +282,7 @@ function PainelControle() {
                                                     marca: os.veiculo?.marca,
                                                     modelo: os.veiculo?.modelo,
                                                     prefixo: os.veiculo?.prefixo,
+                                                    nome: os.cliente?.nome,
                                                 }
                                             }
                                         })}>
@@ -294,6 +298,7 @@ function PainelControle() {
                                                     marca: os.veiculo?.marca,
                                                     modelo: os.veiculo?.modelo,
                                                     prefixo: os.veiculo?.prefixo,
+                                                    nome: os.cliente?.nome,
                                                 }
                                             }
                                         })}>

@@ -2,7 +2,8 @@ import { useParams, useLocation } from "react-router-dom";
 import Layout from "../../../components/Layout/Layout";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import "./Producao.css";
-
+import ServicosEItensLogic from "../../../service/ServicosEItens.js";
+import { useState, useEffect } from "react";
 import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
 import ServicosEItens from "../../../components/Servicos&Itens/Servicos&Itens";
 import ResumoOrcamento from "../../../components/Resumo/ResumoDoOrcamento";
@@ -10,10 +11,31 @@ import Botoes from "../../../components/Botoes/botoes";
 import "../../componentesInferiores.css";
 
 function Producao() {
-    const { idOrdemServico } = useParams()
-    const location = useLocation();
-    const dadosRecuperados = location.state?.veiculoDados || {};
     const paginaAtual = "produzir";
+    const { buscarOrdem } = ServicosEItensLogic();
+    const [ticket, setTicket] = useState(null);
+    const { idOrdemServico } = useParams();
+
+    const carregarOrdem = async () => {
+        try {
+            const dados = await buscarOrdem(idOrdemServico);
+            setTicket({
+                ...dados,
+                servicos: dados.servicos || [],
+                produtos: dados.produtos || []
+            });
+            console.log("Ordem de Serviço carregada:", dados);
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    console.log("Ticket atualizado:", ticket)
+    useEffect(() => {
+        carregarOrdem();
+    }, [idOrdemServico]);
+
+    if (!ticket) return <p>Carregando...</p>;
 
 
     return (
@@ -33,20 +55,20 @@ function Producao() {
                     { id: "finalizado", label: "Finalizado", icon: "bx bx-check-circle", status: "pendente" },
                 ]}
             />
-            <div> 
+            <div>
                 <OrdemServicoCard
-                    marca={dadosRecuperados.marca}
-                    prefixo={dadosRecuperados.prefixo}
-                    modelo={dadosRecuperados.modelo}
-                    cliente={dadosRecuperados.nome}
+                    marca={ticket.veiculo.marca}
+                    prefixo={ticket.veiculo.prefixo}
+                    modelo={ticket.veiculo.modelo}
+                    cliente={ticket.cliente.nome}
                     idOrdemServico={idOrdemServico}
-                    placa={dadosRecuperados.placa} />
+                    placa={ticket.veiculo.placa} />
             </div>
             <div className="componentesInferiores">
                 <ServicosEItens pagina={paginaAtual} />
                 <div className="componentesDireita">
                     <ResumoOrcamento pagina={paginaAtual} />
-                    <Botoes pagina={paginaAtual} placa={dadosRecuperados.placa} ordemServicoDados={dadosRecuperados} idOrdemServico={idOrdemServico} />
+                    <Botoes pagina={paginaAtual} placa={ticket.veiculo.placa} ordemServicoDados={ticket} idOrdemServico={idOrdemServico} />
                 </div>
             </div>
 
