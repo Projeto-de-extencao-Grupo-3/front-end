@@ -1,12 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Layout from "../../../components/Layout/Layout";
 import InformacoesCard from "../../../components/ServicoCard/InformacoesCard";
 import ItemContador from "../../../components/ServicoCard/ItemContador";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
 import "./EntradaVeiculo.css";
-import RegistroEntrada from "../../../service/RegistroEntrada";
 import ReconhecimentoPlaca from "../../../service/ReconhecimentoPlaca";
 import Swal from 'sweetalert2';
 import Jornada from "../../../service/Jornada";
