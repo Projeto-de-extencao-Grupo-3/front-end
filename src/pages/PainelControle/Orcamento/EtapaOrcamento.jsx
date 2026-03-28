@@ -20,11 +20,10 @@ function EtapaOrcamento() {
         try {
             const dados = await buscarOrdem(idOrdemServico);
             setTicket({
-                ...dados,
-                servicos: dados.servicos || [],
-                produtos: dados.produtos || []
+                ...dados.busca_simples,
+                servicos: dados.busca_simples.servicos || [],
+                produtos: dados.busca_simples.produtos || []
             });
-            console.log("Ordem de Serviço carregada:", dados);
         } catch (e) {
             console.error(e);
         }
@@ -69,7 +68,7 @@ function EtapaOrcamento() {
                     marca={ticket.veiculo.marca}
                     prefixo={ticket.veiculo.prefixo}
                     modelo={ticket.veiculo.modelo}
-                    cliente={ticket.cliente.nome}
+                    cliente={ticket.veiculo.nome_cliente}
                     idOrdemServico={idOrdemServico}
                 />
             </div>
@@ -82,10 +81,10 @@ function EtapaOrcamento() {
                 <div className="teste2">
                     <ResumoOrcamento
                         pagina="orcamento"
-                        ticket={ticket}
+                        ticket={ticket.resumo}
                         atualizarLista={carregarOrdem}
                     />
-                    <Botoes pagina={"orcar"} placa={ticket.veiculo.placa} ordemServicoDados={ticket} idOrdemServico={idOrdemServico} />
+                    <Botoes pagina={"orcar"} placa={ticket.veiculo} ordemServicoDados={ticket} idOrdemServico={idOrdemServico} />
                 </div>
             </div>
 

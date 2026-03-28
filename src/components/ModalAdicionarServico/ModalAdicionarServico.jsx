@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import OrdemServicoCard from "../ServicoCard/OrdemServicoCard";
 import "./ModalAdicionarServico.css";
 import { formatarTexto, formatarMoedaBR } from "../../utils/formatarTexto.js";
+import { useParams } from "react-router-dom";
 
 function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", servico, onSave, salvarNaOrdem }) {
     const [aba, setAba] = useState("FUNILARIA");
@@ -15,6 +16,8 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
         especificacao_servico: "",
         tipo_pintura: "NAO_APLICAVEL"
     });
+
+    const { idOrdemServico } = useParams();
 
     useEffect(() => {
         let timer;
@@ -92,7 +95,14 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                         )}
 
                         <div className={`modal-body ${modo === "visualizar" ? "p-3" : "pt-2"}`}>
-                            <OrdemServicoCard placa={placa} />
+                            <OrdemServicoCard 
+                                marca={placa.marca}
+                                modelo={placa.modelo}
+                                prefixo={placa.prefixo}
+                                cliente={placa.nome_cliente}
+                                placa={placa.placa}
+                                idOrdemServico={idOrdemServico}
+                            />
                             <div className={`card-info-servico text-start ${modo === "visualizar" ? "mt-3" : ""}`}>
                                 <div className="titulo-servico mb-2">
                                     <i className={`bx ${modo === "visualizar" ? 'bx-info-circle' : 'bx-wrench'}`}></i>

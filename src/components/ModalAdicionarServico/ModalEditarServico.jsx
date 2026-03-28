@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import OrdemServicoCard from "../ServicoCard/OrdemServicoCard";
 import "./ModalAdicionarServico.css";
 import { formatarTexto } from "../../utils/formatarTexto.js";
+import { useParams } from "react-router-dom";
 
 function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
     const [formData, setFormData] = useState({
@@ -14,6 +15,8 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
         tipo_servico: "",
         tipo_pintura: ""
     });
+
+    const { idOrdemServico } = useParams();
 
     useEffect(() => {
         let timer;
@@ -70,9 +73,14 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
                         </div>
 
                         <div className="modal-body pt-2">
-                            <OrdemServicoCard placa={placa} />
-                            {console.log("placa:", placa)}
-
+                            <OrdemServicoCard 
+                                marca={placa.marca}
+                                modelo={placa.modelo}
+                                prefixo={placa.prefixo}
+                                cliente={placa.nome_cliente}
+                                placa={placa.placa}
+                                idOrdemServico={idOrdemServico}
+                            />
                             <div className="card-info-servico text-start mt-3">
                                 <div className="titulo-servico mb-2">
                                     <i className='bx bx-edit-alt'></i> Informações Registradas

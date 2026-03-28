@@ -5,7 +5,7 @@ import { exibirAlertaSucesso, exibirAlertaErro } from './alertas';
 function ServicosItens() {
     const buscarOrdem = async (id) => {
         try {
-            const response = await api.get(`/ordens/${id}`);
+            const response = await api.get(`/jornada/listagem/${id}`);
             return response.data;
         } catch (error) {
             exibirAlertaErro("Erro ao buscar ordem!");

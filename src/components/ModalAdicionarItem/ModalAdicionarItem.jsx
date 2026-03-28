@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import OrdemServicoCard from "../ServicoCard/OrdemServicoCard";
 import "./ModalAdicionarItem.css";
 import ServicosEItensLogic from "../../service/ServicosEItens.js";
+import { useParams } from "react-router-dom";
 import { formatarTexto } from "../../utils/formatarTexto.js";
 
 function ModalAdicionarItem({ isOpen, onClose, placa, onSave, salvarNaOrdem }) {
@@ -11,6 +12,7 @@ function ModalAdicionarItem({ isOpen, onClose, placa, onSave, salvarNaOrdem }) {
     const [visibilidade, setVisibilidade] = useState(null);
     const [produtos, setProdutos] = useState([]);
     const [_produtoSelecionado, setProdutoSelecionado] = useState(null);
+    const { idOrdemServico } = useParams();
 
     const [formData, setFormData] = useState({
         fk_ordem_servico: salvarNaOrdem,
@@ -115,7 +117,14 @@ function ModalAdicionarItem({ isOpen, onClose, placa, onSave, salvarNaOrdem }) {
 
                         <div className="modal-body pt-2">
 
-                            <OrdemServicoCard placa={placa} />
+                            <OrdemServicoCard 
+                                marca={placa.marca}
+                                modelo={placa.modelo}
+                                prefixo={placa.prefixo}
+                                cliente={placa.nome_cliente}
+                                placa={placa.placa}
+                                idOrdemServico={idOrdemServico}
+                            />
 
                             <div className="card-info-servico text-start">
 
