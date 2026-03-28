@@ -61,9 +61,22 @@ function ServicosItens() {
         }
     };
 
+    const editarProduto = async (idProduto, dadosEditados) => {
+        try {
+            const response = await api.put(`/itens-produtos/${idProduto}`, dadosEditados);
+
+            exibirAlertaSucesso("Produto atualizado com sucesso!");
+            return response.data;
+        } catch (error) {
+            exibirAlertaErro("Erro ao atualizar produto.");
+            console.error("Erro na API ao editar produto:", error);
+            throw error;
+        }
+    };
+
     const excluirServico = async (idServico) => {
         try {
-            const _response = await api.delete(`/itens-servicos/${idServico}`);
+            const response = await api.delete(`/itens-servicos/${idServico}`);
             exibirAlertaSucesso("Serviço excluído com sucesso!");
             return true;
         } catch (error) {
@@ -75,7 +88,7 @@ function ServicosItens() {
 
     const excluirProduto = async (idProduto) => {
         try {
-            const _response = await api.delete(`/itens-produtos/${idProduto}`);
+            const response = await api.delete(`/itens-produtos/${idProduto}`);
             exibirAlertaSucesso("Produto excluído com sucesso!");
             return true;
         } catch (error) {
@@ -91,6 +104,7 @@ function ServicosItens() {
         adicionarServico,
         adicionarProduto,
         editarServico,
+        editarProduto,
         excluirServico,
         excluirProduto
     };

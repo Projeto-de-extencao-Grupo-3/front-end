@@ -24,7 +24,7 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
         if (isOpen && servico) {
             timer = setTimeout(() => {
                 setFormData({
-                    id_registro_servico: servico.id_registro_servico,
+                    id_registro_servico: servico.id_item_servico,
                     preco_cobrado: servico.preco_cobrado || "",
                     parte_veiculo: servico.parte_veiculo || "",
                     lado_veiculo: servico.lado_veiculo || "",

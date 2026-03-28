@@ -35,7 +35,7 @@ function Servicos({ dados, pagina, _onVisualizar, carregarOrdem, placa }) {
 
     const handleExcluir = async () => {
         try {
-            await excluirServico(servicoSelecionado.id_registro_servico);
+            await excluirServico(servicoSelecionado.id_item_servico);
             setServicoSelecionado(null);
             await carregarOrdem();
         } catch (error) {
