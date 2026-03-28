@@ -11,15 +11,15 @@ import iconBox from "../../../assets/icons/boxItens icon.png";
 import iconLixo from "../../../assets/icons/lixoService Icon.png";
 import iconEdit from "../../../assets/icons/EditIcon.png";
 import ServicosEItensLogic from "../../../service/ServicosEItens.js";
+import AlterarEstoque from "../../../service/Produtos";
 
 function Itens({ dados, pagina, carregarOrdem, placa }) {
     const [modalSaida, setModalSaida] = useState(false);
-    const [dadosSaida, setDadosSaida] = useState(null);
-
     const [modalExcluirProduto, setModalExcluirProduto] = useState(false);
     const [modalEditarProduto, setModalEditarProduto] = useState(false);
     const [produtoSelecionado, setProdutoSelecionado] = useState(null);
-    const { excluirProduto ,editarProduto } = ServicosEItensLogic();
+    const { excluirProduto, editarProduto, baixarProduto } = ServicosEItensLogic();
+    const { atualizarQuantidadeEstoque } = AlterarEstoque();
 
     const handleExcluir = async () => {
         try {
@@ -34,11 +34,23 @@ function Itens({ dados, pagina, carregarOrdem, placa }) {
     const handleAtualizar = async (dadosEditados) => {
         try {
             await editarProduto(dadosEditados.id_item_produto, dadosEditados);
-            setModalEditarProduto(false); 
-            setProdutoSelecionado(null); 
-            await carregarOrdem(); 
+            setModalEditarProduto(false);
+            setProdutoSelecionado(null);
+            await carregarOrdem();
         } catch (error) {
             console.error("Erro ao processar atualização no componente:", error);
+        }
+    };
+
+    const handleDarBaixa = async (produtoParaBaixa, novaQuantidadeEstoque) => {
+        try {
+            await atualizarQuantidadeEstoque(produtoParaBaixa.id_produto_estoque, { id: produtoParaBaixa.id_produto_estoque, quantidade_estoque: novaQuantidadeEstoque });
+            await baixarProduto(produtoParaBaixa.id_item_produto);
+            setModalSaida(false);
+            setProdutoSelecionado(null);
+            await carregarOrdem();
+        } catch (error) {
+            console.error("Erro ao dar baixa no material:", error);
         }
     };
 
@@ -69,36 +81,33 @@ function Itens({ dados, pagina, carregarOrdem, placa }) {
                                 <div className="box-options">
                                     {pagina === "orcamento" ?
                                         <>
-                                            <div
-                                                className="icon"
-                                                style={{ backgroundImage: `url(${iconEdit})` }}
-                                                onClick={() => {
-                                                    setProdutoSelecionado(item);
-                                                    setModalEditarProduto(true);
-                                                }}
-                                            ></div>
+                                            {!item.baixado && (
+                                                <>
+                                                    <div
+                                                        className="icon"
+                                                        style={{ backgroundImage: `url(${iconEdit})` }}
+                                                        onClick={() => {
+                                                            setProdutoSelecionado(item);
+                                                            setModalEditarProduto(true);
+                                                        }}
+                                                    ></div>
 
-                                            <div
-                                                className="icon"
-                                                style={{ backgroundImage: `url(${iconLixo})` }}
-                                                onClick={() => {
-                                                    setProdutoSelecionado(item);
-                                                    setModalExcluirProduto(true);
-                                                }}>
-                                            </div>
+                                                    <div
+                                                        className="icon"
+                                                        style={{ backgroundImage: `url(${iconLixo})` }}
+                                                        onClick={() => {
+                                                            setProdutoSelecionado(item);
+                                                            setModalExcluirProduto(true);
+                                                        }}
+                                                    ></div>
+                                                </>
+                                            )}
 
                                             <div
                                                 className="icon"
                                                 style={{ backgroundImage: `url(${iconBox})` }}
                                                 onClick={() => {
-                                                    setDadosSaida({
-                                                        codigo: "00025",
-                                                        itemProduto: "Tinta-Azul-Fiat",
-                                                        visibilidade: "Privado",
-                                                        quantidadeSaida: 8,
-                                                        precoPorUnidade: "30,00",
-                                                        quantidadeEstoque: 7
-                                                    });
+                                                    setProdutoSelecionado(item);
                                                     setModalSaida(true);
                                                 }}
                                             ></div>
@@ -108,34 +117,30 @@ function Itens({ dados, pagina, carregarOrdem, placa }) {
                                             className="icon"
                                             style={{ backgroundImage: `url(${iconBox})` }}
                                             onClick={() => {
-                                                setDadosSaida({
-                                                    codigo: "00025",
-                                                    itemProduto: "Tinta-Azul-Fiat",
-                                                    visibilidade: "Privado",
-                                                    quantidadeSaida: 8,
-                                                    precoPorUnidade: "30,00",
-                                                    quantidadeEstoque: 7
-                                                });
+                                                setProdutoSelecionado(item);
                                                 setModalSaida(true);
                                             }}
                                         ></div>
                                     }
-
-                                    <RegistroSaidaMaterial
-                                        aberto={modalSaida}
-                                        aoConfirmar={(_dados) => {
-                                            setModalSaida(false);
-                                        }}
-                                        aoCancelar={() => setModalSaida(false)}
-                                        dados={dadosSaida}
-                                    />
-
                                 </div>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+
+            <RegistroSaidaMaterial
+                aberto={modalSaida}
+                aoConfirmar={(produtoConfirmado, novoEstoque) => {
+                    handleDarBaixa(produtoConfirmado, novoEstoque);
+                }}
+                aoCancelar={() => {
+                    setModalSaida(false);
+                    setProdutoSelecionado(null);
+                }}
+                produto={produtoSelecionado}
+            />
+
             <ModalEditarItem
                 isOpen={modalEditarProduto}
                 onClose={() => {

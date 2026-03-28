@@ -49,7 +49,6 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
 
     const handleSalvar = async () => {
         try {
-            // Garante que o tipo_pintura vá preenchido corretamente
             const dadosParaSalvar = {
                 ...formData,
                 tipo_pintura: formData.tipo_servico === "PINTURA" ? formData.tipo_pintura : "NAO_APLICAVEL"
@@ -91,7 +90,6 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
                                 </div>
 
                                 <div className="row g-3">
-                                    {/* Campos Comuns: Parte e Lado */}
                                     <div className="col-md-6">
                                         <label>Parte do Veículo *</label>
                                         <select
@@ -136,7 +134,6 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
                                         </select>
                                     </div>
 
-                                    {/* Campos específicos de PINTURA */}
                                     {formData.tipo_servico === "PINTURA" && (
                                         <>
                                             <div className="col-md-6">
@@ -164,7 +161,6 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
                                         </>
                                     )}
 
-                                    {/* Descrição: Editável para todos, mas essencial para OUTROS */}
                                     <div className="col-12">
                                         <label>Descrição {formData.tipo_servico === "OUTROS" ? "*" : ""}</label>
                                         <textarea

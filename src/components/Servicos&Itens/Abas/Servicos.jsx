@@ -11,7 +11,7 @@ import ModalEditarServico from "../../ModalAdicionarServico/ModalEditarServico.j
 import ModalAdicionarServico from "../../ModalAdicionarServico/ModalAdicionarServico.jsx";
 
 
-function Servicos({ dados, pagina, _onVisualizar, carregarOrdem, placa }) {
+function Servicos({ dados, pagina, carregarOrdem, placa }) {
     const [modalVisualizarServico, setModalVisualizarServico] = useState(false);
     const [modalEditarServico, setModalEditarServico] = useState(false);
     const [modalExcluirServico, setModalExcluirServico] = useState(false);
@@ -25,9 +25,9 @@ function Servicos({ dados, pagina, _onVisualizar, carregarOrdem, placa }) {
         try {
             await editarServico(dadosEditados.id_registro_servico, dadosEditados);
 
-            setModalEditarServico(false); // Fecha o modal
-            setServicoSelecionado(null); // Limpa seleção
-            await carregarOrdem(); // Atualiza a lista na tela
+            setModalEditarServico(false); 
+            setServicoSelecionado(null); 
+            await carregarOrdem(); 
         } catch (error) {
             console.error("Erro ao processar atualização no componente:", error);
         }
@@ -115,9 +115,9 @@ function Servicos({ dados, pagina, _onVisualizar, carregarOrdem, placa }) {
                     setServicoVisualizar(null);
                 }}
                 placa={placa}
-                modo="visualizar" // Forçamos o modo visualizar
+                modo="visualizar" 
                 servico={servicoVisualizar}
-                salvarNaOrdem={placa} // Passe o ID da ordem aqui se necessário
+                salvarNaOrdem={placa}
             />
             <ModalEditarServico
                 isOpen={modalEditarServico}

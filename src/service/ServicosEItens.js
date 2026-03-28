@@ -98,6 +98,18 @@ function ServicosItens() {
         }
     };
 
+    const baixarProduto = async (idProduto) => {
+        try {
+            const response = await api.patch(`/jornada/${idProduto}/saida-material`);
+            exibirAlertaSucesso("Produto baixado do estoque com sucesso!");
+            return true;
+        } catch (error) {
+            exibirAlertaErro("Erro ao baixar produto do estoque.");
+            console.error("Erro ao baixar produto do estoque:", error);
+            throw error;
+        }
+    };
+
     return {
         buscarOrdem,
         buscarProdutos,
@@ -106,7 +118,8 @@ function ServicosItens() {
         editarServico,
         editarProduto,
         excluirServico,
-        excluirProduto
+        excluirProduto,
+        baixarProduto
     };
 }
 
