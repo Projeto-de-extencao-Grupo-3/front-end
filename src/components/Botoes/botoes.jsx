@@ -38,7 +38,7 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico }) {
 
     // Função centralizada de navegação
     const navegarPara = (rotaBase) => {
-        if (placa) {
+        if (placa.placa) {
             navigate(`${rotaBase}/${idOrdemServico}`, {
                 state: { veiculoDados: ordemServicoDados }
             });
@@ -112,7 +112,7 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico }) {
                 </div>
             )}
 
-            {pagina === "orcar" && (
+            {pagina === "orcarmento" && (
                 <div className="button container3">
                     <div className="icon" style={{ backgroundImage: `url(${SaveIcon})` }}></div>
                     <button className="botao" onClick={() => navegarPara("/painelControle/autorizacao")}>Finalizar orçamento</button>
@@ -124,10 +124,21 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico }) {
             </div>
 
             {/* MODAIS */}
-            {showModal && <ConfirmacaoAutorizacao onClose={() => setShowModal(false)} placa={placa} ordemServicoDados={ordemServicoDados} idOrdemServico={idOrdemServico}/>}
+            {showModal && <ConfirmacaoAutorizacao
+                onClose={() => setShowModal(false)}
+                placa={placa}
+                ordemServicoDados={ordemServicoDados}
+            />}
 
-            <VeiculoEEmpresa aberto={modalVeiculo} aoFechar={() => setModalVeiculo(false)} />
-            <EntradaVeiculo aberto={modalEntrada} aoFechar={() => setModalEntrada(false)} />
+            <VeiculoEEmpresa
+                aberto={modalVeiculo}
+                aoFechar={() => setModalVeiculo(false)}
+            />
+
+            <EntradaVeiculo
+                aberto={modalEntrada}
+                aoFechar={() => setModalEntrada(false)}
+            />
 
             <ModalConfirmacao
                 aberto={modalPagamento}
@@ -157,8 +168,6 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico }) {
                 descricao="Deseja realmente finalizar este serviço?"
             />
 
-                
-            
             <ModalConfirmacao
                 aberto={modalNota}
                 aoConfirmar={() => { setModalNota(false); navegarPara("/painelControle/analisar3"); }}
@@ -170,7 +179,7 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico }) {
 
             <ModalConfirmacao
                 aberto={modalRevisar}
-                aoConfirmar={() =>  { setModalServico(false); navegarPara("/painelControle/orcamento"); }}
+                aoConfirmar={() => { setModalServico(false); navegarPara("/painelControle/orcamento"); }}
                 aoCancelar={() => setModalRevisar(false)}
                 icone={iconRevisar}
                 titulo="Revisar Orçamento?"

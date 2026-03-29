@@ -1,17 +1,19 @@
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 import Layout from "../../../components/Layout/Layout";
 import ServicosEItens from "../../../components/Servicos&Itens/Servicos&Itens";
 import ResumoOrcamento from "../../../components/Resumo/ResumoDoOrcamento";
 import Botoes from "../../../components/Botoes/botoes";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
-import "./EtapaOrcamento.css";
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 import ServicosEItensLogic from "../../../service/ServicosEItens.js";
 
 import "./EtapaOrcamento.css";
+import "./EtapaOrcamento.css";
 
 function EtapaOrcamento() {
+    const paginaAtual = "orcarmento";
     const { buscarOrdem } = ServicosEItensLogic();
     const [ticket, setTicket] = useState(null);
     const { idOrdemServico } = useParams();
@@ -28,11 +30,13 @@ function EtapaOrcamento() {
             console.error(e);
         }
     };
-    
-    console.log("Ticket atualizado:", ticket)
+
     useEffect(() => {
         carregarOrdem();
     }, [idOrdemServico]);
+
+    console.log("Ticket:", ticket);
+
 
     if (!ticket) return <p>Carregando...</p>;
 
@@ -74,17 +78,22 @@ function EtapaOrcamento() {
             </div>
             <div className="painelteste">
                 <ServicosEItens
-                    pagina="orcamento"
+                    pagina={paginaAtual}
                     ticket={ticket}
                     atualizarLista={carregarOrdem}
                 />
                 <div className="teste2">
                     <ResumoOrcamento
-                        pagina="orcamento"
+                        pagina={paginaAtual}
                         ticket={ticket.resumo}
                         atualizarLista={carregarOrdem}
                     />
-                    <Botoes pagina={"orcar"} placa={ticket.veiculo} ordemServicoDados={ticket} idOrdemServico={idOrdemServico} />
+                    <Botoes
+                        pagina={paginaAtual}
+                        placa={ticket.veiculo}
+                        ordemServicoDados={ticket}
+                        idOrdemServico={idOrdemServico}
+                    />
                 </div>
             </div>
 
