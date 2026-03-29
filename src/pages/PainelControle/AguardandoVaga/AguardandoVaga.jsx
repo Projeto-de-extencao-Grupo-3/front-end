@@ -9,8 +9,7 @@ import ResumoOrcamento from "../../../components/Resumo/ResumoDoOrcamento";
 import Botoes from "../../../components/Botoes/botoes";
 import ServicosEItensLogic from "../../../service/ServicosEItens.js";
 
-import "../../componentesInferiores.css";
-import "./AguardandoVaga.css";
+import "../../ConfigLayoutWorkflow.css";
 
 function AguardandoVaga() {
     const paginaAtual = "aguardar";

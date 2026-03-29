@@ -1,4 +1,4 @@
-import "./servicos.css";
+import "./abas.css";
 import { useState } from "react";
 import { formatarTexto, formatarMoedaBR } from "../../../utils/formatarTexto.js";
 
@@ -59,11 +59,12 @@ function Itens({ dados, pagina, carregarOrdem, placa }) {
             <table className="tabela">
                 <thead className="titles">
                     <tr className="config-titles">
-                        <th className="title">Código Est.</th>
-                        <th className="title">Item</th>
+                        <th className="title codigo">ID Est.</th>
+                        <th className="title item">Item</th>
                         <th className="title">Visibilidade</th>
                         <th className="title">Quantidade</th>
                         <th className="title">Preço Unid.</th>
+                        <th className="title">Preço Total</th>
                         <th className="title">Saída Est.</th>
                         <th className="title">Opções</th>
                     </tr>
@@ -71,11 +72,12 @@ function Itens({ dados, pagina, carregarOrdem, placa }) {
                 <tbody className="dados">
                     {dados.map((item) => (
                         <tr key={item.id_item_produto} className="config-dados">
-                            <td className="dado">{formatarTexto(item.id_produto_estoque)}</td>
-                            <td className="dado">{formatarTexto(item.nome_produto)}</td>
-                            <td className="dado">{item.visivel_orcamento === true ? "Público" : "Privado"}</td>
+                            <td className="dado codigo">{formatarTexto(item.id_produto_estoque)}</td>
+                            <td className="dado item">{formatarTexto(item.nome_produto)}</td>
+                            <td className="dado">{item.visivel_orcamento_cliente === true ? "Público" : "Privado"}</td>
                             <td className="dado">{item.quantidade}</td>
                             <td className="dado">{formatarMoedaBR(item.preco_peca)}</td>
+                            <td className="dado">{formatarMoedaBR(item.preco_peca * item.quantidade)}</td>
                             <td className="dado">{item.baixado === true ? "Sim" : "Não"}</td>
                             <td className="dado">
                                 <div className="box-options">
@@ -91,17 +93,16 @@ function Itens({ dados, pagina, carregarOrdem, placa }) {
                                                             setModalEditarProduto(true);
                                                         }}
                                                     ></div>
-
-                                                    <div
-                                                        className="icon"
-                                                        style={{ backgroundImage: `url(${iconLixo})` }}
-                                                        onClick={() => {
-                                                            setProdutoSelecionado(item);
-                                                            setModalExcluirProduto(true);
-                                                        }}
-                                                    ></div>
                                                 </>
                                             )}
+                                            <div
+                                                className="icon"
+                                                style={{ backgroundImage: `url(${iconLixo})` }}
+                                                onClick={() => {
+                                                    setProdutoSelecionado(item);
+                                                    setModalExcluirProduto(true);
+                                                }}
+                                            ></div>
 
                                             <div
                                                 className="icon"

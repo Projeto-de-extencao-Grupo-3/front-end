@@ -41,7 +41,7 @@ function ResumoDoOrcamento( { pagina, ticket }) {
                     <span className="valoresTexto">{formatarMoedaBR(ticket?.total_produtos)}</span>
 
                     {pagina === "produzir" || pagina === "finalizar" || pagina === "analisar" ?
-                        <span className="valoresTexto">{ticket.produtos_saida_estoque_concluida}/{ticket.produtos_saida_estoque_pendente} Itens</span>
+                        <span className="valoresTexto">{ticket.produtos_saida_estoque_concluida}/{ticket.produtos_saida_estoque_pendente + ticket.produtos_saida_estoque_concluida} Itens</span>
                         : null
                     }
 

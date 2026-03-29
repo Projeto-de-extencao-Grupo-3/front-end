@@ -9,8 +9,7 @@ import ResumoOrcamento from "../../../components/Resumo/ResumoDoOrcamento";
 import Botoes from "../../../components/Botoes/botoes";
 import ServicosEItensLogic from "../../../service/ServicosEItens.js";
 
-import "./AutorizacaoVeiculo.css";
-import "../../componentesInferiores.css";
+import "../../ConfigLayoutWorkflow.css";
 
 function AutorizacaoVeiculo() {
     const paginaAtual = "aprovar";
