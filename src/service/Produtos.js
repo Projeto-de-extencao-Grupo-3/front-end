@@ -19,6 +19,16 @@ function Produtos() {
         }
     };
 
+    const listarProdutosById = async (id) => {
+        try {
+            const response = await api.get(`/produtos/${id}`);
+            return response.data;
+        } catch (error) {
+            exibirAlertaErro("Erro ao buscar produtos.");
+            throw error
+        } 
+    };
+
     const adicionarProduto = async (dadosDoFormulario) => {
         try {
             const response = await api.post("/produtos", dadosDoFormulario);
@@ -85,7 +95,14 @@ function Produtos() {
         listarProdutos();
     }, []);
 
-    return { produtos, loading, adicionarProduto, excluirProduto, atualizarProduto, atualizarQuantidadeEstoque };
+    return { 
+        produtos, 
+        listarProdutosById,
+        loading, 
+        adicionarProduto, 
+        excluirProduto, 
+        atualizarProduto, 
+        atualizarQuantidadeEstoque };
 }
 
 export default Produtos;

@@ -1,13 +1,14 @@
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 import Layout from "../../../components/Layout/Layout";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
-import "./Producao.css";
 import ServicosEItensLogic from "../../../service/ServicosEItens.js";
-import { useState, useEffect } from "react";
 import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
 import ServicosEItens from "../../../components/Servicos&Itens/Servicos&Itens";
 import ResumoOrcamento from "../../../components/Resumo/ResumoDoOrcamento";
 import Botoes from "../../../components/Botoes/botoes";
+
+import "./Producao.css";
 import "../../componentesInferiores.css";
 
 function Producao() {
@@ -20,23 +21,20 @@ function Producao() {
         try {
             const dados = await buscarOrdem(idOrdemServico);
             setTicket({
-                ...dados,
-                servicos: dados.servicos || [],
-                produtos: dados.produtos || []
+                ...dados.busca_simples,
+                servicos: dados.busca_simples.servicos || [],
+                produtos: dados.busca_simples.produtos || []
             });
-            console.log("Ordem de Serviço carregada:", dados);
         } catch (e) {
             console.error(e);
         }
     };
 
-    console.log("Ticket atualizado:", ticket)
     useEffect(() => {
         carregarOrdem();
     }, [idOrdemServico]);
 
     if (!ticket) return <p>Carregando...</p>;
-
 
     return (
         <Layout ativo={"painel"}>
@@ -57,18 +55,32 @@ function Producao() {
             />
             <div>
                 <OrdemServicoCard
+                    placa={ticket.veiculo.placa}
                     marca={ticket.veiculo.marca}
                     prefixo={ticket.veiculo.prefixo}
                     modelo={ticket.veiculo.modelo}
-                    cliente={ticket.cliente.nome}
+                    cliente={ticket.veiculo.nome_cliente}
                     idOrdemServico={idOrdemServico}
-                    placa={ticket.veiculo.placa} />
+                />
             </div>
             <div className="componentesInferiores">
-                <ServicosEItens pagina={paginaAtual} />
+                <ServicosEItens
+                    pagina={paginaAtual}
+                    ticket={ticket}
+                    atualizarLista={carregarOrdem}
+                />
                 <div className="componentesDireita">
-                    <ResumoOrcamento pagina={paginaAtual} />
-                    <Botoes pagina={paginaAtual} placa={ticket.veiculo.placa} ordemServicoDados={ticket} idOrdemServico={idOrdemServico} />
+                    <ResumoOrcamento
+                        pagina={paginaAtual}
+                        ticket={ticket.resumo}
+                        atualizarLista={carregarOrdem}
+                    />
+                    <Botoes
+                        pagina={paginaAtual}
+                        placa={ticket.veiculo}
+                        ordemServicoDados={ticket}
+                        idOrdemServico={idOrdemServico} 
+                    />
                 </div>
             </div>
 

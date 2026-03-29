@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import OrdemServicoCard from "../ServicoCard/OrdemServicoCard";
 import "./ModalAdicionarServico.css";
 import { formatarTexto } from "../../utils/formatarTexto.js";
+import { useParams } from "react-router-dom";
 
 function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
     const [formData, setFormData] = useState({
@@ -15,13 +16,15 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
         tipo_pintura: ""
     });
 
+    const { idOrdemServico } = useParams();
+
     useEffect(() => {
         let timer;
 
         if (isOpen && servico) {
             timer = setTimeout(() => {
                 setFormData({
-                    id_registro_servico: servico.id_registro_servico,
+                    id_registro_servico: servico.id_item_servico,
                     preco_cobrado: servico.preco_cobrado || "",
                     parte_veiculo: servico.parte_veiculo || "",
                     lado_veiculo: servico.lado_veiculo || "",
@@ -46,7 +49,6 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
 
     const handleSalvar = async () => {
         try {
-            // Garante que o tipo_pintura vá preenchido corretamente
             const dadosParaSalvar = {
                 ...formData,
                 tipo_pintura: formData.tipo_servico === "PINTURA" ? formData.tipo_pintura : "NAO_APLICAVEL"
@@ -70,9 +72,14 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
                         </div>
 
                         <div className="modal-body pt-2">
-                            <OrdemServicoCard placa={placa} />
-                            {console.log("placa:", placa)}
-
+                            <OrdemServicoCard 
+                                marca={placa.marca}
+                                modelo={placa.modelo}
+                                prefixo={placa.prefixo}
+                                cliente={placa.nome_cliente}
+                                placa={placa.placa}
+                                idOrdemServico={idOrdemServico}
+                            />
                             <div className="card-info-servico text-start mt-3">
                                 <div className="titulo-servico mb-2">
                                     <i className='bx bx-edit-alt'></i> Informações Registradas
@@ -83,7 +90,6 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
                                 </div>
 
                                 <div className="row g-3">
-                                    {/* Campos Comuns: Parte e Lado */}
                                     <div className="col-md-6">
                                         <label>Parte do Veículo *</label>
                                         <select
@@ -128,7 +134,6 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
                                         </select>
                                     </div>
 
-                                    {/* Campos específicos de PINTURA */}
                                     {formData.tipo_servico === "PINTURA" && (
                                         <>
                                             <div className="col-md-6">
@@ -156,7 +161,6 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
                                         </>
                                     )}
 
-                                    {/* Descrição: Editável para todos, mas essencial para OUTROS */}
                                     <div className="col-12">
                                         <label>Descrição {formData.tipo_servico === "OUTROS" ? "*" : ""}</label>
                                         <textarea

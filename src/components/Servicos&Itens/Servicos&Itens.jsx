@@ -95,6 +95,7 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
                 {abaAtiva === "servicos" ? (
                     <Servicos
                         dados={ticket.servicos}
+                        placa = {ticket.veiculo}
                         pagina={pagina}
                         onVisualizar={(dados) => {
                             setServicoVisualizar(dados);
@@ -105,6 +106,7 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
                 ) : (
                     <Itens
                         dados={ticket.produtos}
+                        placa = {ticket.veiculo}
                         pagina={pagina}
                         onVisualizar={(dados) => {
                             setItemVisualizar(dados);
@@ -118,7 +120,7 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
             <ModalAdicionarServico
                 isOpen={mostrarModalServico}
                 onClose={() => setMostrarModalServico(false)}
-                placa={ticket .placa}
+                placa={ticket.veiculo}
                 modo={modoServico}
                 servico={servicoVisualizar}
                 onSave={async (dados) => {
@@ -131,7 +133,7 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
             <ModalAdicionarItem
                 isOpen={mostrarModalItem}
                 onClose={() => setMostrarModalItem(false)}
-                placa={ticket.placa}
+                placa={ticket.veiculo}
                 modo={modoItem}
                 item={itemVisualizar}
                 onSave={async (dados) => {
