@@ -112,7 +112,7 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico }) {
                 </div>
             )}
 
-            {pagina === "orcarmento" && (
+            {pagina === "orcamento" && (
                 <div className="button container3">
                     <div className="icon" style={{ backgroundImage: `url(${SaveIcon})` }}></div>
                     <button className="botao" onClick={() => navegarPara("/painelControle/autorizacao")}>Finalizar orçamento</button>

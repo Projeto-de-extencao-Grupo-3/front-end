@@ -9,11 +9,10 @@ import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
 import ServicosEItensLogic from "../../../service/ServicosEItens.js";
 
-import "./EtapaOrcamento.css";
-import "./EtapaOrcamento.css";
+import "../../ConfigLayoutWorkflow.css";
 
 function EtapaOrcamento() {
-    const paginaAtual = "orcarmento";
+    const paginaAtual = "orcamento";
     const { buscarOrdem } = ServicosEItensLogic();
     const [ticket, setTicket] = useState(null);
     const { idOrdemServico } = useParams();
@@ -42,15 +41,9 @@ function EtapaOrcamento() {
 
     return (
         <Layout ativo={"painel"}>
-
-            {/* CABECALHO */}
-            <div className="d-flex justify-content-between align-items-center mb-4">
-                <div className="d-flex flex-column">
-                    <h2 className="m-0">Orçamento de Serviço</h2>
-                    <span className="fs-5 text-muted">
-                        Crie e gerencie o orçamento dos serviços
-                    </span>
-                </div>
+            <div className="titulos-principais">
+                <h1 className="titulo-principal">Orçamento</h1>
+                <p className="subtitulo-principal">Crie e gerencie o orçamento dos serviços</p>
             </div>
 
 
@@ -76,13 +69,13 @@ function EtapaOrcamento() {
                     idOrdemServico={idOrdemServico}
                 />
             </div>
-            <div className="painelteste">
+            <div className="componentesInferiores">
                 <ServicosEItens
                     pagina={paginaAtual}
                     ticket={ticket}
                     atualizarLista={carregarOrdem}
                 />
-                <div className="teste2">
+                <div className="componentesDireita">
                     <ResumoOrcamento
                         pagina={paginaAtual}
                         ticket={ticket.resumo}
