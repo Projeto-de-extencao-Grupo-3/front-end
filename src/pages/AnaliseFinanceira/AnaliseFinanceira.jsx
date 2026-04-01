@@ -37,7 +37,7 @@ function AnaliseFinanceira() {
         fetchDadosFinanceiros();
     }, [anoMes]);
 
-    function calcularDiferencaDias(dataMaior, dataMenor) {
+    function _calcularDiferencaDias(dataMaior, dataMenor) {
         const formatarParaLocal = (data) => {
             if (!data) return new Date();
             if (typeof data === 'string' && data.includes('-')) return new Date(data + 'T00:00:00');

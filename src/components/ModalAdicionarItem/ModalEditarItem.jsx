@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import OrdemServicoCard from "../ServicoCard/OrdemServicoCard";
-import "./ModalAdicionarItem.css"; 
+import "./ModalAdicionarItem.css";
 import { useParams } from "react-router-dom";
-import { formatarTexto } from "../../utils/formatarTexto.js"; 
+import { formatarTexto } from "../../utils/formatarTexto.js";
 
 function ModalEditarItem({ isOpen, onClose, placa, produto, onUpdate }) {
     const { idOrdemServico } = useParams();
@@ -19,18 +19,20 @@ function ModalEditarItem({ isOpen, onClose, placa, produto, onUpdate }) {
     });
 
     useEffect(() => {
-        if (produto) {
+        if (!produto) return;
+
+        setTimeout(() => {
             setFormData({
                 id_item_produto: produto.id_item_produto,
                 fk_ordem_servico: idOrdemServico,
-                fk_produto: produto.id_produto_estoque, 
+                fk_produto: produto.id_produto_estoque,
                 nome_produto: produto.nome_produto,
-                visibilidade: produto.visivel_orcamento === true ? 1 : 0, 
+                visibilidade: produto.visivel_orcamento === true ? 1 : 0,
                 quantidade: produto.quantidade,
                 preco_produto: produto.preco_peca,
                 baixado: produto.baixado
             });
-        }
+        }, 50); 
     }, [produto, idOrdemServico]);
 
     const handleClose = () => {
@@ -48,7 +50,7 @@ function ModalEditarItem({ isOpen, onClose, placa, produto, onUpdate }) {
 
     const handleAtualizar = async () => {
         try {
-            await onUpdate(formData); 
+            await onUpdate(formData);
             onClose();
         } catch (error) {
             console.error("Erro ao atualizar produto:", error);
@@ -99,7 +101,7 @@ function ModalEditarItem({ isOpen, onClose, placa, produto, onUpdate }) {
                                         <select
                                             name="fk_produto"
                                             className="form-control form-select"
-                                            disabled 
+                                            disabled
                                         >
                                             <option value={formData.fk_produto}>
                                                 {formatarTexto(formData.nome_produto)}
@@ -113,11 +115,11 @@ function ModalEditarItem({ isOpen, onClose, placa, produto, onUpdate }) {
                                             <label className="radio-label">
                                                 <input
                                                     type="radio"
-                                                    name="visibilidade" 
+                                                    name="visibilidade"
                                                     value={0}
                                                     className="radio-custom"
                                                     checked={formData.visibilidade === 0}
-                                                    disabled 
+                                                    disabled
                                                 />
                                                 Privado
                                             </label>
@@ -125,7 +127,7 @@ function ModalEditarItem({ isOpen, onClose, placa, produto, onUpdate }) {
                                             <label className="radio-label">
                                                 <input
                                                     type="radio"
-                                                    name="visibilidade" 
+                                                    name="visibilidade"
                                                     value={1}
                                                     className="radio-custom"
                                                     checked={formData.visibilidade === 1}
