@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 /* TabelaVeiculos.module.css */
 
 a {
@@ -9,10 +10,18 @@ select{
 }
 
 /* ── Veículos ── */
+=======
+/* TabelaVeiculos.module.css — apenas o que Bootstrap não cobre */
+
+>>>>>>> Stashed changes
 .vehicle-card {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
   transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 .vehicle-card:hover {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.11);
   transform: translateY(-1px);
@@ -23,6 +32,10 @@ select{
   height: 58px;
   letter-spacing: -1px;
 }
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 .avatar-navy { background-color: #1b2a45; }
 .avatar-gold  { background-color: #d4a422; }
 
@@ -38,6 +51,10 @@ select{
   text-decoration: none;
   transition: background 0.18s ease;
 }
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 .btn-navy:hover {
   background-color: #243654;
   color: #fff;
@@ -55,6 +72,7 @@ select{
   text-decoration: none;
   transition: background 0.18s ease, color 0.18s ease;
 }
+<<<<<<< Updated upstream
 .btn-outline-navy:hover {
   background-color: #1b2a45;
   color: #fff;
@@ -114,4 +132,10 @@ select{
   outline: none;
   border-color: #1b2a45;
   box-shadow: none;
+=======
+
+.btn-outline-navy:hover {
+  background-color: #1b2a45;
+  color: #fff;
+>>>>>>> Stashed changes
 }
