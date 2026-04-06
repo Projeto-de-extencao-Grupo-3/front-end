@@ -53,10 +53,12 @@ function App() {
         <Route path="/painelControle/finalizado" element={<Finalizado />} />
         <Route path="/painelControle/finalizado/:idOrdemServico" element={<Finalizado />} />
         
-        {/* Roteamento de Clientes */}
+        {/* Roteamento de Clientes e Veículos */}
         <Route path="/clientes" element={<GestaoClientes />} />
-        <Route path="/clientes/veiculos" element={<HistoricoVeiculos />} />
+        <Route path="/clientes/veiculos/:id" element={<HistoricoVeiculos />} />
         <Route path="/clientes/veiculos/servico" element={<HistoricoVeiculosServico />} />
+        
+        {/* Roteamento de Estoque */}
         <Route path="/estoque" element={<ControleEstoque />} />
        
         {/* Roteamento de Funcionários */}
