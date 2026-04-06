@@ -13,10 +13,7 @@ import GestaoFuncionarios from './pages/Funcionarios/GestaoFuncionarios.jsx';
 import ControleEstoque from './pages/Estoque/ControleEstoque.jsx';
 import GestaoClientes from './pages/Clientes/GestaoClientes.jsx';
 import HistoricoVeiculos from './pages/Clientes/Veiculos/HistoricoVeiculos.jsx';
-<<<<<<< Updated upstream
 import HistoricoVeiculosServico from './pages/Clientes/Veiculos/HistoricoVeiculosServico.jsx';
-=======
->>>>>>> Stashed changes
 import Teste from './pages/Teste.jsx';
 import TesteModal from './components/ModalNovoItem/TesteModal.jsx';
 import TesteModalEditar from './components/ModalEditarItem/TesteModalEditar.jsx';
@@ -59,10 +56,7 @@ function App() {
         {/* Roteamento de Clientes */}
         <Route path="/clientes" element={<GestaoClientes />} />
         <Route path="/clientes/veiculos" element={<HistoricoVeiculos />} />
-<<<<<<< Updated upstream
         <Route path="/clientes/veiculos/servico" element={<HistoricoVeiculosServico />} />
-=======
->>>>>>> Stashed changes
         <Route path="/estoque" element={<ControleEstoque />} />
        
         {/* Roteamento de Funcionários */}
