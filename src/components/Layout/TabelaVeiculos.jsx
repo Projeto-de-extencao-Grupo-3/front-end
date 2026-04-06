@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from "./TabelaVeiculos.module.css";
-// import { buscarVeiculos } from '../../services/veiculosService';
+import veiculosService from '../../service/Veiculos.js';
 
 const IconeOlho = () => (
   <svg style={{ width: 15, height: 15, fill: 'currentColor', flexShrink: 0 }} viewBox="0 0 24 24">
@@ -10,6 +10,7 @@ const IconeOlho = () => (
 );
 
 function TabelaVeiculos() {
+  const { buscarVeiculosPorCliente } = veiculosService();
   const [veiculos, setVeiculos] = useState([]);
   const [loading, setLoading]   = useState(true);
   const [erro, setErro]         = useState(null);
@@ -22,17 +23,17 @@ function TabelaVeiculos() {
         setErro(null);
 
         // 🧪 MOCK — remova quando a API estiver pronta
-        const dados = [
-          { id: 1, placa: 'FUB-5231', modelo: 'Volkswagen Tiguan', ano: '2015', status: 'Sem agendamento', totalServicos: 12, emProducao: false },
-          { id: 2, placa: 'FUB-5231', modelo: 'Jetta',             ano: '2015', status: 'Sem agendamento', totalServicos: 12, emProducao: false },
-          { id: 3, placa: 'ABC-1234', modelo: 'Honda Civic',        ano: '2020', status: 'Em produção',     totalServicos: 5,  emProducao: true  },
-          { id: 4, placa: 'ABC-1234', modelo: 'Corsa',              ano: '2020', status: 'Em produção',     totalServicos: 5,  emProducao: true  },
-        ];
-        setVeiculos(dados);
+        // const dados = [
+        //   { id: 1, placa: 'FUB-5231', modelo: 'Volkswagen Tiguan', ano: '2015', status: 'Sem agendamento', totalServicos: 12, emProducao: false },
+        //   { id: 2, placa: 'FUB-5231', modelo: 'Jetta',             ano: '2015', status: 'Sem agendamento', totalServicos: 12, emProducao: false },
+        //   { id: 3, placa: 'ABC-1234', modelo: 'Honda Civic',        ano: '2020', status: 'Em produção',     totalServicos: 5,  emProducao: true  },
+        //   { id: 4, placa: 'ABC-1234', modelo: 'Corsa',              ano: '2020', status: 'Em produção',     totalServicos: 5,  emProducao: true  },
+        // ];
+        // setVeiculos(dados);
 
         // ✅ PRODUÇÃO — descomente quando a API estiver pronta
-        // const dados = await buscarVeiculos();
-        // setVeiculos(dados);
+        const dados = await buscarVeiculosPorCliente(2);
+        setVeiculos(dados);
 
       } catch {
         setErro('Nenhum veículo encontrado.');
