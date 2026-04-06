@@ -58,10 +58,6 @@ function Sidebar({ ativo }) {
           <i className='bx bxs-briefcase-alt-2' style={{ fontSize: "25px" }}></i> Funcionários
         </li>
 
-        <li className={ativo === "veiculos" ? "ativo" : ""} onClick={() => navigate("/clientes/veiculos")}>
-          <i className='bx bxs-bus' style={{ fontSize: "25px" }}></i> Veículos
-        </li>
-
         {/* <li className={ativo === "veiculos" ? "ativo" : ""}>
           <i className='bx bxs-bus' style={{ fontSize: "25px" }}></i> Veículos
         </li> */}

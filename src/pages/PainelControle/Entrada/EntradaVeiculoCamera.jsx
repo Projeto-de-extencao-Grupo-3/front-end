@@ -6,7 +6,6 @@ import ItemContador from "../../../components/ServicoCard/ItemContador";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
 import "./EntradaVeiculo.css";
-import RegistroEntrada from "../../../service/RegistroEntrada";
 import ReconhecimentoPlaca from "../../../service/ReconhecimentoPlaca";
 import Swal from 'sweetalert2';
 import Jornada from "../../../service/Jornada";
