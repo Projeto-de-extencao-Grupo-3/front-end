@@ -35,7 +35,6 @@ function PainelControle() {
     };
 
     const fetchServicos = () => {
-        // Nova configuração de Endpoint e Params
         api.get("/jornada/listagem", {
             params: { map: "PAINEL_CONTROLE" }
         })
@@ -50,12 +49,11 @@ function PainelControle() {
         fetchServicos();
     }, []);
 
-    // FUNÇÃO CORRIGIDA: Trata fuso horário local (T00:00:00) para evitar erro de +/- 1 dia
     function calcularDias(dataMaior, dataMenor) {
         const formatarParaLocal = (data) => {
             if (!data) return new Date();
             if (typeof data === 'string' && data.includes('-')) {
-                return new Date(data + 'T00:00:00'); // Força interpretação no fuso local
+                return new Date(data + 'T00:00:00'); 
             }
             return new Date(data);
         };
@@ -67,17 +65,16 @@ function PainelControle() {
         d2.setHours(0, 0, 0, 0);
 
         const diffTime = d1 - d2;
+
         return Math.round(diffTime / (1000 * 60 * 60 * 24));
     }
 
     const chaveBack = chavesStatus[kpiAtiva];
-    // Ajuste no acesso à lista dentro de 'listagem_painel_controle'
     const listaOrdens = servicos?.listagem_painel_controle?.[chaveBack]?.ordens_de_servico || [];
 
     return (
         <Layout ativo="painel">
             <div className="d-flex flex-column">
-                {/* CABECALHO */}
                 <div className="d-flex justify-content-between align-items-center mb-4">
                     <div className="d-flex flex-column">
                         <h2 className="m-0">Painel de Controle</h2>
@@ -102,7 +99,6 @@ function PainelControle() {
                 />
                 <ModalEntradaVeiculo isOpen={mostrarModalEntrada} onClose={() => setMostrarModalEntrada(false)} />
 
-                {/* KPIS - Ajuste de design para não quebrar no iPad e caminho do JSON */}
                 <div className="d-flex gap-3">
                     {Object.keys(chavesStatus).map((id) => {
                         const dadosStatus = servicos?.listagem_painel_controle?.[chavesStatus[id]];
@@ -110,26 +106,24 @@ function PainelControle() {
                         const ordensInternas = dadosStatus?.ordens_de_servico || [];
 
                         let corKpi = "verde";
+                        let temVermelho = false;
+                        let temAmarelo = false;
 
-                        if (id !== "entrada" && id !== "finalizados") {
-                            let temVermelho = false;
-                            let temAmarelo = false;
-
-                            ordensInternas.forEach(os => {
-                                // Lógica de cores agora baseada no campo 'dias_espera' do JSON
+                        ordensInternas.forEach(os => {
+                            if (id === "entrada") {
+                                const dias = calcularDias(os.data_entrada_prevista, null);
+                                if (dias < 0) temVermelho = true;
+                            } else if (id !== "finalizados") {
                                 if (os.dias_espera > 6) {
                                     temVermelho = true;
                                 } else if (os.dias_espera >= 3) {
                                     temAmarelo = true;
                                 }
-                            });
-
-                            if (temVermelho) {
-                                corKpi = "vermelho";
-                            } else if (temAmarelo) {
-                                corKpi = "amarelo";
                             }
-                        }
+                        });
+
+                        if (temVermelho) corKpi = "vermelho";
+                        else if (temAmarelo) corKpi = "amarelo";
 
                         return (
                             <div key={id} className="flex-fill" style={{ minWidth: 0 }}>
@@ -154,8 +148,13 @@ function PainelControle() {
                         let corCard = "verde";
                         let icone = null;
 
-                        // Lógica de cores do card baseada nos dias_espera vindos do backend
-                        if (kpiAtiva !== "entrada" && kpiAtiva !== "finalizados") {
+                        if (kpiAtiva === "entrada") {
+                            const dias = calcularDias(os.data_entrada_prevista, null);
+                            if (dias < 0) {
+                                corCard = "vermelho";
+                                icone = <i className='bx bx-time-five text-danger fs-3'></i>;
+                            }
+                        } else if (kpiAtiva !== "finalizados") {
                             if (os.dias_espera > 6) {
                                 corCard = "vermelho";
                                 icone = <i className='bxr bx-alert-triangle text-danger fs-3'></i>;
@@ -187,8 +186,17 @@ function PainelControle() {
                                 <div className="mb-3 small">
                                     {kpiAtiva === 'entrada' && (
                                         <>
-                                            <div><b>Dias restantes para Entrada:</b> <b className={`cor-fonte-${corCard}`}>{calcularDias(os.data_entrada_prevista, null)} Dias</b></div>
                                             <div><b>Data Agendada:</b> {os.data_entrada_prevista ? new Date(os.data_entrada_prevista + 'T00:00:00').toLocaleDateString('pt-BR') : 'N/A'}</div>
+                                            <div>
+                                                {calcularDias(os.data_entrada_prevista, null) > 0  && (
+                                                <b>Dias restantes para Entrada:</b>
+                                                )}
+                                                <b className={`cor-fonte-${corCard}`}>
+                                                    {calcularDias(os.data_entrada_prevista, null) < 0 
+                                                        ? `Em atraso ${Math.abs(calcularDias(os.data_entrada_prevista, null))} dias` 
+                                                        : `${calcularDias(os.data_entrada_prevista, null)} Dias`}
+                                                </b>
+                                            </div>
                                         </>
                                     )}
 

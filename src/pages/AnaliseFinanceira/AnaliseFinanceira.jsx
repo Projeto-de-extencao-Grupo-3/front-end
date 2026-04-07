@@ -8,8 +8,17 @@ import CalendarIcon from "../../assets/icons/CalendarIcon.png";
 import "./AnaliseFinanceira.css";
 
 function AnaliseFinanceira() {
+    // funcionalidade puxar data atual para filtro inicial
+    const agora = new Date();
+    const ano = agora.getFullYear();
+    const mes = String(agora.getMonth() + 1).padStart(2, '0');
+
+    const anoMesAtual = `${ano}-${mes}`;
+
+
+
     const [financeiro, setFinanceiro] = useState(null);
-    const [anoMes, setAnoMes] = useState("2026-03");
+    const [anoMes, setAnoMes] = useState(anoMesAtual);
     const [mostrarModalFiltro, setMostrarModalFiltro] = useState(false);
     const navigate = useNavigate();
 
@@ -37,18 +46,6 @@ function AnaliseFinanceira() {
         fetchDadosFinanceiros();
     }, [anoMes]);
 
-    function _calcularDiferencaDias(dataMaior, dataMenor) {
-        const formatarParaLocal = (data) => {
-            if (!data) return new Date();
-            if (typeof data === 'string' && data.includes('-')) return new Date(data + 'T00:00:00');
-            return new Date(data);
-        };
-        const d1 = formatarParaLocal(dataMaior);
-        const d2 = formatarParaLocal(dataMenor);
-        d1.setHours(0, 0, 0, 0);
-        d2.setHours(0, 0, 0, 0);
-        return Math.round((d1 - d2) / (1000 * 60 * 60 * 24));
-    }
 
     function definirCorKpi(listaOrdens) {
         if (!listaOrdens || listaOrdens.length === 0) return "verde";
@@ -98,28 +95,18 @@ function AnaliseFinanceira() {
                     <div className="col-12 col-md-4 d-flex flex-column gap-3">
                         {(() => {
                             const dadosPagto = financeiro?.listagem_analise_financeira?.[categorias.pagamento] || {};
-                            const dadosNF = financeiro?.listagem_analise_financeira?.[categorias.notaFiscal] || {};
-                            
+
                             const ordensPagto = dadosPagto.ordens_de_servicos || [];
-                            const ordensNF = dadosNF.ordens_de_servicos || [];
 
-                            let valorTotalSoma = 0;
-                            for (let os of ordensPagto) {
-                                valorTotalSoma = valorTotalSoma + (os.valor_total || 0);
-                            }
-                            for (let os of ordensNF) {
-                                valorTotalSoma = valorTotalSoma + (os.valor_total || 0);
-                            }
 
-                            const qtdTotal = ordensPagto.length + ordensNF.length;
-                            const corKpi = definirCorKpi([...ordensPagto, ...ordensNF]);
+                            const corKpi = definirCorKpi(ordensPagto);
 
                             return (
                                 <>
                                     <KpiStatus
                                         cor={corKpi}
                                         status="Total de Serviços a receber"
-                                        valor={`R$ ${valorTotalSoma.toLocaleString('pt-BR')} (${qtdTotal} Serviços)`}
+                                        valor={`R$ ${dadosPagto?.total_valor?.toLocaleString('pt-BR') || '0,00'} (${dadosPagto?.quantidade_servicos_pagamento_pendentes || 0} Serviços)`}
                                     />
                                     <p className="texto-raia m-0">Pagamento com pendência</p>
                                     {ordensPagto.map(os => (
