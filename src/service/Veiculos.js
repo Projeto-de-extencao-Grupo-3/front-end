@@ -30,7 +30,10 @@ function Veiculos() {
         }
     }
 
-    return { listarVeiculos, adicionarVeiculos }
+   
+
+     return { listarVeiculos, adicionarVeiculos }
 }
+
 
 export default Veiculos

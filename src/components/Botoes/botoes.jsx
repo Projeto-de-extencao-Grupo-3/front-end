@@ -126,7 +126,12 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico }) {
             {/* MODAIS */}
             {showModal && <ConfirmacaoAutorizacao onClose={() => setShowModal(false)} placa={placa} ordemServicoDados={ordemServicoDados} idOrdemServico={idOrdemServico}/>}
 
-            <VeiculoEEmpresa aberto={modalVeiculo} aoFechar={() => setModalVeiculo(false)} />
+            <VeiculoEEmpresa 
+             isOpen={modalVeiculo}
+             onClose ={() => setModalVeiculo(false)}
+             dadosRecebidos={ordemServicoDados}
+             />
+
             <EntradaVeiculo aberto={modalEntrada} aoFechar={() => setModalEntrada(false)} />
 
             <ModalConfirmacao

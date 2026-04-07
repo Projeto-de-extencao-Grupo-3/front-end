@@ -1,10 +1,11 @@
 import "./veiculo&empresa.css";
 
-function VeiculoEEmpresa({ aberto, aoFechar }) {
-    if (!aberto) return null;
+function VeiculoEEmpresa({ isOpen, onClose, dadosRecebidos }) {
+   
+    if (!isOpen) return null;
 
     return (
-        <div className="fundo-modal" onClick={aoFechar}>
+        <div className="fundo-modal" onClick={onClose}>
             <div className="caixa-modal" onClick={(e) => e.stopPropagation()}>
 
                 <h1 className="titulo-modal">
@@ -20,30 +21,30 @@ function VeiculoEEmpresa({ aberto, aoFechar }) {
                     <div className="linha-dupla">
                         <div className="campo">
                             <label>Marca*</label>
-                            <div className="valor-campo">Marcopolo</div>
+                            <div className="valor-campo">{dadosRecebidos.marca}</div>
                         </div>
 
                         <div className="campo">
                             <label>Modelo*</label>
-                            <div className="valor-campo">G8</div>
+                            <div className="valor-campo">{dadosRecebidos.modelo} </div>
                         </div>
                     </div>
 
                     <div className="linha-dupla">
                         <div className="campo">
                             <label>Placa*</label>
-                            <div className="valor-campo">ABC-1234</div>
+                            <div className="valor-campo">{dadosRecebidos.placa}</div>
                         </div>
 
                         <div className="campo">
                             <label>Prefixo*</label>
-                            <div className="valor-campo">1200</div>
+                            <div className="valor-campo">{dadosRecebidos.prefixo}</div>
                         </div>
                     </div>
 
                     <div className="campo">
                         <label>Ano/Modelo*</label>
-                        <div className="valor-campo">2020</div>
+                        <div className="valor-campo">{dadosRecebidos.ano}</div>
                     </div>
                 </div>
 
@@ -56,24 +57,24 @@ function VeiculoEEmpresa({ aberto, aoFechar }) {
                     <div className="linha-dupla">
                         <div className="campo">
                             <label>CPF/CNPJ*</label>
-                            <div className="valor-campo">94065670000130</div>
+                            <div className="valor-campo">{dadosRecebidos.cpf}</div>
                         </div>
 
                         <div className="campo">
                             <label>Nome/Razão Social*</label>
-                            <div className="valor-campo">Sussantur Turismo LTDA</div>
+                            <div className="valor-campo">{dadosRecebidos.nome}</div>
                         </div>
                     </div>
 
                     <div className="linha-dupla">
                         <div className="campo">
                             <label>Telefone*</label>
-                            <div className="valor-campo">(11) 91234-3210</div>
+                            <div className="valor-campo">{dadosRecebidos.telefone}</div>
                         </div>
 
                         <div className="campo">
                             <label>Email*</label>
-                            <div className="valor-campo">cliente@mail.com</div>
+                            <div className="valor-campo">{dadosRecebidos.email}</div>
                         </div>
                     </div>
 
@@ -86,7 +87,7 @@ function VeiculoEEmpresa({ aberto, aoFechar }) {
                     </div>
                 </div>
 
-                <button className="botao-fechar" onClick={aoFechar}>
+                <button className="botao-fechar" onClick={onClose}>
                     Fechar
                 </button>
 
