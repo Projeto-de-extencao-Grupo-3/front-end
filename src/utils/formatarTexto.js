@@ -1,17 +1,13 @@
 export function formatarTexto(texto) {
     if (!texto) return "";
-    console.log("Input original:", texto);
-    console.log("Array de bytes:", new TextEncoder().encode(texto));
-
     let textoCorrigido = texto;
 
     try {
         // Windows
         textoCorrigido = decodeURIComponent(escape(texto));
-    } catch (e) {
+    } catch {
         // Linux/Mac
         textoCorrigido = texto; 
-        console.warn("Decodificação falhou, usando texto original:", e);
     }
 
     return textoCorrigido
