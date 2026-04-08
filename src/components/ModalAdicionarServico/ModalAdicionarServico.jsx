@@ -8,7 +8,6 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
     const [aba, setAba] = useState("FUNILARIA");
 
     const [formData, setFormData] = useState({
-        fk_ordem_servico: salvarNaOrdem,
         preco_cobrado: "",
         parte_veiculo: "",
         lado_veiculo: "",

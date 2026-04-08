@@ -26,3 +26,13 @@ export const formatarMoedaBR = (valor) => {
         currency: "BRL"
     });
 };
+
+
+
+export function formatarDataBR(data) {
+    if (!data) return "";
+
+    const date = new Date(data);
+
+    return date.toLocaleDateString("pt-BR");
+}

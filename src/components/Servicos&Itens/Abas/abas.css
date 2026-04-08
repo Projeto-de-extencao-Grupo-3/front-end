@@ -68,12 +68,22 @@
     width: 220px;
 }
 
+.title.qtd{
+    width: 80px;
+}
+
+.dado.qtd{
+    width: 80px;
+}
+
 .dado.codigo{
     width: 60px;
 }
 .dado.item{
     width: 220px;
 }
+
+
 
 /* ABA DE SERVIÇOS */
 

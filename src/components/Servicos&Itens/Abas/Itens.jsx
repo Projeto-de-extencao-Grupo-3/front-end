@@ -62,7 +62,7 @@ function Itens({ dados, pagina, carregarOrdem, placa }) {
                         <th className="title codigo">ID Est.</th>
                         <th className="title item">Item</th>
                         <th className="title">Visibilidade</th>
-                        <th className="title">Quantidade</th>
+                        <th className="title qtd">Quant.</th>
                         <th className="title">Preço Unid.</th>
                         <th className="title">Preço Total</th>
                         <th className="title">Saída Est.</th>
@@ -75,7 +75,7 @@ function Itens({ dados, pagina, carregarOrdem, placa }) {
                             <td className="dado codigo">{formatarTexto(item.id_produto_estoque)}</td>
                             <td className="dado item">{formatarTexto(item.nome_produto)}</td>
                             <td className="dado">{item.visivel_orcamento_cliente === true ? "Público" : "Privado"}</td>
-                            <td className="dado">{item.quantidade}</td>
+                            <td className="dado qtd">{item.quantidade}</td>
                             <td className="dado">{formatarMoedaBR(item.preco_peca)}</td>
                             <td className="dado">{formatarMoedaBR(item.preco_peca * item.quantidade)}</td>
                             <td className="dado">{item.baixado === true ? "Sim" : "Não"}</td>

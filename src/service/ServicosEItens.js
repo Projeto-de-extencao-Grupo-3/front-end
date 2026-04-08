@@ -25,9 +25,9 @@ function ServicosItens() {
         }
     };
 
-    const adicionarServico = async (dadosNecessarios) => {
+    const adicionarServico = async (idOrdemServico, dadosNecessarios) => {
         try {
-            const response = await api.post(`/jornada/${dadosNecessarios.fk_ordem_servico}/servicos`, dadosNecessarios);
+            const response = await api.post(`/jornada/${idOrdemServico}/servicos`, dadosNecessarios);
             console.log("Dados recebidos para adicionar serviço:", dadosNecessarios);
             exibirAlertaSucesso("Serviço adicionado com sucesso!");
             return response.data;
@@ -37,9 +37,9 @@ function ServicosItens() {
         }
     };
 
-    const adicionarProduto = async (dadosNecessarios) => {
+    const adicionarProduto = async ( idOrdemServico, dadosNecessarios) => {
         try {
-            const response = await api.post(`/jornada/${dadosNecessarios.fk_ordem_servico}/produtos`, dadosNecessarios);
+            const response = await api.post(`/jornada/${idOrdemServico}/produtos`, dadosNecessarios);
             exibirAlertaSucesso("Produto adicionado com sucesso!");
             return response.data;
         } catch (error) {
@@ -63,7 +63,7 @@ function ServicosItens() {
 
     const editarProduto = async (idProduto, dadosEditados) => {
         try {
-            const response = await api.put(`/itens-produtos/${idProduto}`, dadosEditados);
+            const response = await api.put(`/jornada/${idProduto}/produtos`, dadosEditados);
 
             exibirAlertaSucesso("Produto atualizado com sucesso!");
             return response.data;

@@ -15,7 +15,6 @@ function ModalAdicionarItem({ isOpen, onClose, placa, onSave, salvarNaOrdem }) {
     const { idOrdemServico } = useParams();
 
     const [formData, setFormData] = useState({
-        fk_ordem_servico: salvarNaOrdem,
         fk_produto: "",
         quantidade: "",
         preco_produto: ""

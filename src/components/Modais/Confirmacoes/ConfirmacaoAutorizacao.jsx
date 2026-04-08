@@ -7,9 +7,11 @@ import TempoEstimado from "../TempoEstimado";
 
 import "./ConfirmacaoAutorizacao.css";
 
-function ConfirmacaoAutorizacao({ onClose, _onConfirm, placa, ordemServicoDados }) {
+function ConfirmacaoAutorizacao({ aberto, onClose, onConfirm, placa, ordemServicoDados }) {
     const navigate = useNavigate();
     const { idOrdemServico } = useParams();
+
+    if (!aberto) return null;
 
     return (
         <div className="modal-overlay">
@@ -32,10 +34,7 @@ function ConfirmacaoAutorizacao({ onClose, _onConfirm, placa, ordemServicoDados 
 
                 <div className="confirmacao-buttons">
                     <button className="btn-confirmar" onClick={() => {
-                        navigate(`/painelControle/aguardandoVaga/${idOrdemServico}`, {
-                            state: { veiculoDados: ordemServicoDados }
-                        });
-                        onClose();
+                        onConfirm();
                     }}>Confirmar</button>
 
                     <button className="btn-cancelar" onClick={onClose}>Cancelar</button>

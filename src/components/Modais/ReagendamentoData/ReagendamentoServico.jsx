@@ -3,7 +3,7 @@ import { useState } from "react";
 import "./ReagendamentoServico.css";
 import CalendarIcon from "../../../assets/icons/CalendarIcon.png";
 
-function ReagendamentoServico({ aberto, aoConfirmar, aoCancelar }) {
+function ReagendamentoServico({ aberto, aoConfirmar, aoCancelar, mensagem }) {
     const [data, setData] = useState("");
 
     if (!aberto) return null;
@@ -14,11 +14,11 @@ function ReagendamentoServico({ aberto, aoConfirmar, aoCancelar }) {
 
                 <div className="rs-cabecalho">
                     <img className="rs-icone" src={CalendarIcon} alt="" />
-                    <h2 className="rs-titulo">Reagendamento de Serviço</h2>
+                    <h2 className="rs-titulo">{mensagem}</h2>
                 </div>
 
                 <div className="rs-campo">
-                    <label className="rs-label">Nova data de Entrega*</label>
+                    <label className="rs-label">Data de Entrega*</label>
                     <div className="rs-input-wrapper">
                         <input
                             className="rs-input"
