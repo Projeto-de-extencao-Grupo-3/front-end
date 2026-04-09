@@ -9,7 +9,7 @@ import EditarQuantidadeEstoque from "../../components/ModalNovoItem/EditarQuanti
 import Produtos from "../../service/Produtos.js";
 
 function ControleEstoque() {
-    const { produtos, excluirProduto, adicionarProduto, atualizarProduto, atualizarQuantidadeEstoque } = Produtos();
+    const { produtos, excluirProduto, adicionarProduto, atualizarProduto, realizarBaixaEstoqueProduto } = Produtos();
 
     const [produtosParaEditar, setProdutosParaEditar] = useState(null);
     const [itemParaDesativar, setItemParaDesativar] = useState(null);
@@ -32,6 +32,7 @@ function ControleEstoque() {
     const categorias = [
         { id: "FUNILARIA", label: "FUNILARIA", icon: "bx-gear" },
         { id: "PINTURA", label: "PINTURA", icon: "bx-paint-roll" },
+        { id: "MECANICA", label: "MECANICA", icon: "bx-spanner" },
         { id: "OUTROS", label: "OUTROS", icon: "bx-package" },
     ];
 
@@ -84,12 +85,7 @@ function ControleEstoque() {
         try {
             const id = itemParaAjustarEstoque.id_peca || itemParaAjustarEstoque.id;
 
-            const dadosParaEnviar = {
-                id: id,
-                quantidade_estoque: parseInt(novaQuantidade)
-            };
-
-            await atualizarQuantidadeEstoque(id, dadosParaEnviar);
+            await realizarBaixaEstoqueProduto(id);
             setEditarQuantidadeEstoque(false);
             setItemParaAjustarEstoque(null);
         } catch (error) {
@@ -101,7 +97,7 @@ function ControleEstoque() {
         <Layout ativo={"estoque"}>
             <div className="header-clientes">
                 <div>
-                    <h1>Catálogo de Serviços</h1>
+                    <h1>Catálogo do Estoque</h1>
                     <p>Visão geral dos serviços/estoque</p>
                 </div>
                 <div className="d-flex gap-3 align-items-center">
