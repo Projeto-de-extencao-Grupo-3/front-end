@@ -29,6 +29,7 @@ function Finalizado() {
             console.error(e);
         }
     };
+    console.log("Dados do ticket:", ticket);
 
     useEffect(() => {
         carregarOrdem();

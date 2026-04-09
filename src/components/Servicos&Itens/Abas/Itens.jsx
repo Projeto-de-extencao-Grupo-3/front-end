@@ -81,20 +81,19 @@ function Itens({ dados, pagina, carregarOrdem, placa }) {
                             <td className="dado">{item.baixado === true ? "Sim" : "Não"}</td>
                             <td className="dado">
                                 <div className="box-options">
-                                    {pagina === "orcamento" ?
+                                    {pagina === "orcamento" ? (
                                         <>
                                             {!item.baixado && (
-                                                <>
-                                                    <div
-                                                        className="icon"
-                                                        style={{ backgroundImage: `url(${iconEdit})` }}
-                                                        onClick={() => {
-                                                            setProdutoSelecionado(item);
-                                                            setModalEditarProduto(true);
-                                                        }}
-                                                    ></div>
-                                                </>
+                                                <div
+                                                    className="icon"
+                                                    style={{ backgroundImage: `url(${iconEdit})` }}
+                                                    onClick={() => {
+                                                        setProdutoSelecionado(item);
+                                                        setModalEditarProduto(true);
+                                                    }}
+                                                ></div>
                                             )}
+
                                             <div
                                                 className="icon"
                                                 style={{ backgroundImage: `url(${iconLixo})` }}
@@ -104,6 +103,19 @@ function Itens({ dados, pagina, carregarOrdem, placa }) {
                                                 }}
                                             ></div>
 
+                                            {pagina === "produzir" && (
+                                                <div
+                                                    className="icon"
+                                                    style={{ backgroundImage: `url(${iconBox})` }}
+                                                    onClick={() => {
+                                                        setProdutoSelecionado(item);
+                                                        setModalSaida(true);
+                                                    }}
+                                                ></div>
+                                            )}
+                                        </>
+                                    ) : (
+                                        pagina === "produzir" && (
                                             <div
                                                 className="icon"
                                                 style={{ backgroundImage: `url(${iconBox})` }}
@@ -112,17 +124,8 @@ function Itens({ dados, pagina, carregarOrdem, placa }) {
                                                     setModalSaida(true);
                                                 }}
                                             ></div>
-                                        </>
-                                        :
-                                        <div
-                                            className="icon"
-                                            style={{ backgroundImage: `url(${iconBox})` }}
-                                            onClick={() => {
-                                                setProdutoSelecionado(item);
-                                                setModalSaida(true);
-                                            }}
-                                        ></div>
-                                    }
+                                        )
+                                    )}
                                 </div>
                             </td>
                         </tr>
