@@ -49,6 +49,12 @@ function PainelControle() {
         fetchServicos();
     }, []);
 
+    function formatarData(data) {
+        if (!data) return 'N/A';
+        const dataObj = new Date(data + 'T00:00:00');
+        return dataObj.toLocaleDateString('pt-BR');
+    }
+
     function calcularDias(dataMaior, dataMenor) {
         const formatarParaLocal = (data) => {
             if (!data) return new Date();
@@ -186,7 +192,7 @@ function PainelControle() {
                                 <div className="mb-3 small">
                                     {kpiAtiva === 'entrada' && (
                                         <>
-                                            <div><b>Data Agendada:</b> {os.data_entrada_prevista ? new Date(os.data_entrada_prevista + 'T00:00:00').toLocaleDateString('pt-BR') : 'N/A'}</div>
+                                            <div><b>Data Agendada:</b> {formatarData(os.data_entrada_prevista) }</div>
                                             <div>
                                                 {calcularDias(os.data_entrada_prevista, null) > 0  && (
                                                 <b>Dias restantes para Entrada:</b>
@@ -217,6 +223,7 @@ function PainelControle() {
                                     {kpiAtiva === 'finalizados' && (
                                         <>
                                             <div><b>Total do Serviço:</b> R${os.valor_total?.toLocaleString('pt-BR') || '0,00'}</div>
+                                            <div><b>Data de Saída: </b>{formatarData(os.data_saida_efetiva)}</div>
                                             <div><b>Duração do Serviço:</b> <b className="cor-fonte-verde">{calcularDias(os.data_saida_efetiva, os.data_entrada_efetiva)} Dias</b></div>
                                         </>
                                     )}
