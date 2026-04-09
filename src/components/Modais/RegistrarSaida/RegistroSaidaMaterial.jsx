@@ -94,6 +94,7 @@ function RegistroSaidaMaterial({ aberto, aoConfirmar, aoCancelar, produto }) {
                 </div>
 
                 {/* SEÇÃO ESTOQUE */}
+                { !jaBaixado && (
                 <div className="rsm-secao">
                     <div className="rsm-cabecalho-secao">
                         <span className="rsm-secao-icone">$</span>
@@ -116,6 +117,8 @@ function RegistroSaidaMaterial({ aberto, aoConfirmar, aoCancelar, produto }) {
                         <strong>{insuficiente ? "Insuficiente" : `${resultado} Unidades`}</strong>
                     </div>
                 </div>
+                )
+                }
 
                 <div className="rsm-botoes">
                     <button

@@ -51,7 +51,11 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
 
                     <div className="datas">
                         <span>{formatarDataBR(ticket.data_entrada_efetiva)}</span>
-                        <span>{formatarDataBR(ticket.data_saida_prevista)}</span>
+                        {pagina === "finalizar" ? (
+                            <span>{formatarDataBR(ticket.data_saida_efetiva)}</span>
+                        ) : (
+                            <span>{formatarDataBR(ticket.data_saida_prevista)}</span>
+                        )   }
                     </div>
                 </div>
                 : null

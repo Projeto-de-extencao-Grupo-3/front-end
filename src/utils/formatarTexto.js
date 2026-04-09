@@ -32,7 +32,6 @@ export const formatarMoedaBR = (valor) => {
 export function formatarDataBR(data) {
     if (!data) return "";
 
-    const date = new Date(data);
-
-    return date.toLocaleDateString("pt-BR");
+    const [ano, mes, dia] = data.split("-");
+    return `${dia}/${mes}/${ano}`;
 }

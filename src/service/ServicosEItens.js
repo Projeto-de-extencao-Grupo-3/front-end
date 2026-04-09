@@ -50,7 +50,7 @@ function ServicosItens() {
 
     const editarServico = async (idServico, dadosEditados) => {
         try {
-            const response = await api.put(`/itens-servicos/${idServico}`, dadosEditados);
+            const response = await api.put(`/jornada/${idServico}/servicos`, dadosEditados);
 
             exibirAlertaSucesso("Serviço atualizado com sucesso!");
             return response.data;
@@ -76,7 +76,7 @@ function ServicosItens() {
 
     const excluirServico = async (idServico) => {
         try {
-            const _response = await api.delete(`/itens-servicos/${idServico}`);
+            const _response = await api.delete(`/jornada/${idServico}/servicos`);
             exibirAlertaSucesso("Serviço excluído com sucesso!");
             return true;
         } catch (error) {
@@ -88,7 +88,7 @@ function ServicosItens() {
 
     const excluirProduto = async (idProduto) => {
         try {
-            const _response = await api.delete(`/itens-produtos/${idProduto}`);
+            const _response = await api.delete(`/jornada/${idProduto}/produtos`);
             exibirAlertaSucesso("Produto excluído com sucesso!");
             return true;
         } catch (error) {

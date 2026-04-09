@@ -28,13 +28,13 @@ function GestaoClientes() {
 
     const handleFinalizarCadastroTotal = async (dadosEndereco) => {
         try {
-            const responseEndereco = await api.post('/enderecos', dadosEndereco);
+            //const responseEndereco = await api.post('/enderecos', dadosEndereco);
+            //const idCapturado = responseEndereco.data.idEndereco || responseEndereco.data.id_endereco;
+            //const enderecoComId = { id_endereco: idCapturado };
 
-            const idCapturado = responseEndereco.data.idEndereco || responseEndereco.data.id_endereco;
+            dadosClienteTemp.endereco = dadosEndereco; // Adiciona o endereço ao objeto do cliente 
 
-            const enderecoComId = { id_endereco: idCapturado };
-
-            await adicionarCliente(dadosClienteTemp, enderecoComId);
+            await adicionarCliente(dadosClienteTemp);
 
             setMostrarModalEndereco(false);
         } catch (error) {
