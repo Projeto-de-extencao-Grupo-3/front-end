@@ -17,16 +17,16 @@ function Clientes() {
         }
     };
 
-    const adicionarCliente = async (dadosDoCliente, dadosDoEndereco) => {
+    const adicionarCliente = async (dados) => {
         try {
             const payload = {
-                nome: dadosDoCliente.nome,
-                cpf_cnpj: dadosDoCliente.cpf_cnpj,
-                telefone: dadosDoCliente.telefone,
-                email: dadosDoCliente.email,
-                tipo_cliente: dadosDoCliente.tipo_cliente === "Pessoa Física" ? "PESSOA_FISICA" : "PESSOA_JURIDICA",
+                nome: dados.nome,
+                cpf_cnpj: dados.cpf_cnpj,
+                telefone: dados.telefone,
+                email: dados.email,
+                tipo_cliente: dados.tipo_cliente === "Pessoa Física" ? "PESSOA_FISICA" : "PESSOA_JURIDICA",
                 fk_oficina: 1,
-                fk_endereco: Number(dadosDoEndereco.id_endereco)
+                endereco: dados.endereco
             };
 
             const response = await api.post("/clientes", payload);
