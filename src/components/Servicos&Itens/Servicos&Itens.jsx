@@ -3,7 +3,7 @@ import { useState } from "react";
 import Servicos from "./Abas/Servicos";
 import Itens from "./Abas/Itens";
 import ModalAdicionarServico from "../ModalAdicionarServico/ModalAdicionarServico";
-import { formatarTexto, formatarMoedaBR , formatarDataBR } from "../../utils/formatarTexto.js";
+import { formatarDataBR } from "../../utils/formatarTexto.js";
 
 import ModalAdicionarItem from "../ModalAdicionarItem/ModalAdicionarItem";
 import ServicosEItensLogic from "../../service/ServicosEItens.js";

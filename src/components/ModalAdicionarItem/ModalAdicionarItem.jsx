@@ -5,7 +5,7 @@ import ServicosEItensLogic from "../../service/ServicosEItens.js";
 import { useParams } from "react-router-dom";
 import { formatarTexto } from "../../utils/formatarTexto.js";
 
-function ModalAdicionarItem({ isOpen, onClose, placa, onSave, salvarNaOrdem }) {
+function ModalAdicionarItem({ isOpen, onClose, placa, onSave, _salvarNaOrdem }) {
 
     const { buscarProdutos } = ServicosEItensLogic();
 
