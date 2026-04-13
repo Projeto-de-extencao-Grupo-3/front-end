@@ -1,16 +1,37 @@
 import { createPortal } from "react-dom";
+import { useState, useEffect } from "react";
 import "./RegistroSaidaMaterial.css";
+import ListarQuantidade from "../../../service/Produtos"; // Mantive para a busca inicial
 
-function RegistroSaidaMaterial({ aberto, aoConfirmar, aoCancelar, dados }) {
+function RegistroSaidaMaterial({ aberto, aoConfirmar, aoCancelar, produto }) {
+    const { listarProdutosById } = ListarQuantidade();
+    const [infoDoProdutoEstoque, setInfoDoProdutoEstoque] = useState(null);
+
+    const infoDoProdutoEstoqueGet = async () => {
+        if (!produto) return;
+        try {
+            const dados = await listarProdutosById(produto.id_produto_estoque);
+            setInfoDoProdutoEstoque({ ...dados });
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    useEffect(() => {
+        if (aberto) {
+            infoDoProdutoEstoqueGet();
+        }
+    }, [produto, aberto]);
+
     if (!aberto) return null;
 
-    // dados esperados:
-    // { codigo, itemProduto, visibilidade, quantidadeSaida, precoPorUnidade, quantidadeEstoque }
-
-    const qtdSaida = Number(dados?.quantidadeSaida || 0);
-    const qtdEstoque = Number(dados?.quantidadeEstoque || 0);
-    const resultado = qtdEstoque - qtdSaida;
+    const qtdSaida = Number(produto?.quantidade || 0);
+    const qtdEstoque = Number(infoDoProdutoEstoque?.quantidade_estoque || 0);
+    const resultado = qtdEstoque - qtdSaida; // Essa é a nova quantidade de estoque
     const insuficiente = qtdSaida > qtdEstoque;
+
+    const jaBaixado = produto?.baixado === true; // Verifica se já foi dado baixa
+    const desabilitarBotao = insuficiente || jaBaixado;
 
     return createPortal(
         <div className="rsm-fundo" onClick={aoCancelar}>
@@ -26,7 +47,15 @@ function RegistroSaidaMaterial({ aberto, aoConfirmar, aoCancelar, dados }) {
                     </div>
                 )}
 
+                {jaBaixado && (
+                    <div className="rsm-alerta" style={{ backgroundColor: "#e3f2fd", color: "#0d47a1", borderLeftColor: "#0d47a1" }}>
+                        <span className="rsm-alerta-icone" style={{ backgroundColor: "#0d47a1" }}>i</span>
+                        A saída deste material já foi registrada anteriormente!
+                    </div>
+                )}
+
                 {/* SEÇÃO MATERIAL */}
+                {/* ... (Todo o seu HTML da Seção de Material fica igualzinho!) ... */}
                 <div className="rsm-secao">
                     <div className="rsm-cabecalho-secao">
                         <span className="rsm-secao-icone">☰</span>
@@ -36,11 +65,11 @@ function RegistroSaidaMaterial({ aberto, aoConfirmar, aoCancelar, dados }) {
                     <div className="rsm-linha-dupla">
                         <div className="rsm-campo rsm-campo-fixo">
                             <label>Codigo</label>
-                            <div className="rsm-valor">{dados?.codigo || "—"}</div>
+                            <div className="rsm-valor">{produto?.id_produto_estoque || "—"}</div>
                         </div>
                         <div className="rsm-campo">
                             <label>Item/Produto</label>
-                            <div className="rsm-valor">{dados?.itemProduto || "—"}</div>
+                            <div className="rsm-valor">{produto?.nome_produto || "—"}</div>
                         </div>
                     </div>
 
@@ -48,7 +77,7 @@ function RegistroSaidaMaterial({ aberto, aoConfirmar, aoCancelar, dados }) {
                         <label>Visibilidade</label>
                         <div className="rsm-radio-grupo">
                             <input type="radio" readOnly checked className="rsm-radio" />
-                            <span>{dados?.visibilidade || "Privado"}</span>
+                            <span>{produto?.visibilidade === 1 || produto?.visivel_orcamento ? "Público" : "Privado"}</span>
                         </div>
                     </div>
 
@@ -59,12 +88,13 @@ function RegistroSaidaMaterial({ aberto, aoConfirmar, aoCancelar, dados }) {
                         </div>
                         <div className="rsm-campo">
                             <label>Preço por Unidade (R$)</label>
-                            <div className="rsm-valor">R$ {dados?.precoPorUnidade || "0,00"}</div>
+                            <div className="rsm-valor">R$ {produto?.preco_peca || produto?.preco_venda || "0,00"}</div>
                         </div>
                     </div>
                 </div>
 
                 {/* SEÇÃO ESTOQUE */}
+                { !jaBaixado && (
                 <div className="rsm-secao">
                     <div className="rsm-cabecalho-secao">
                         <span className="rsm-secao-icone">$</span>
@@ -87,15 +117,16 @@ function RegistroSaidaMaterial({ aberto, aoConfirmar, aoCancelar, dados }) {
                         <strong>{insuficiente ? "Insuficiente" : `${resultado} Unidades`}</strong>
                     </div>
                 </div>
+                )
+                }
 
-                {/* BOTÕES */}
                 <div className="rsm-botoes">
                     <button
-                        className={`rsm-btn rsm-btn-confirmar ${insuficiente ? "rsm-btn-desabilitado" : ""}`}
-                        onClick={() => !insuficiente && aoConfirmar(dados)}
-                        disabled={insuficiente}
+                        className={`rsm-btn rsm-btn-confirmar ${desabilitarBotao ? "rsm-btn-desabilitado" : ""}`}
+                        onClick={() => !desabilitarBotao && aoConfirmar(produto, resultado)}
+                        disabled={desabilitarBotao}
                     >
-                        Confirmar
+                        {jaBaixado ? "Já Registrado" : "Confirmar"}
                     </button>
                     <button className="rsm-btn rsm-btn-cancelar" onClick={aoCancelar}>
                         Cancelar

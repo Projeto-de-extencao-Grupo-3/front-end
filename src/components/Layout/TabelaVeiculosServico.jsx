@@ -1,8 +1,10 @@
 import { useEffect, useState, useMemo } from 'react'; // ← adicionado useMemo
 import styles from "./TabelaVeiculos.module.css";
+import veiculosService from '../../service/Veiculos.js';
 // import { useNavigate } from 'react-router-dom';
 
 function TabelaServicos({ fromProduction }) {
+  const { buscarOrdensPorVeiculo } = veiculosService();
   const [servicos, setServicos]   = useState([]);
   const [loading, setLoading]     = useState(true);
   const [erro, setErro]           = useState(null);
@@ -21,23 +23,24 @@ function TabelaServicos({ fromProduction }) {
         setLoading(true);
         setErro(null);
  
-        const dados = [
-          { id: 1,  ordem: '#003', data: '10/11/2026', valor: 550.00, status: 'Em andamento' },
-          { id: 2,  ordem: '#004', data: '10/11/2026', valor: 550.00, status: 'Em andamento' },
-          { id: 3,  ordem: '#005', data: '10/11/2026', valor: 550.00, status: 'Em andamento' },
-          { id: 4,  ordem: '#006', data: '31/12/2025', valor: 550.00, status: 'Concluído'    },
-          { id: 5,  ordem: '#007', data: '31/12/2025', valor: 550.00, status: 'Concluído'    },
-          { id: 6,  ordem: '#008', data: '31/12/2025', valor: 550.00, status: 'Concluído'    },
-          { id: 7,  ordem: '#009', data: '10/09/2025', valor: 550.00, status: 'Concluído'    },
-          { id: 8,  ordem: '#010', data: '10/09/2025', valor: 550.00, status: 'Concluído'    },
-          { id: 9,  ordem: '#011', data: '10/09/2025', valor: 550.00, status: 'Concluído'    },
-          { id: 10, ordem: '#012', data: '10/06/2025', valor: 550.00, status: 'Concluído'    },
-          { id: 11, ordem: '#013', data: '10/06/2025', valor: 550.00, status: 'Concluído'    },
-          { id: 12, ordem: '#014', data: '10/06/2025', valor: 550.00, status: 'Concluído'    },
-        ];
-        setServicos(dados);
+        // const dados = [
+        //   { id: 1,  ordem: '#003', data: '10/11/2026', valor: 550.00, status: 'Em andamento' },
+        //   { id: 2,  ordem: '#004', data: '10/11/2026', valor: 550.00, status: 'Em andamento' },
+        //   { id: 3,  ordem: '#005', data: '10/11/2026', valor: 550.00, status: 'Em andamento' },
+        //   { id: 4,  ordem: '#006', data: '31/12/2025', valor: 550.00, status: 'Concluído'    },
+        //   { id: 5,  ordem: '#007', data: '31/12/2025', valor: 550.00, status: 'Concluído'    },
+        //   { id: 6,  ordem: '#008', data: '31/12/2025', valor: 550.00, status: 'Concluído'    },
+        //   { id: 7,  ordem: '#009', data: '10/09/2025', valor: 550.00, status: 'Concluído'    },
+        //   { id: 8,  ordem: '#010', data: '10/09/2025', valor: 550.00, status: 'Concluído'    },
+        //   { id: 9,  ordem: '#011', data: '10/09/2025', valor: 550.00, status: 'Concluído'    },
+        //   { id: 10, ordem: '#012', data: '10/06/2025', valor: 550.00, status: 'Concluído'    },
+        //   { id: 11, ordem: '#013', data: '10/06/2025', valor: 550.00, status: 'Concluído'    },
+        //   { id: 12, ordem: '#014', data: '10/06/2025', valor: 550.00, status: 'Concluído'    },
+        // ];
         // const dados = await buscarServicos(filtro);
         // setServicos(dados);
+        const dados = await buscarOrdensPorVeiculo();
+        setServicos(dados);
  
       } catch {
         setErro('Não foi possível carregar os serviços. Tente novamente.');

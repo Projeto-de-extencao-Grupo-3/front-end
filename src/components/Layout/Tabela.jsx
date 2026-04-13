@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom";
 import "./Tabela.css";
 
 function Tabela({ clientes, excluirCliente, editarCliente }) {
-    
+    const navigate = useNavigate();
+
     if (!clientes || clientes.length === 0) {
         return (
             <div className="text-center mt-5">
@@ -21,6 +23,7 @@ function Tabela({ clientes, excluirCliente, editarCliente }) {
                         <th>Telefone</th>
                         <th>Email</th>
                         <th>Tipo</th>
+                        <th>Veículos</th>
                         <th className="text-center">Opções</th>
                     </tr>
                 </thead>
@@ -42,7 +45,14 @@ function Tabela({ clientes, excluirCliente, editarCliente }) {
                                     {cliente.email || "N/A"}
                                 </td>
                                 <td>{cliente.tipoCliente || cliente.tipo_cliente}</td> 
-                                
+                                <td>
+                                    <button 
+                                        className="btn btn-outline-primary btn-sm"
+                                        onClick={() => navigate(`/clientes/veiculos/${idAtual}`)}
+                                        >
+                                        <i className='bx bx-car'></i> Ver Veículos
+                                    </button>
+                                </td>
                                 <td className="text-center">
                                     <div className="d-flex justify-content-center gap-3">
                                         <button 

@@ -1,34 +1,30 @@
-import { useState } from "react";
 import api from "./api";
-import { exibirAlertaErro, exibirAlertaSucesso } from './alertas';
+import { exibirAlertaErro } from './alertas';
 
 function Veiculos() {
-    const [_veiculos, setVeiculos] = useState([]);
-    const [_loading, setLoading] = useState(true);
-
-    const listarVeiculos = async () => {
+    const buscarVeiculosPorCliente = async (idCliente) => {
         try {
-            const response = await api.get("/veiculos");
-            setVeiculos(response.data);
+            const response = await api.get(`/veiculos/cliente/${idCliente}`);
+            console.log("Resposta da API:", response);
+            response.data.status = "Em produção";
+            return response.data;
         } catch (error) {
-            exibirAlertaErro("Erro ao buscar produtos.");
-            throw error
-        } finally {
-            setLoading(false);
+            exibirAlertaErro("Erro ao buscar veículos do cliente!");
+            console.error("Erro ao buscar veículos por cliente:", error);
+            throw error;
         }
     };
 
-    const adicionarVeiculos = async (dadosDoFormulario) => {
+    const buscarOrdensPorVeiculo = async (idVeiculo, periodo) => {
         try {
-            const response = await api.post("/veiculos", dadosDoFormulario);
-            setVeiculos(prevVeiculos => [...prevVeiculos, response.data]);
-            exibirAlertaSucesso("Produto adicionado com sucesso!");
+            const response = await api.get(`/ordens/veiculo/${idVeiculo}?intervalo=${periodo}`);
             return response.data;
         } catch (error) {
-            exibirAlertaErro("Erro ao adicionar produto.");
+            exibirAlertaErro("Erro ao buscar ordens do veículo!");
+            console.error("Erro ao buscar ordens do veículo:", error);
             throw error;
         }
-    }
+    };
 
    
 

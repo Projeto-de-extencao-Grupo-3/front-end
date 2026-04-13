@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Layout from "../../components/Layout/Layout";
 import StepperFluxo from "../../components/StepperFluxo/StepperFluxo";
 import ServicosEItens from "../../components/Servicos&Itens/Servicos&Itens";
@@ -28,7 +27,6 @@ function PagamentoPendentePecas() {
       <div className="painelteste">
         <ServicosEItens pagina={"analisar"} />
         <div className="teste2">
-          {/* Mantendo estático como você pediu */}
           <ResumoOrcamento pagina={"analisar"} />
           <Botoes pagina={"analisar1"} placa={placa} />
         </div>

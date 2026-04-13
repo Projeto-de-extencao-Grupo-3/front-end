@@ -12,7 +12,6 @@ function ModalDesativar({
     dados = [], // Array de objetos { label: "Nome", value: "Gabriel" }
     iconClass = "bx-user"
 }) {
-    console.log("Dados recebidos no Modal:", dados);
     if (!isOpen) return null;
 
     return (

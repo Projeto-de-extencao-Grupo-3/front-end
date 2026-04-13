@@ -58,3 +58,51 @@
     display: flex;
     gap: 0 3px;
 }
+
+/* ABA DE PRODUTOS */
+
+.title.codigo{
+    width: 60px;
+}
+.title.item{
+    width: 220px;
+}
+
+.title.qtd{
+    width: 80px;
+}
+
+.dado.qtd{
+    width: 80px;
+}
+
+.dado.codigo{
+    width: 60px;
+}
+.dado.item{
+    width: 220px;
+}
+
+
+
+/* ABA DE SERVIÇOS */
+
+.title.tipo{
+    width: 100px;
+}
+.title.parte{
+    width: 130px;
+}
+.title.lado{
+    width: 150px;
+}
+
+.dado.tipo{
+    width: 100px;
+}
+.dado.parte{
+    width: 130px;
+}
+.dado.lado{
+    width: 150px;
+}

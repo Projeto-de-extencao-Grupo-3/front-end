@@ -3,12 +3,13 @@ import { useState } from "react";
 import Servicos from "./Abas/Servicos";
 import Itens from "./Abas/Itens";
 import ModalAdicionarServico from "../ModalAdicionarServico/ModalAdicionarServico";
+import { formatarTexto, formatarMoedaBR , formatarDataBR } from "../../utils/formatarTexto.js";
+
 import ModalAdicionarItem from "../ModalAdicionarItem/ModalAdicionarItem";
 import ServicosEItensLogic from "../../service/ServicosEItens.js";
 
 function ServicosEItens({ pagina, ticket, atualizarLista }) {
     const { adicionarServico, adicionarProduto } = ServicosEItensLogic();
-    const [_dados, _setDados] = useState([]);
     const [abaAtiva, setAbaAtiva] = useState("servicos");
 
     const [mostrarModalServico, setMostrarModalServico] = useState(false);
@@ -19,27 +20,42 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
     const [modoItem, setModoItem] = useState("adicionar");
     const [itemVisualizar, setItemVisualizar] = useState(null);
 
+
     if (!ticket) {
         return <div className="resumo-container">Carregando...</div>;
     }
 
     return (
         <div className="resumo-container">
-            {pagina === "finalizar" ?
+            {pagina === "finalizar" || pagina === "produzir" ?
                 <div className="progresso-servico">
                     <div className="progresso-titulo">
                         <strong>Progresso do Serviço:</strong> Concluído!
                     </div>
 
                     <div className="linha-container">
-                        <div className="bolinha esquerda" />
-                        <div className="linha" />
-                        <div className="bolinha direita" />
+                        {pagina === "finalizar" ? (
+                            <>
+                                <div className="bolinha esquerda" />
+                                <div className="linha" />
+                                <div className="bolinha direita" />
+                            </>
+                        ) : (
+                            <>
+                                <div className="bolinha esquerda" />
+                                <div className="linha cinza" />
+                                <div className="bolinha direita cinza" />
+                            </>
+                        )}
                     </div>
 
                     <div className="datas">
-                        <span>01/03/2026</span>
-                        <span>10/03/2026</span>
+                        <span>{formatarDataBR(ticket.data_entrada_efetiva)}</span>
+                        {pagina === "finalizar" ? (
+                            <span>{formatarDataBR(ticket.data_saida_efetiva)}</span>
+                        ) : (
+                            <span>{formatarDataBR(ticket.data_saida_prevista)}</span>
+                        )   }
                     </div>
                 </div>
                 : null
@@ -95,6 +111,7 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
                 {abaAtiva === "servicos" ? (
                     <Servicos
                         dados={ticket.servicos}
+                        placa={ticket.veiculo}
                         pagina={pagina}
                         onVisualizar={(dados) => {
                             setServicoVisualizar(dados);
@@ -105,6 +122,7 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
                 ) : (
                     <Itens
                         dados={ticket.produtos}
+                        placa={ticket.veiculo}
                         pagina={pagina}
                         onVisualizar={(dados) => {
                             setItemVisualizar(dados);
@@ -118,11 +136,11 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
             <ModalAdicionarServico
                 isOpen={mostrarModalServico}
                 onClose={() => setMostrarModalServico(false)}
-                placa={ticket.placa}
+                placa={ticket.veiculo}
                 modo={modoServico}
                 servico={servicoVisualizar}
                 onSave={async (dados) => {
-                    await adicionarServico(dados);
+                    await adicionarServico(ticket.id_ordem_servico, dados);
                     await atualizarLista();
                 }}
                 salvarNaOrdem={ticket.id_ordem_servico}
@@ -131,12 +149,12 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
             <ModalAdicionarItem
                 isOpen={mostrarModalItem}
                 onClose={() => setMostrarModalItem(false)}
-                placa={ticket.placa}
+                placa={ticket.veiculo}
                 modo={modoItem}
                 item={itemVisualizar}
                 onSave={async (dados) => {
-                    await adicionarProduto(dados);
-                    await atualizarLista(); // 🔥
+                    await adicionarProduto(ticket.id_ordem_servico, dados);
+                    await atualizarLista();
                 }}
                 salvarNaOrdem={ticket.id_ordem_servico}
             />

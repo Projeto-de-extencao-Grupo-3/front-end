@@ -4,7 +4,7 @@ import './ModalAdicionar.css';
 function ModalAdicionar({ isOpen, onClose, onSave }) {
     const estadoInicial = {
         nome: "",
-        cpfCnpj: "",
+        cpf_cnpj: "",
         tipo: "PESSOA_FISICA",
         telefone: "",
         email: "",
@@ -72,8 +72,8 @@ function ModalAdicionar({ isOpen, onClose, onSave }) {
                                         <label className="form-label mb-1 text-dark fw-normal">CPF/CNPJ</label>
                                         <input
                                             type="text"
-                                            name="cpfCnpj"
-                                            value={formData.cpfCnpj}
+                                            name="cpf_cnpj"
+                                            value={formData.cpf_cnpj}
                                             onChange={handleChange}
                                             className="form-control bg-light border-0"
                                             placeholder="132913128381"

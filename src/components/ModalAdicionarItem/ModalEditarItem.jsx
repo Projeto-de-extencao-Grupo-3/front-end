@@ -1,67 +1,41 @@
 import { useState, useEffect } from "react";
 import OrdemServicoCard from "../ServicoCard/OrdemServicoCard";
 import "./ModalAdicionarItem.css";
-import ServicosEItensLogic from "../../service/ServicosEItens.js";
 import { useParams } from "react-router-dom";
 import { formatarTexto } from "../../utils/formatarTexto.js";
 
-function ModalAdicionarItem({ isOpen, onClose, placa, onSave, salvarNaOrdem }) {
-
-    const { buscarProdutos } = ServicosEItensLogic();
-
-    const [visibilidade, setVisibilidade] = useState(null);
-    const [produtos, setProdutos] = useState([]);
-    const [_produtoSelecionado, setProdutoSelecionado] = useState(null);
+function ModalEditarItem({ isOpen, onClose, placa, produto, onUpdate }) {
     const { idOrdemServico } = useParams();
 
     const [formData, setFormData] = useState({
+        id_item_produto: "",
         fk_ordem_servico: idOrdemServico,
         fk_produto: "",
+        nome_produto: "",
+        visibilidade: "",
         quantidade: "",
-        preco_produto: ""
+        preco_produto: "",
+        baixado: ""
     });
 
     useEffect(() => {
-        const carregarProdutos = async () => {
-            try {
-                const dados = await buscarProdutos();
-                setProdutos(dados || []);
-            } catch (error) {
-                console.log("Erro ao carregar produtos", error);
-            }
-        };
-        if (isOpen) {
-            carregarProdutos();
-        }
-    }, [isOpen]);
-
-
-    const handleSelecionarProduto = (e) => {
-        const idProduto = Number(e.target.value);
-        const produto = produtos.find(p => p.id_peca === idProduto);
-
         if (!produto) return;
 
-        setProdutoSelecionado(produto);
-        setVisibilidade(produto.visivel_orcamento ? "publico" : "privado");
-
-        setFormData(prev => ({
-            ...prev,
-            fk_produto: idProduto,
-            preco_produto: produto.preco_venda
-        }));
-    };
+        setTimeout(() => {
+            setFormData({
+                id_item_produto: produto.id_item_produto,
+                fk_ordem_servico: idOrdemServico,
+                fk_produto: produto.id_produto_estoque,
+                nome_produto: produto.nome_produto,
+                visibilidade: produto.visivel_orcamento === true ? 1 : 0,
+                quantidade: produto.quantidade,
+                preco_produto: produto.preco_peca,
+                baixado: produto.baixado
+            });
+        }, 50); 
+    }, [produto, idOrdemServico]);
 
     const handleClose = () => {
-        setVisibilidade(null);
-
-        setFormData({
-            fk_ordem_servico: 1,
-            fk_produto: "",
-            quantidade: "",
-            preco_produto: ""
-        });
-
         onClose();
     };
 
@@ -74,31 +48,16 @@ function ModalAdicionarItem({ isOpen, onClose, placa, onSave, salvarNaOrdem }) {
         }));
     };
 
-    const handleFinalizar = async () => {
+    const handleAtualizar = async () => {
         try {
-
-            if (!formData.fk_produto || !formData.quantidade || !formData.preco_produto) {
-                alert("Preencha todos os campos obrigatórios");
-                return;
-            }
-
-            const dados = {
-                ...formData,
-                fk_produto: Number(formData.fk_produto),
-                quantidade: Number(formData.quantidade),
-                preco_produto: Number(formData.preco_produto)
-            };
-
-            await onSave(dados);
-
+            await onUpdate(formData);
             onClose();
-
         } catch (error) {
-            console.error("Erro ao salvar:", error);
+            console.error("Erro ao atualizar produto:", error);
         }
     };
 
-    if (!isOpen) return null;
+    if (!isOpen || !produto) return null;
 
     return (
         <>
@@ -110,19 +69,19 @@ function ModalAdicionarItem({ isOpen, onClose, placa, onSave, salvarNaOrdem }) {
 
                         <div className="modal-header border-0 pb-0">
                             <h5 className="modal-title titulo-modal">
-                                Adicionar Item/Produto
+                                Editar Item/Produto
                             </h5>
                             <button className="btn-close" onClick={handleClose}></button>
                         </div>
 
                         <div className="modal-body pt-2">
 
-                            <OrdemServicoCard 
-                                marca={placa.marca}
-                                modelo={placa.modelo}
-                                prefixo={placa.prefixo}
-                                cliente={placa.nome_cliente}
-                                placa={placa.placa}
+                            <OrdemServicoCard
+                                marca={placa?.marca}
+                                modelo={placa?.modelo}
+                                prefixo={placa?.prefixo}
+                                cliente={placa?.nome_cliente || placa?.cliente}
+                                placa={placa?.placa}
                                 idOrdemServico={idOrdemServico}
                             />
 
@@ -133,44 +92,33 @@ function ModalAdicionarItem({ isOpen, onClose, placa, onSave, salvarNaOrdem }) {
                                     Informações do Material
                                 </div>
 
-                                <p className="texto-info mb-2">
-                                    Todos os itens com * são obrigatórios!
-                                </p>
-
-                                <div className="linha-separadora"></div>
+                                <div className="linha-separadora mb-3"></div>
 
                                 <div className="row g-3">
 
-                                    {/* SELECT PRODUTOS */}
                                     <div className="col-12">
                                         <label>Item/Produto*</label>
                                         <select
                                             name="fk_produto"
                                             className="form-control form-select"
-                                            onChange={handleSelecionarProduto}
-                                            defaultValue=""
+                                            disabled
                                         >
-                                            <option value="" disabled>
-                                                Informe o nome do Produto
+                                            <option value={formData.fk_produto}>
+                                                {formatarTexto(formData.nome_produto)}
                                             </option>
-                                            {produtos.map(produto => (
-                                                <option key={produto.id_peca} value={produto.id_peca}>
-                                                    {formatarTexto(produto.nome)}
-                                                </option>
-                                            ))}
                                         </select>
                                     </div>
 
-                                    {/* VISIBILIDADE */}
                                     <div className="col-12">
                                         <label>Visibilidade*</label>
                                         <div className="radio-group">
                                             <label className="radio-label">
-
                                                 <input
                                                     type="radio"
+                                                    name="visibilidade"
+                                                    value={0}
                                                     className="radio-custom"
-                                                    checked={visibilidade === "privado"}
+                                                    checked={formData.visibilidade === 0}
                                                     disabled
                                                 />
                                                 Privado
@@ -179,8 +127,10 @@ function ModalAdicionarItem({ isOpen, onClose, placa, onSave, salvarNaOrdem }) {
                                             <label className="radio-label">
                                                 <input
                                                     type="radio"
+                                                    name="visibilidade"
+                                                    value={1}
                                                     className="radio-custom"
-                                                    checked={visibilidade === "publico" || visibilidade === "público"}
+                                                    checked={formData.visibilidade === 1}
                                                     disabled
                                                 />
                                                 Público
@@ -193,7 +143,6 @@ function ModalAdicionarItem({ isOpen, onClose, placa, onSave, salvarNaOrdem }) {
                                         <input
                                             name="quantidade"
                                             className="form-control"
-                                            placeholder="Informe a quantidade"
                                             type="number"
                                             value={formData.quantidade}
                                             onChange={handleChange}
@@ -205,7 +154,6 @@ function ModalAdicionarItem({ isOpen, onClose, placa, onSave, salvarNaOrdem }) {
                                         <input
                                             name="preco_produto"
                                             className="form-control"
-                                            placeholder="R$ 0,00"
                                             type="number"
                                             value={formData.preco_produto}
                                             onChange={handleChange}
@@ -215,8 +163,8 @@ function ModalAdicionarItem({ isOpen, onClose, placa, onSave, salvarNaOrdem }) {
                                 </div>
 
                                 <div className="botoes-modal mt-4">
-                                    <button className="btn-adicionar" onClick={handleFinalizar}>
-                                        Adicionar
+                                    <button className="btn-adicionar" onClick={handleAtualizar}>
+                                        Atualizar
                                     </button>
 
                                     <button className="btn-cancel" onClick={handleClose}>
@@ -234,4 +182,4 @@ function ModalAdicionarItem({ isOpen, onClose, placa, onSave, salvarNaOrdem }) {
     );
 }
 
-export default ModalAdicionarItem;
+export default ModalEditarItem;

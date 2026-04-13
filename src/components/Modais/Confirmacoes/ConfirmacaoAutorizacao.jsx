@@ -1,37 +1,42 @@
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+
 import ResumoDoOrcamento from "../../Resumo/ResumoDoOrcamento";
 import OrdemServicoCard from "../../ServicoCard/OrdemServicoCard";
-import "./ConfirmacaoAutorizacao.css"; 
 import TempoEstimado from "../TempoEstimado";
 
-function ConfirmacaoAutorizacao({ onClose, _onConfirm, placa, idOrdemServico, ordemServicoDados }) {
+import "./ConfirmacaoAutorizacao.css";
+
+function ConfirmacaoAutorizacao({ aberto, onClose, onConfirm, placa, ordemServicoDados }) {
     const navigate = useNavigate();
-    
+    const { idOrdemServico } = useParams();
+
+    if (!aberto) return null;
+
     return (
         <div className="modal-overlay">
             <div className="modal-content">
                 <h2>Deseja realmente aprovar este orçamento?</h2>
-                
-                <OrdemServicoCard 
-                    placa={placa} 
-                    marca={ordemServicoDados?.marca}
-                    prefixo={ordemServicoDados?.prefixo}
+
+                <OrdemServicoCard
+                    placa={placa.placa}
+                    marca={placa.marca}
+                    prefixo={placa.prefixo}
+                    modelo={placa.modelo}
+                    cliente={placa.nome_cliente}
                     idOrdemServico={idOrdemServico}
-                    modelo={ordemServicoDados?.modelo}
-                    cliente={ordemServicoDados?.empresa}
                 />
-                
-                <TempoEstimado dias={14}/>
-                <ResumoDoOrcamento/>
-                
+
+                <TempoEstimado dias={14} />
+                <ResumoDoOrcamento
+                    ticket={ordemServicoDados.resumo}
+                />
+
                 <div className="confirmacao-buttons">
                     <button className="btn-confirmar" onClick={() => {
-                        navigate(`/painelControle/aguardandoVaga/${placa}/${idOrdemServico}`, {
-                            state: { veiculoDados: ordemServicoDados }
-                        });
-                        onClose();
+                        onConfirm();
                     }}>Confirmar</button>
-                    
+
                     <button className="btn-cancelar" onClick={onClose}>Cancelar</button>
                 </div>
             </div>

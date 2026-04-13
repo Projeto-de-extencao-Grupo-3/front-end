@@ -1,13 +1,13 @@
 export function formatarTexto(texto) {
     if (!texto) return "";
-
     let textoCorrigido = texto;
 
     try {
+        // Windows
         textoCorrigido = decodeURIComponent(escape(texto));
-    } catch (error) {
-        textoCorrigido = texto;
-        throw new Error(`Erro ao decodificar o texto: ${error.message}`);
+    } catch {
+        // Linux/Mac
+        textoCorrigido = texto; 
     }
 
     return textoCorrigido
@@ -26,3 +26,12 @@ export const formatarMoedaBR = (valor) => {
         currency: "BRL"
     });
 };
+
+
+
+export function formatarDataBR(data) {
+    if (!data) return "";
+
+    const [ano, mes, dia] = data.split("-");
+    return `${dia}/${mes}/${ano}`;
+}

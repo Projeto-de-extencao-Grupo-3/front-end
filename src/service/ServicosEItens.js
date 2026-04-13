@@ -5,7 +5,7 @@ import { exibirAlertaSucesso, exibirAlertaErro } from './alertas';
 function ServicosItens() {
     const buscarOrdem = async (id) => {
         try {
-            const response = await api.get(`/ordens/${id}`);
+            const response = await api.get(`/jornada/listagem/${id}`);
             return response.data;
         } catch (error) {
             exibirAlertaErro("Erro ao buscar ordem!");
@@ -25,9 +25,9 @@ function ServicosItens() {
         }
     };
 
-    const adicionarServico = async (dadosNecessarios) => {
+    const adicionarServico = async (idOrdemServico, dadosNecessarios) => {
         try {
-            const response = await api.post(`/jornada/${dadosNecessarios.fk_ordem_servico}/servicos`, dadosNecessarios);
+            const response = await api.post(`/jornada/${idOrdemServico}/servicos`, dadosNecessarios);
             console.log("Dados recebidos para adicionar serviço:", dadosNecessarios);
             exibirAlertaSucesso("Serviço adicionado com sucesso!");
             return response.data;
@@ -37,9 +37,9 @@ function ServicosItens() {
         }
     };
 
-    const adicionarProduto = async (dadosNecessarios) => {
+    const adicionarProduto = async ( idOrdemServico, dadosNecessarios) => {
         try {
-            const response = await api.post(`/jornada/${dadosNecessarios.fk_ordem_servico}/produtos`, dadosNecessarios);
+            const response = await api.post(`/jornada/${idOrdemServico}/produtos`, dadosNecessarios);
             exibirAlertaSucesso("Produto adicionado com sucesso!");
             return response.data;
         } catch (error) {
@@ -50,7 +50,7 @@ function ServicosItens() {
 
     const editarServico = async (idServico, dadosEditados) => {
         try {
-            const response = await api.put(`/itens-servicos/${idServico}`, dadosEditados);
+            const response = await api.put(`/jornada/${idServico}/servicos`, dadosEditados);
 
             exibirAlertaSucesso("Serviço atualizado com sucesso!");
             return response.data;
@@ -61,9 +61,22 @@ function ServicosItens() {
         }
     };
 
+    const editarProduto = async (idProduto, dadosEditados) => {
+        try {
+            const response = await api.put(`/jornada/${idProduto}/produtos`, dadosEditados);
+
+            exibirAlertaSucesso("Produto atualizado com sucesso!");
+            return response.data;
+        } catch (error) {
+            exibirAlertaErro("Erro ao atualizar produto.");
+            console.error("Erro na API ao editar produto:", error);
+            throw error;
+        }
+    };
+
     const excluirServico = async (idServico) => {
         try {
-            const _response = await api.delete(`/itens-servicos/${idServico}`);
+            const _response = await api.delete(`/jornada/${idServico}/servicos`);
             exibirAlertaSucesso("Serviço excluído com sucesso!");
             return true;
         } catch (error) {
@@ -75,12 +88,24 @@ function ServicosItens() {
 
     const excluirProduto = async (idProduto) => {
         try {
-            const _response = await api.delete(`/itens-produtos/${idProduto}`);
+            const _response = await api.delete(`/jornada/${idProduto}/produtos`);
             exibirAlertaSucesso("Produto excluído com sucesso!");
             return true;
         } catch (error) {
             exibirAlertaErro("Erro ao excluir produto.");
             console.error("Erro ao excluir produto:", error);
+            throw error;
+        }
+    };
+
+    const baixarProduto = async (idProduto) => {
+        try {
+            const _response = await api.patch(`/jornada/${idProduto}/saida-material`);
+            exibirAlertaSucesso("Produto baixado do estoque com sucesso!");
+            return true;
+        } catch (error) {
+            exibirAlertaErro("Erro ao baixar produto do estoque.");
+            console.error("Erro ao baixar produto do estoque:", error);
             throw error;
         }
     };
@@ -91,8 +116,10 @@ function ServicosItens() {
         adicionarServico,
         adicionarProduto,
         editarServico,
+        editarProduto,
         excluirServico,
-        excluirProduto
+        excluirProduto,
+        baixarProduto
     };
 }
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styles from "./TabelaVeiculos.module.css";
-// import { buscarVeiculos } from '../../services/veiculosService';
+import veiculosService from '../../service/Veiculos.js';
 
 const IconeOlho = () => (
   <svg style={{ width: 15, height: 15, fill: 'currentColor', flexShrink: 0 }} viewBox="0 0 24 24">
@@ -10,10 +10,12 @@ const IconeOlho = () => (
 );
 
 function TabelaVeiculos() {
+  const { buscarVeiculosPorCliente } = veiculosService();
   const [veiculos, setVeiculos] = useState([]);
   const [loading, setLoading]   = useState(true);
   const [erro, setErro]         = useState(null);
   const navigate = useNavigate();
+  const { id } = useParams();
 
   useEffect(() => {
     async function carregarVeiculos() {
@@ -21,18 +23,9 @@ function TabelaVeiculos() {
         setLoading(true);
         setErro(null);
 
-        // 🧪 MOCK — remova quando a API estiver pronta
-        const dados = [
-          { id: 1, placa: 'FUB-5231', modelo: 'Volkswagen Tiguan', ano: '2015', status: 'Sem agendamento', totalServicos: 12, emProducao: false },
-          { id: 2, placa: 'FUB-5231', modelo: 'Jetta',             ano: '2015', status: 'Sem agendamento', totalServicos: 12, emProducao: false },
-          { id: 3, placa: 'ABC-1234', modelo: 'Honda Civic',        ano: '2020', status: 'Em produção',     totalServicos: 5,  emProducao: true  },
-          { id: 4, placa: 'ABC-1234', modelo: 'Corsa',              ano: '2020', status: 'Em produção',     totalServicos: 5,  emProducao: true  },
-        ];
+        const dados = await buscarVeiculosPorCliente(id);
+        console.log("Veículos carregados:", dados);
         setVeiculos(dados);
-
-        // ✅ PRODUÇÃO — descomente quando a API estiver pronta
-        // const dados = await buscarVeiculos();
-        // setVeiculos(dados);
 
       } catch {
         setErro('Nenhum veículo encontrado.');

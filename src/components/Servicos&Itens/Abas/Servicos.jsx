@@ -1,6 +1,6 @@
-import "./servicos.css";
+import "./abas.css";
 import ModalConfirmacao from "../../Modais/Confirmacoes/confirmacoes.jsx";
-import iconBook from "../../../assets/icons/bookService icon.png";
+import iconBook from "../../../assets/icons/viewService icon.png";
 import iconLixo from "../../../assets/icons/lixoService Icon.png";
 import iconEdit from "../../../assets/icons/EditIcon.png";
 import deleteServicoIcon from "../../../assets/icons/deleteServico icon.png";
@@ -11,7 +11,7 @@ import ModalEditarServico from "../../ModalAdicionarServico/ModalEditarServico.j
 import ModalAdicionarServico from "../../ModalAdicionarServico/ModalAdicionarServico.jsx";
 
 
-function Servicos({ dados, pagina, _onVisualizar, carregarOrdem, placa }) {
+function Servicos({ dados, pagina, carregarOrdem, placa }) {
     const [modalVisualizarServico, setModalVisualizarServico] = useState(false);
     const [modalEditarServico, setModalEditarServico] = useState(false);
     const [modalExcluirServico, setModalExcluirServico] = useState(false);
@@ -25,9 +25,9 @@ function Servicos({ dados, pagina, _onVisualizar, carregarOrdem, placa }) {
         try {
             await editarServico(dadosEditados.id_registro_servico, dadosEditados);
 
-            setModalEditarServico(false); // Fecha o modal
-            setServicoSelecionado(null); // Limpa seleção
-            await carregarOrdem(); // Atualiza a lista na tela
+            setModalEditarServico(false); 
+            setServicoSelecionado(null); 
+            await carregarOrdem(); 
         } catch (error) {
             console.error("Erro ao processar atualização no componente:", error);
         }
@@ -35,7 +35,7 @@ function Servicos({ dados, pagina, _onVisualizar, carregarOrdem, placa }) {
 
     const handleExcluir = async () => {
         try {
-            await excluirServico(servicoSelecionado.id_registro_servico);
+            await excluirServico(servicoSelecionado.id_item_servico);
             setServicoSelecionado(null);
             await carregarOrdem();
         } catch (error) {
@@ -48,9 +48,9 @@ function Servicos({ dados, pagina, _onVisualizar, carregarOrdem, placa }) {
             <table className="tabela">
                 <thead className="titles">
                     <tr className="config-titles">
-                        <th className="title">Tipo Serviço</th>
-                        <th className="title">Parte</th>
-                        <th className="title">Lado</th>
+                        <th className="title tipo">Tipo Serviço</th>
+                        <th className="title parte">Parte</th>
+                        <th className="title lado">Lado</th>
                         <th className="title">Tipo de Pintura:</th>
                         <th className="title">Cor</th>
                         <th className="title">Preço</th>
@@ -60,10 +60,13 @@ function Servicos({ dados, pagina, _onVisualizar, carregarOrdem, placa }) {
                 <tbody className="dados">
                     {dados.map((servico) => (
                         <tr key={servico.id_registro_servico} className="config-dados">
-                            <td className="dado">{formatarTexto(servico.tipo_servico)}</td>
-                            <td className="dado">{formatarTexto(servico.parte_veiculo)}</td>
-                            <td className="dado">{formatarTexto(servico.lado_veiculo)}</td>
-                            <td className="dado">{formatarTexto(servico.tipo_pintura) || "-"}</td>
+                            <td className="dado tipo">{formatarTexto(servico.tipo_servico)}</td>
+                            <td className="dado parte">{formatarTexto(servico.parte_veiculo)}</td>
+                            <td className="dado lado">{formatarTexto(servico.lado_veiculo)}</td>
+                            <td className="dado">
+                                {servico.tipo_pintura === "NAO_APLICAVEL" || servico.tipo_pintura === null  ? "-":
+                                formatarTexto(servico.tipo_pintura) }
+                            </td>
                             <td className="dado">{formatarTexto(servico.cor) || "-"}</td>
                             <td className="dado">{formatarMoedaBR(servico.preco_cobrado)}</td>
 
@@ -115,9 +118,9 @@ function Servicos({ dados, pagina, _onVisualizar, carregarOrdem, placa }) {
                     setServicoVisualizar(null);
                 }}
                 placa={placa}
-                modo="visualizar" // Forçamos o modo visualizar
+                modo="visualizar" 
                 servico={servicoVisualizar}
-                salvarNaOrdem={placa} // Passe o ID da ordem aqui se necessário
+                salvarNaOrdem={placa}
             />
             <ModalEditarServico
                 isOpen={modalEditarServico}

@@ -1,32 +1,30 @@
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+
 import Layout from "../../../components/Layout/Layout";
 import ServicosEItens from "../../../components/Servicos&Itens/Servicos&Itens";
 import ResumoOrcamento from "../../../components/Resumo/ResumoDoOrcamento";
 import Botoes from "../../../components/Botoes/botoes";
 import StepperFluxo from "../../../components/StepperFluxo/StepperFluxo";
 import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
-import "./EtapaOrcamento.css";
-import { useLocation, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
 import ServicosEItensLogic from "../../../service/ServicosEItens.js";
 
-import "./EtapaOrcamento.css";
+import "../../ConfigLayoutWorkflow.css";
 
 function EtapaOrcamento() {
+    const paginaAtual = "orcamento";
     const { buscarOrdem } = ServicosEItensLogic();
     const [ticket, setTicket] = useState(null);
-    const { placa, idOrdemServico } = useParams();
-    const location = useLocation();
-    const dadosRecuperados = location.state?.veiculoDados || {};
+    const { idOrdemServico } = useParams();
 
     const carregarOrdem = async () => {
         try {
             const dados = await buscarOrdem(idOrdemServico);
             setTicket({
-                ...dados,
-                servicos: dados.servicos || [],
-                produtos: dados.produtos || []
+                ...dados.busca_simples,
+                servicos: dados.busca_simples.servicos || [],
+                produtos: dados.busca_simples.produtos || []
             });
-            console.log("Ordem de Serviço carregada:", dados);
         } catch (e) {
             console.error(e);
         }
@@ -36,17 +34,16 @@ function EtapaOrcamento() {
         carregarOrdem();
     }, [idOrdemServico]);
 
+    console.log("Ticket:", ticket);
+
+
+    if (!ticket) return <p>Carregando...</p>;
+
     return (
         <Layout ativo={"painel"}>
-
-            {/* CABECALHO */}
-            <div className="d-flex justify-content-between align-items-center mb-4">
-                <div className="d-flex flex-column">
-                    <h2 className="m-0">Orçamento de Serviço</h2>
-                    <span className="fs-5 text-muted">
-                        Crie e gerencie o orçamento dos serviços
-                    </span>
-                </div>
+            <div className="titulos-principais">
+                <h1 className="titulo-principal">Orçamento</h1>
+                <p className="subtitulo-principal">Crie e gerencie o orçamento dos serviços</p>
             </div>
 
 
@@ -64,27 +61,32 @@ function EtapaOrcamento() {
             />
             <div>
                 <OrdemServicoCard
-                    placa={placa}
-                    marca={dadosRecuperados.marca}
-                    prefixo={dadosRecuperados.prefixo}
-                    modelo={dadosRecuperados.modelo}
-                    cliente={dadosRecuperados.nome}
+                    placa={ticket.veiculo.placa}
+                    marca={ticket.veiculo.marca}
+                    prefixo={ticket.veiculo.prefixo}
+                    modelo={ticket.veiculo.modelo}
+                    cliente={ticket.veiculo.nome_cliente}
                     idOrdemServico={idOrdemServico}
                 />
             </div>
-            <div className="painelteste">
+            <div className="componentesInferiores">
                 <ServicosEItens
-                    pagina="orcamento"
+                    pagina={paginaAtual}
                     ticket={ticket}
                     atualizarLista={carregarOrdem}
                 />
-                <div className="teste2">
+                <div className="componentesDireita">
                     <ResumoOrcamento
-                        pagina="orcamento"
-                        ticket={ticket}
+                        pagina={paginaAtual}
+                        ticket={ticket.resumo}
                         atualizarLista={carregarOrdem}
                     />
-                    <Botoes pagina={"orcar"} placa={placa} ordemServicoDados={dadosRecuperados} idOrdemServico={idOrdemServico} />
+                    <Botoes
+                        pagina={paginaAtual}
+                        placa={ticket.veiculo}
+                        ordemServicoDados={ticket}
+                        idOrdemServico={idOrdemServico}
+                    />
                 </div>
             </div>
 

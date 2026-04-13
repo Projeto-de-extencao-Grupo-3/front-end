@@ -19,6 +19,16 @@ function Produtos() {
         }
     };
 
+    const listarProdutosById = async (id) => {
+        try {
+            const response = await api.get(`/produtos/${id}`);
+            return response.data;
+        } catch (error) {
+            exibirAlertaErro("Erro ao buscar produtos.");
+            throw error
+        } 
+    };
+
     const adicionarProduto = async (dadosDoFormulario) => {
         try {
             const response = await api.post("/produtos", dadosDoFormulario);
@@ -65,18 +75,14 @@ function Produtos() {
         }
     };
 
-    const atualizarQuantidadeEstoque = async (id, dadosAtualizados) => {
+    const realizarBaixaEstoqueProduto = async (id) => {
         try {
-            const response = await api.patch(`/produtos/quantidade-estoque`, dadosAtualizados);
+            const response = await api.patch(`/itens-produtos/baixa-estoque/${id}`);
             const produtoAtualizado = response.data;
-            setProdutos(prev => prev.map(p => {
-                const isTarget = p.id_peca === id || p.idPeca === id || p.id === id;
-                return isTarget ? produtoAtualizado : p;
-            }));
-            exibirAlertaSucesso("Quantidade atualizado com sucesso!");
+            exibirAlertaSucesso("Quantidade atualizada com sucesso!");
             return produtoAtualizado;
         } catch (error) {
-            exibirAlertaErro("Erro ao atualizar a quantidade.");
+            exibirAlertaErro("Erro ao dar baixo no produto.");
             throw error;
         }
     };
@@ -85,7 +91,14 @@ function Produtos() {
         listarProdutos();
     }, []);
 
-    return { produtos, loading, adicionarProduto, excluirProduto, atualizarProduto, atualizarQuantidadeEstoque };
+    return { 
+        produtos, 
+        listarProdutosById,
+        loading, 
+        adicionarProduto, 
+        excluirProduto, 
+        atualizarProduto, 
+        realizarBaixaEstoqueProduto };
 }
 
 export default Produtos;
