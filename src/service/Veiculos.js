@@ -5,8 +5,7 @@ function Veiculos() {
     const buscarVeiculosPorCliente = async (idCliente) => {
         try {
             const response = await api.get(`/veiculos/cliente/${idCliente}`);
-            console.log("Resposta da API:", response);
-            response.data.status = "Em produção";
+            console.log("back:", response);
             return response.data;
         } catch (error) {
             exibirAlertaErro("Erro ao buscar veículos do cliente!");

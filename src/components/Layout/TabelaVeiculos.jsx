@@ -37,6 +37,8 @@ function TabelaVeiculos() {
     carregarVeiculos();
   }, []);
 
+    console.log("back:", veiculos);
+
   if (loading) {
     return (
       <div className="d-flex justify-content-center align-items-center p-5">
@@ -80,8 +82,8 @@ function TabelaVeiculos() {
             </p>
             <div className="d-flex flex-wrap gap-3 text-secondary" style={{ fontSize: '0.8rem' }}>
               <span><strong>PLACA:</strong> {veiculo.placa}</span>
-              <span><strong>ANO:</strong> {veiculo.ano}</span>
-              <span><strong>Total Serviços (2026):</strong> {veiculo.totalServicos}</span>
+              <span><strong>ANO:</strong> {veiculo.ano_modelo}</span>
+              {/* <span><strong>Total Serviços (2026):</strong> {veiculo.data}</span> */}
             </div>
           </div>
 
@@ -97,7 +99,7 @@ function TabelaVeiculos() {
               </a>
             )}
             <a className={`${styles['btn-navy']} d-flex align-items-center gap-1`}
-              onClick={(e) => { e.preventDefault(); navigate('/clientes/veiculos/servico', { state: {modelo: veiculo.modelo, placa: veiculo.placa } }); }}  
+              onClick={(e) => { e.preventDefault(); navigate('/clientes/veiculos/servico', { state: {modelo: veiculo.modelo, placa: veiculo.placa, veiculo: veiculo } }); }}  
             >
               <IconeOlho />
               Ver Histórico <span style={{ opacity: 0.7 }}>›</span>

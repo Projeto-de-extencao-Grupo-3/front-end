@@ -24,7 +24,7 @@ function HistoricoVeiculosServico() {
                     </Link>
                 </div>
             </div>
-            <TabelaServicos fromProduction={fromProduction} />
+            <TabelaServicos modelo={modelo} placa={placa} />
         </Layout>
     );
 }
