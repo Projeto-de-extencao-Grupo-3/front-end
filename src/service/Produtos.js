@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import api from "./api";
 import { exibirAlertaSucesso, exibirAlertaErro, exibirAlertaConfirmacao } from './alertas';
 
@@ -7,9 +7,22 @@ function Produtos() {
     const [produtos, setProdutos] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const listarProdutos = async () => {
+    const listarProdutosPaginados = async (tamanhoPagina, pagina) => {
         try {
-            const response = await api.get("/produtos");
+            const response = await api.get(`/produtos/produtos-paginados?size=${pagina}&page=${tamanhoPagina}`);
+            console.log("Resposta da API Produtos Paginados:", response.data);
+            setProdutos(response.data);
+        } catch (error) {
+            exibirAlertaErro("Erro ao buscar produtos.");
+            throw error
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const listarProdutosPaginadosPorServico = async (servico, tamanhoPagina, pagina) => {
+        try {
+            const response = await api.get(`/produtos/por-servico?tipo=${servico}&size=${pagina}&page=${tamanhoPagina}`);
             setProdutos(response.data);
         } catch (error) {
             exibirAlertaErro("Erro ao buscar produtos.");
@@ -87,13 +100,11 @@ function Produtos() {
         }
     };
 
-    useEffect(() => {
-        listarProdutos();
-    }, []);
-
     return { 
         produtos, 
         listarProdutosById,
+        listarProdutosPaginados,
+        listarProdutosPaginadosPorServico,
         loading, 
         adicionarProduto, 
         excluirProduto, 
