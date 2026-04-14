@@ -24,6 +24,9 @@ import PagamentoPendentePecas from './pages/AnaliseServico/PagamentoPendentePeca
 import PagamentoRealizado from './pages/AnaliseServico/PagamentoRealizado.jsx';
 import NotaFiscal from './pages/AnaliseServico/NotaFiscal.jsx';
 import Servicos from './components/Servicos&Itens/Abas/Servicos.jsx';
+import ProdFinalizadaTela from './pages/PainelControle/TelasAnalises/ProdFinalizada/ProdFinalizada.jsx';
+import PgtoRealizadoTela from './pages/PainelControle/TelasAnalises/PgtoRealizado/PgtoRealizado.jsx';
+import NfGeradaTela from './pages/PainelControle/TelasAnalises/NfGerada/NfGerada.jsx';
 
 
 
@@ -34,7 +37,6 @@ function App() {
       <Routes>
         {/* Roteamento de telas, aqui chama a função da tela e o path é o caminho que vai ser acessado */}
         <Route path="/" element={<Login />} />
-        <Route path="/teste" element={<Teste />} />
 
         {/* Roteamento do Painel de Controle */}
         <Route path="/painelControle" element={<PainelControle />} />
@@ -52,30 +54,31 @@ function App() {
         <Route path="/painelControle/producao/:idOrdemServico" element={<Producao />} />
         <Route path="/painelControle/finalizado" element={<Finalizado />} />
         <Route path="/painelControle/finalizado/:idOrdemServico" element={<Finalizado />} />
-        
+        <Route path="/analiseFinanceira/prodfinalizada/:idOrdemServico" element={<ProdFinalizadaTela />} />
+        <Route path="/analiseFinanceira/pgtorealizado/:idOrdemServico" element={<PgtoRealizadoTela />} />
+        <Route path="/analiseFinanceira/nfgerada/:idOrdemServico" element={<NfGeradaTela />} />
+
         {/* Roteamento de Clientes e Veículos */}
         <Route path="/clientes" element={<GestaoClientes />} />
         <Route path="/clientes/veiculos/:id" element={<HistoricoVeiculos />} />
         <Route path="/clientes/veiculos/servico" element={<HistoricoVeiculosServico />} />
-        
+
         {/* Roteamento de Estoque */}
         <Route path="/estoque" element={<ControleEstoque />} />
-       
+
         {/* Roteamento de Funcionários */}
         <Route path="/funcionarios" element={<GestaoFuncionarios />} />
-        
+
         {/* Roteamento de Análise Financeira */}
         <Route path="/analiseFinanceira" element={<AnaliseFinanceira />} />
-        
+
         {/* Roteamento de Teste */}
-        <Route path="/TesteModal" element={<TesteModal />} />
         <Route path="/TesteModalEditar" element={<TesteModalEditar />} />
         <Route path="/TesteModalQtd" element={<TesteModalQtd />} />
         <Route path="/PagamentoPendente" element={<PagamentoPendente />} />
         <Route path="/PagamentoPendentePecas" element={<PagamentoPendentePecas />} />
         <Route path="/PagamentoRealizado" element={<PagamentoRealizado />} />
         <Route path="/NotaFiscal" element={<NotaFiscal />} />
-        <Route path="/Servicos&Itens/Servicos" element={<Servicos />} />
 
 
 

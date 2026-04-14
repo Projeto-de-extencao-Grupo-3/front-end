@@ -37,10 +37,11 @@ function AnaliseFinanceira() {
         })
             .then((res) => {
                 setFinanceiro(res.data);
-                console.log(`${anoMes} - Dados Financeiros Recebidos:`, res.data);
             })
             .catch((err) => console.error("Erro na API Financeira:", err));
     };
+
+
 
     useEffect(() => {
         fetchDadosFinanceiros();
@@ -95,6 +96,7 @@ function AnaliseFinanceira() {
                     <div className="col-12 col-md-4 d-flex flex-column gap-3">
                         {(() => {
                             const dadosPagto = financeiro?.listagem_analise_financeira?.[categorias.pagamento] || {};
+
 
                             const ordensPagto = dadosPagto.ordens_de_servicos || [];
 
@@ -190,7 +192,7 @@ function ModalFiltroData({ valorAtual, aoConfirmar, aoCancelar }) {
 function CardFinanceiro({ os, categoria, navigate }) {
     let corCard = "verde";
     let icone = <i className='bxr bxs-check-circle text-success fs-4'></i>;
-    let rotaDestino = `validarPraOndevai`; // TO DO;
+    let rotaDestino = ``; // TO DO;
 
     if (categoria !== "SERVICOS_PAGAMENTO_REALIZADO") {
         if (os.dias_espera > 6) {
@@ -202,10 +204,17 @@ function CardFinanceiro({ os, categoria, navigate }) {
         }
     }
 
+
+
+    console.log("Categoria da OS:", categoria);
     if (categoria === "SERVICOS_NOTA_FISCAL_PENDENTE") {
-        rotaDestino = `validarPraOndevai`; // TO DO
+        rotaDestino = `/analiseFinanceira/nfgerada//${os.id_ordem_servico}`;
+        
     } else if (categoria === "SERVICOS_PAGAMENTO_REALIZADO") {
-        rotaDestino = `validarPraOndevai`; // TO DO
+        rotaDestino = `/analiseFinanceira/pgtorealizado//${os.id_ordem_servico}`; // TO DO
+        
+    } else if (categoria === "SERVICOS_PAGAMENTO_PENDENTE") {
+        rotaDestino = `/analiseFinanceira/prodfinalizada/${os.id_ordem_servico}`; // TO DO
     }
 
     return (

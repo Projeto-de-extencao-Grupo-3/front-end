@@ -158,64 +158,180 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico }) {
                 </button>
             </div>
 
-            {/* MODAIS */}
-            {showModal && <ConfirmacaoAutorizacao onClose={() => setShowModal(false)} placa={placa} ordemServicoDados={ordemServicoDados} idOrdemServico={idOrdemServico}/>}
+            {/* ================= MODAIS ================= */}
 
-            <VeiculoEEmpresa 
-             isOpen={modalVeiculo}
-             onClose ={() => setModalVeiculo(false)}
-             dadosRecebidos={ordemServicoDados}
-             />
+            {modalAtivo === "autorizar" && (
+                <ConfirmacaoAutorizacao
+                    aberto
+                    onClose={fecharModal}
+                    onConfirm={async () => {
+                        const ok = await atualizar({
+                            status: "AGUARDANDO_VAGA",
+                            tipoJornada: "AGENDAMENTO"
+                        });
 
-            <EntradaVeiculo aberto={modalEntrada} aoFechar={() => setModalEntrada(false)} />
+                        fecharModal();
+                        if (!ok) return;
 
-            <ModalConfirmacao
-                aberto={modalPagamento}
-                aoConfirmar={() => { setModalPagamento(false); navegarPara("/painelControle/analisar2"); }}
-                aoCancelar={() => setModalPagamento(false)}
-                icone={iconConfirmPgmt}
-                titulo="Confirmação de Pagamento"
-                descricao="O pagamento deste serviço já foi concluído?"
-                textoBotaoConfirmar="Sim, foi pago"
-                textoBotaoCancelar="Não, ainda não"
-            />
+                        navegarPara("/painelControle/aguardandoVaga");
+                    }}
+                    placa={placa}
+                    ordemServicoDados={ordemServicoDados}
+                />
+            )}
 
-            <ReagendamentoServico
-                aberto={modalReagendamento}
-                aoConfirmar={(_novaData) => {
-                    setModalReagendamento(false);
-                }}
-                aoCancelar={() => setModalReagendamento(false)}
-            />
+            {modalAtivo === "data" && (
+                <ReagendamentoServico
+                    aberto
+                    mensagem="Data prevista para término do Serviço"
+                    aoConfirmar={async (data) => {
+                        const statusOk = await atualizar({
+                            status: "EM_PRODUCAO",
+                            tipoJornada: "AGENDAMENTO"
+                        });
 
-            <ModalConfirmacao
-                aberto={modalServico}
-                aoConfirmar={() => { setModalServico(false); navegarPara("/painelControle/finalizado"); }}
-                aoCancelar={() => setModalServico(false)}
-                icone={iconConcluido}
-                titulo="Conclusão de Serviço"
-                descricao="Deseja realmente finalizar este serviço?"
-            />
+                        if (!statusOk) return;
 
-                
-            
-            <ModalConfirmacao
-                aberto={modalNota}
-                aoConfirmar={() => { setModalNota(false); navegarPara("/painelControle/analisar3"); }}
-                aoCancelar={() => setModalNota(false)}
-                icone={iconPagGreen}
-                titulo="Conclusão de Nota Fiscal"
-                descricao="Deseja realmente finalizar esta Nota Fiscal?"
-            />
+                        const dataOk = await definirData({
+                            saida_prevista: data
+                        });
 
-            <ModalConfirmacao
-                aberto={modalRevisar}
-                aoConfirmar={() =>  { setModalServico(false); navegarPara("/painelControle/orcamento"); }}
-                aoCancelar={() => setModalRevisar(false)}
-                icone={iconRevisar}
-                titulo="Revisar Orçamento?"
-                descricao="Caso você volte, o orçamento terá que ser aprovado novamente pelo cliente."
-            />
+                        fecharModal();
+                        if (!dataOk) return;
+
+                        navegarPara("/painelControle/producao");
+                    }}
+                    aoCancelar={fecharModal}
+                />
+            )}
+
+            {modalAtivo === "finalizarOrcamento" && (
+                <ModalConfirmacao
+                    aberto
+                    aoConfirmar={async () => {
+                        const ok = await atualizar({
+                            status: "AGUARDANDO_AUTORIZACAO",
+                            tipoJornada: "AGENDAMENTO"
+                        });
+
+                        fecharModal();
+                        if (!ok) return;
+
+                        navegarPara("/painelControle/autorizacao");
+                    }}
+                    aoCancelar={fecharModal}
+                    icone={iconPag}
+                    titulo="Finalizar orçamento?"
+                />
+            )}
+
+            {modalAtivo === "pagamento" && (
+                <ModalConfirmacao
+                    aberto
+                    aoConfirmar={() => {
+                        fecharModal();
+                        navegarPara("/painelControle/analisar2");
+                    }}
+                    aoCancelar={fecharModal}
+                    icone={iconConfirmPgmt}
+                    titulo="Confirmação de Pagamento"
+                    descricao="O pagamento deste serviço já foi concluído?"
+                    textoBotaoConfirmar="Sim, foi pago"
+                    textoBotaoCancelar="Não, ainda não"
+                />
+            )}
+
+            {modalAtivo === "servico" && (
+                <ModalConfirmacao
+                    aberto
+                    aoConfirmar={async () => {
+                        const ok = await atualizar({
+                            status: "FINALIZADO",
+                            tipoJornada: "AGENDAMENTO"
+                        });
+
+                        fecharModal();
+                        if (!ok) return;
+
+                        const hojeFormatado = new Date().toISOString().split("T")[0];
+                        const dataOk = await definirData({
+                            saida_efetiva: hojeFormatado
+                        });
+
+                        if (!dataOk) return;
+
+                        navegarPara("/painelControle/finalizado");
+                    }}
+                    aoCancelar={fecharModal}
+                    icone={iconConcluido}
+                    titulo="Conclusão de Serviço"
+                    descricao="Deseja realmente finalizar este serviço?"
+                />
+            )}
+
+            {modalAtivo === "nota" && (
+                <ModalConfirmacao
+                    aberto
+                    aoConfirmar={() => {
+                        fecharModal();
+                        navegarPara("/painelControle/analisar3");
+                    }}
+                    aoCancelar={fecharModal}
+                    icone={iconPagGreen}
+                    titulo="Conclusão de Nota Fiscal"
+                    descricao="Deseja realmente finalizar esta Nota Fiscal?"
+                />
+            )}
+
+            {modalAtivo === "revisar" && (
+                <ModalConfirmacao
+                    aberto
+                    aoConfirmar={async () => {
+                        const ok = await atualizar({
+                            status: "AGUARDANDO_ORCAMENTO",
+                            tipoJornada: "AGENDAMENTO"
+                        });
+
+                        fecharModal();
+                        if (!ok) return;
+
+                        navegarPara("/painelControle/orcamento");
+                    }}
+                    aoCancelar={fecharModal}
+                    icone={iconRevisar}
+                    titulo="Revisar Orçamento?"
+                    descricao="Caso você volte, o orçamento terá que ser aprovado novamente pelo cliente."
+                />
+            )}
+
+            {modalAtivo === "veiculo" && (
+                <VeiculoEEmpresa
+                    isOpen={true}
+                    onClose={fecharModal}
+                    dadosRecebidos={ordemServicoDados}
+                />
+            )}
+
+            {modalAtivo === "entrada" && (
+                <EntradaVeiculo aberto aoFechar={fecharModal} />
+            )}
+
+            {modalAtivo === "reagendar" && (
+                <ReagendamentoServico
+                    aberto
+                    mensagem="Reagendamento de Serviço"
+                    aoConfirmar={async (data) => {
+                        await definirData({
+                            saida_prevista: data
+                        });
+
+                        fecharModal();
+
+                    }}
+                    aoCancelar={fecharModal}
+                />
+            )}
+
         </div>
     );
 }

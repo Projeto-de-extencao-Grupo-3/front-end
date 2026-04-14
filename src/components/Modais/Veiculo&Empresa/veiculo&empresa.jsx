@@ -1,7 +1,8 @@
 import "./veiculo&empresa.css";
 
 function VeiculoEEmpresa({ isOpen, onClose, dadosRecebidos }) {
-   
+    console.log("Dados recebidos no modal:", dadosRecebidos);
+
     if (!isOpen) return null;
 
     return (
@@ -21,30 +22,30 @@ function VeiculoEEmpresa({ isOpen, onClose, dadosRecebidos }) {
                     <div className="linha-dupla">
                         <div className="campo">
                             <label>Marca*</label>
-                            <div className="valor-campo">{dadosRecebidos.marca}</div>
+                            <div className="valor-campo">{dadosRecebidos.veiculo.marca}</div>
                         </div>
 
                         <div className="campo">
                             <label>Modelo*</label>
-                            <div className="valor-campo">{dadosRecebidos.modelo} </div>
+                            <div className="valor-campo">{dadosRecebidos.veiculo.modelo} </div>
                         </div>
                     </div>
 
                     <div className="linha-dupla">
                         <div className="campo">
                             <label>Placa*</label>
-                            <div className="valor-campo">{dadosRecebidos.placa}</div>
+                            <div className="valor-campo">{dadosRecebidos.veiculo.placa}</div>
                         </div>
 
                         <div className="campo">
                             <label>Prefixo*</label>
-                            <div className="valor-campo">{dadosRecebidos.prefixo}</div>
+                            <div className="valor-campo">{dadosRecebidos.veiculo.prefixo}</div>
                         </div>
                     </div>
 
                     <div className="campo">
                         <label>Ano/Modelo*</label>
-                        <div className="valor-campo">{dadosRecebidos.ano}</div>
+                        <div className="valor-campo">{dadosRecebidos.veiculo.ano_modelo}</div>
                     </div>
                 </div>
 
@@ -57,31 +58,36 @@ function VeiculoEEmpresa({ isOpen, onClose, dadosRecebidos }) {
                     <div className="linha-dupla">
                         <div className="campo">
                             <label>CPF/CNPJ*</label>
-                            <div className="valor-campo">{dadosRecebidos.cpf}</div>
+                            <div className="valor-campo">{dadosRecebidos.cliente.cpf_cnpj}</div>
                         </div>
 
                         <div className="campo">
                             <label>Nome/Razão Social*</label>
-                            <div className="valor-campo">{dadosRecebidos.nome}</div>
+                            <div className="valor-campo">{dadosRecebidos.cliente.nome}</div>
                         </div>
                     </div>
 
                     <div className="linha-dupla">
                         <div className="campo">
                             <label>Telefone*</label>
-                            <div className="valor-campo">{dadosRecebidos.telefone}</div>
+                            <div className="valor-campo">{dadosRecebidos.cliente.telefone}</div>
                         </div>
 
                         <div className="campo">
                             <label>Email*</label>
-                            <div className="valor-campo">{dadosRecebidos.email}</div>
+                            <div className="valor-campo">{dadosRecebidos.cliente.email}</div>
                         </div>
                     </div>
 
                     <div className="linha-unica">
                         <span>Tipo de Cliente</span>
                         <div className="radio-grupo">
-                            <input className="checkBox" type="radio" readOnly />
+                            <input
+                                className="checkBox"
+                                type="radio"
+                                checked={dadosRecebidos?.cliente.tipo_cliente !== "PESSOA_FISICA"}
+                                readOnly
+                            />
                             <span>Empresa</span>
                         </div>
                     </div>

@@ -26,9 +26,10 @@ function Veiculos() {
         }
     };
 
-   
-
-     return { listarVeiculos, adicionarVeiculos }
+    return {
+        buscarVeiculosPorCliente,
+        buscarOrdensPorVeiculo
+    }
 }
 
 

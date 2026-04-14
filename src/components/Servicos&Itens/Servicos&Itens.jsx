@@ -62,7 +62,7 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
             }
 
             <div className="bar-menu">
-                <div className={`bar-options ${pagina === "analisar" ? "full" : ""}`}>
+                <div className={`bar-options ${pagina == "analisar2" || pagina == "analisar1" || pagina == "analisar3"   ? "full" : ""}`}>
                     <button
                         className={`buttons ${abaAtiva === "servicos" ? "selecionado" : ""}`}
                         onClick={() => setAbaAtiva("servicos")}
@@ -78,7 +78,7 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
                     </button>
                 </div>
 
-                {pagina != "analisar" ? (
+                { pagina != "analisar2" && pagina != "analisar1" && pagina != "analisar3"  ? (
                     <div className="options-action">
                         {pagina === "orcamento" ? (
                             abaAtiva === "servicos" ? (
