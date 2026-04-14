@@ -35,7 +35,7 @@ function NfPendente() {
     if (!ticket) return <p>Carregando...</p>;
 
     return (
-        <Layout ativo={"painel"}>
+        <Layout ativo={"financeiro"}>
             <div className="titulos-principais">
                 <h1 className="titulo-principal">Em Produção</h1>
                 <p className="subtitulo-principal">Acompanhe o Andamento do serviço deste veículo</p>
