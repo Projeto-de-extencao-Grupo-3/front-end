@@ -3,7 +3,7 @@ import styles from "./TabelaVeiculos.module.css";
 import veiculosService from '../../service/Veiculos.js';
 // import { useNavigate } from 'react-router-dom';
 
-function TabelaServicos({ fromProduction }) {
+function TabelaServicos({ modelo, placa }) {
   const { buscarOrdensPorVeiculo } = veiculosService();
   const [servicos, setServicos]   = useState([]);
   const [loading, setLoading]     = useState(true);
@@ -50,7 +50,7 @@ function TabelaServicos({ fromProduction }) {
     }
  
     carregarServicos();
-  }, [filtro]);
+  },);
 
   // ← adicionado: converte "DD/MM/YYYY" → Date e filtra por período
   const parsarData = (dataStr) => {
@@ -104,11 +104,11 @@ function TabelaServicos({ fromProduction }) {
           className="form-select fs-5 p-3 bg-white border rounded-pill w-auto"
           style={{ borderColor: '#000' }}
           value={filtro}
-          onChange={(e) => setFiltro(e.target.value)}
+          // onChange={(e) => setFiltro(e.target.value)}
         >
-          {opcoesFiltro.map((op) => (
+          {/* {opcoesFiltro.map((op) => (
             <option key={op.value} value={op.value}>{op.label}</option>
-          ))}
+          ))} */}
         </select>
       </div>
  

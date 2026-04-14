@@ -313,7 +313,10 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico }) {
             )}
 
             {modalAtivo === "entrada" && (
-                <EntradaVeiculo aberto aoFechar={fecharModal} />
+                <EntradaVeiculo 
+                aberto 
+                aoFechar={fecharModal}
+                />
             )}
 
             {modalAtivo === "reagendar" && (
