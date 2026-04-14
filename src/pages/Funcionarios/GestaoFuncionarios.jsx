@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Layout from "../../components/Layout/Layout.jsx";
 import ModalAdicionarFuncionario from "../../components/ModalClientesFuncionarios/ModalAdicionarFuncionario.jsx";
 import "./GestaoFuncionarios.css";
@@ -7,7 +7,7 @@ import TabelaFuncionarios from "../../components/Layout/TabelaFuncionarios.jsx";
 import Funcionarios from "../../service/Funcionarios.js";
 
 function GestaoFuncionarios() {
-    const { funcionarios, excluirFuncionario, adicionarFuncionario, atualizarFuncionario } = Funcionarios();
+    const { funcionarios, listarFuncionariosPaginados, excluirFuncionario, adicionarFuncionario, atualizarFuncionario } = Funcionarios();
     const [funcionarioParaEditar, setFuncionarioParaEditar] = useState(null);
     const [modalAberto, setModalAberto] = useState(false);
     const [funcionarioParaDesativar, setFuncionarioParaDesativar] = useState(null);
@@ -17,6 +17,9 @@ function GestaoFuncionarios() {
         setFuncionarioParaEditar(funcionario);
         setModalAberto(true);
     };
+
+        const [paginaAtual, setPaginaAtual] = useState(0);
+    const [tamanhoPagina] = useState(8);
 
     const abrirModalNovo = () => {
         console.log("Abrindo modal para novo");
@@ -56,6 +59,10 @@ function GestaoFuncionarios() {
         }
     };
 
+    useEffect(() => {
+        listarFuncionariosPaginados(paginaAtual, tamanhoPagina);
+    }, [paginaAtual]);
+
     return (
         <Layout ativo={"funcionarios"}>
             <div className="header-funcionarios">
@@ -78,7 +85,7 @@ function GestaoFuncionarios() {
                         subtitulo="Dados do Colaborador"
                         textoBotao="Desativar"
                         corBotao="#dc3545"
-                        iconClass="bx-briefcase" 
+                        iconClass="bx-briefcase"
                         dados={funcionarioParaDesativar ? [
                             { label: "Nome Completo", value: funcionarioParaDesativar.nome, fullWidth: true },
                             { label: "Cargo", value: funcionarioParaDesativar.cargo },
@@ -98,10 +105,35 @@ function GestaoFuncionarios() {
             </div>
 
             <TabelaFuncionarios
-                funcionarios={funcionarios}
+                funcionarios={funcionarios.content || []}
                 excluirFuncionario={abrirModalDesativar}
                 editarFuncionario={lidarComEdicao}
             />
+
+            <div className="d-flex justify-content-between align-items-center mt-3">
+                <span className="text-muted">
+                    Página {paginaAtual + 1} de {funcionarios?.page?.total_pages || 1}
+                </span>
+
+                <div className="btn-group">
+                    <button
+                        className="btn btn-outline-dark"
+                        disabled={paginaAtual === 0}
+                        onClick={() => setPaginaAtual(prev => prev - 1)}
+                    >
+                        Anterior
+                    </button>
+
+                    <button
+                        className="btn btn-outline-dark"
+                        // Se a página atual for a última (total - 1), desabilita
+                        disabled={paginaAtual >= (funcionarios?.page?.total_pages - 1)}
+                        onClick={() => setPaginaAtual(prev => prev + 1)}
+                    >
+                        Próximo
+                    </button>
+                </div>
+            </div>
         </Layout>
     );
 }
