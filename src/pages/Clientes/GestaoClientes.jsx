@@ -1,16 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Layout from "../../components/Layout/Layout.jsx";
 import Tabela from "../../components/Layout/Tabela.jsx";
 import ModalAdicionar from "../../components/ModalClientesFuncionarios/ModalAdicionar.jsx";
 import Clientes from "../../service/Clientes.js";
 import "./GestaoClientes.css";
-import api from "../../service/api.js";
 import ModalDesativar from "../../components/ModalClientesFuncionarios/ModalDesativar.jsx";
 import ModalAdicionarEndereco from "../../components/ModalEnderecos/ModalAdicionarEndereco.jsx";
 import ModalEditarCliente from "../../components/ModalClientesFuncionarios/ModalEditarClientes.jsx";
 
 function GestaoClientes() {
-    const { clientes, _loading, excluirCliente, adicionarCliente, atualizarCliente } = Clientes();
+    const { clientes, _loading, listarClientesPaginados, excluirCliente, adicionarCliente, atualizarCliente } = Clientes();
 
     const [mostrarModalAdicionar, setMostrarModalAdicionar] = useState(false);
     const [mostrarModalEndereco, setMostrarModalEndereco] = useState(false);
@@ -19,6 +18,9 @@ function GestaoClientes() {
     const [clienteSelecionado, setClienteSelecionado] = useState(null);
     const [clienteParaDesativar, setClienteParaDesativar] = useState(null);
     const [isModalDesativarOpen, setIsModalDesativarOpen] = useState(false);
+
+    const [paginaAtual, setPaginaAtual] = useState(0);
+    const [tamanhoPagina] = useState(8);
 
     const handleAvancarParaEndereco = (dadosCliente) => {
         setDadosClienteTemp(dadosCliente);
@@ -63,11 +65,15 @@ function GestaoClientes() {
         setIsModalDesativarOpen(true);
     };
 
+    useEffect(() => {
+        listarClientesPaginados(paginaAtual, tamanhoPagina);
+    }, [paginaAtual]);
+
     const confirmarDesativacao = async () => {
         try {
             const id = clienteParaDesativar.idCliente || clienteParaDesativar.id_cliente;
 
-            await excluirCliente(id); 
+            await excluirCliente(id);
 
             setIsModalDesativarOpen(false);
             setClienteParaDesativar(null);
@@ -111,9 +117,35 @@ function GestaoClientes() {
                 </div>
             </div>
             <Tabela
-                clientes={clientes}
+                clientes={clientes.content || []}
                 excluirCliente={abrirModalDesativar}
-                editarCliente={handleAbrirEdicao}></Tabela>
+                editarCliente={handleAbrirEdicao}>
+            </Tabela>
+
+            <div className="d-flex justify-content-between align-items-center mt-3">
+                <span className="text-muted">
+                    Página {paginaAtual + 1} de {clientes?.page?.total_pages || 1}
+                </span>
+
+                <div className="btn-group">
+                    <button
+                        className="btn btn-outline-dark"
+                        disabled={paginaAtual === 0}
+                        onClick={() => setPaginaAtual(prev => prev - 1)}
+                    >
+                        Anterior
+                    </button>
+
+                    <button
+                        className="btn btn-outline-dark"
+                        // Se a página atual for a última (total - 1), desabilita
+                        disabled={paginaAtual >= (clientes?.page?.total_pages - 1)}
+                        onClick={() => setPaginaAtual(prev => prev + 1)}
+                    >
+                        Próximo
+                    </button>
+                </div>
+            </div>
             <ModalDesativar
                 isOpen={isModalDesativarOpen}
                 onClose={() => {

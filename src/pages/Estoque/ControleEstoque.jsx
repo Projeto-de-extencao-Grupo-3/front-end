@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Layout from "../../components/Layout/Layout.jsx";
 import TabelaEstoque from "../../components/Layout/TabelaEstoque.jsx";
 import "./ControleEstoque.css";
@@ -9,7 +9,7 @@ import EditarQuantidadeEstoque from "../../components/ModalNovoItem/EditarQuanti
 import Produtos from "../../service/Produtos.js";
 
 function ControleEstoque() {
-    const { produtos, excluirProduto, adicionarProduto, atualizarProduto, realizarBaixaEstoqueProduto } = Produtos();
+    const { produtos, listarProdutosPaginados, listarProdutosPaginadosPorServico, excluirProduto, adicionarProduto, atualizarProduto, realizarBaixaEstoqueProduto } = Produtos();
 
     const [produtosParaEditar, setProdutosParaEditar] = useState(null);
     const [itemParaDesativar, setItemParaDesativar] = useState(null);
@@ -20,14 +20,10 @@ function ControleEstoque() {
     const [isModalDesativarOpen, setIsModalDesativarOpen] = useState(false);
     const [editarQuantidadeEstoque, setEditarQuantidadeEstoque] = useState(false);
 
-    const [filtroTexto, _setFiltroTexto] = useState("");
     const [categoriaAtiva, setCategoriaAtiva] = useState("TODOS");
 
-    const produtosFiltrados = produtos.filter((produto) => {
-        const matchesTexto = produto.nome.toLowerCase().includes(filtroTexto.toLowerCase());
-        const matchesCategoria = categoriaAtiva === "TODOS" || produto.tipo_servico === categoriaAtiva;
-        return matchesTexto && matchesCategoria;
-    });
+    const [paginaAtual, setPaginaAtual] = useState(0);
+    const [tamanhoPagina] = useState(8);
 
     const categorias = [
         { id: "FUNILARIA", label: "FUNILARIA", icon: "bx-gear" },
@@ -55,6 +51,7 @@ function ControleEstoque() {
         try {
             const id = itemParaDesativar.id_peca || itemParaDesativar.id;
             await excluirProduto(id);
+            listarProdutosPaginados(paginaAtual, tamanhoPagina);
             setIsModalDesativarOpen(false);
             setItemParaDesativar(null);
         } catch (error) {
@@ -81,16 +78,30 @@ function ControleEstoque() {
         }
     };
 
-    const confirmarAjusteEstoque = async (novaQuantidade) => {
+    const confirmarAjusteEstoque = async (_novaQuantidade) => {
         try {
             const id = itemParaAjustarEstoque.id_peca || itemParaAjustarEstoque.id;
 
             await realizarBaixaEstoqueProduto(id);
+            listarProdutosPaginados(paginaAtual, tamanhoPagina);
             setEditarQuantidadeEstoque(false);
             setItemParaAjustarEstoque(null);
         } catch (error) {
             console.error("Erro ao ajustar estoque:", error);
         }
+    };
+
+    useEffect(() => {
+        if (categoriaAtiva === "TODOS") {
+            listarProdutosPaginados(paginaAtual, tamanhoPagina);
+        } else {
+            listarProdutosPaginadosPorServico(categoriaAtiva, paginaAtual, tamanhoPagina);
+        }
+    }, [paginaAtual, categoriaAtiva]); 
+
+    const mudarCategoria = (id) => {
+        setPaginaAtual(0);
+        setCategoriaAtiva(categoriaAtiva === id ? "TODOS" : id);
     };
 
     return (
@@ -112,7 +123,7 @@ function ControleEstoque() {
                 {categorias.map((cat) => (
                     <button
                         key={cat.id}
-                        onClick={() => setCategoriaAtiva(categoriaAtiva === cat.id ? "TODOS" : cat.id)}
+                        onClick={() => mudarCategoria(cat.id)}
                         className={`btn d-flex align-items-center gap-2 px-4 py-2 fw-semibold transition-all shadow-sm`}
                         style={{
                             borderRadius: '8px',
@@ -130,11 +141,36 @@ function ControleEstoque() {
             </div>
 
             <TabelaEstoque
-                produtos={produtosFiltrados}
+                produtos={produtos.content || []}
                 excluirProdutos={lidarComDesativacao}
                 editarProdutos={lidarComEdicao}
                 editarQuantidadeEstoque={lidarComAjusteEstoque}
             />
+
+            <div className="d-flex justify-content-between align-items-center mt-3">
+                <span className="text-muted">
+                    Página {paginaAtual + 1} de {produtos?.page?.total_pages || 1}
+                </span>
+
+                <div className="btn-group">
+                    <button
+                        className="btn btn-outline-dark"
+                        disabled={paginaAtual === 0}
+                        onClick={() => setPaginaAtual(prev => prev - 1)}
+                    >
+                        Anterior
+                    </button>
+
+                    <button
+                        className="btn btn-outline-dark"
+                        // Se a página atual for a última (total - 1), desabilita
+                        disabled={paginaAtual >= (produtos?.page?.total_pages - 1)}
+                        onClick={() => setPaginaAtual(prev => prev + 1)}
+                    >
+                        Próximo
+                    </button>
+                </div>
+            </div>
 
             <ModalNovoItem
                 isOpen={mostrarModalAdicionar}

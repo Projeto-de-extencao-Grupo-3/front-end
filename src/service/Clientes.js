@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import api from "./api";
 import { exibirAlertaSucesso, exibirAlertaErro, exibirAlertaConfirmacao } from './alertas';
 
@@ -6,9 +6,10 @@ function Clientes() {
     const [clientes, setClientes] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const listarClientes = async () => {
+    const listarClientesPaginados = async (pagina, tamanho) => {
         try {
-            const response = await api.get("/clientes");
+            const response = await api.get(`/clientes/clientes-paginados?page=${pagina}&size=${tamanho}`);
+            console.log("Resposta da API Clientes Paginados:", response.data);
             setClientes(response.data);
         } catch (error) {
             console.error("Erro ao buscar clientes:", error);
@@ -30,7 +31,7 @@ function Clientes() {
             };
 
             const response = await api.post("/clientes", payload);
-            await listarClientes();
+            await listarClientesPaginados(0, 8);
             exibirAlertaSucesso("Cliente adicionado com sucesso!");
             return response.data;
         } catch (error) {
@@ -65,7 +66,7 @@ function Clientes() {
     const atualizarCliente = async (dadosAtualizados) => {
         try {
             const response = await api.put("/clientes", dadosAtualizados);
-            await listarClientes();
+            await listarClientesPaginados(0, 8);
             exibirAlertaSucesso("Cliente atualizado com sucesso!");
             return response.data;
         } catch (error) {
@@ -75,11 +76,7 @@ function Clientes() {
         }
     };
 
-    useEffect(() => {
-        listarClientes();
-    }, []);
-
-    return { clientes, loading, adicionarCliente, excluirCliente, atualizarCliente };
+    return { clientes, loading, listarClientesPaginados, adicionarCliente, excluirCliente, atualizarCliente };
 }
 
 export default Clientes;

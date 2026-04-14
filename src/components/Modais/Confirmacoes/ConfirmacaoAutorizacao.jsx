@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 import ResumoDoOrcamento from "../../Resumo/ResumoDoOrcamento";
@@ -8,7 +7,6 @@ import TempoEstimado from "../TempoEstimado";
 import "./ConfirmacaoAutorizacao.css";
 
 function ConfirmacaoAutorizacao({ aberto, onClose, onConfirm, placa, ordemServicoDados }) {
-    const navigate = useNavigate();
     const { idOrdemServico } = useParams();
 
     if (!aberto) return null;

@@ -7,12 +7,13 @@ function Funcionarios() {
     const [funcionarios, setFuncionarios] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const listarFuncionarios = async () => {
+    const listarFuncionariosPaginados = async (tamanhoPagina, pagina) => {
         try {
-            const response = await api.get("/funcionarios");
+            const response = await api.get(`/funcionarios/funcionarios-paginados?size=${pagina}&page=${tamanhoPagina}`);
+            console.log("Resposta da API Funcionários Paginados:", response.data);
             setFuncionarios(response.data);
         } catch (error) {
-            exibirAlertaErro("Erro ao buscar Funcionários.")
+            exibirAlertaErro("Erro ao buscar funcionários.");
             throw error
         } finally {
             setLoading(false);
@@ -87,11 +88,7 @@ function Funcionarios() {
         }
     };
 
-    useEffect(() => {
-        listarFuncionarios();
-    }, []);
-
-    return { funcionarios, loading, adicionarFuncionario, excluirFuncionario, atualizarFuncionario };
+    return { funcionarios, loading,listarFuncionariosPaginados, adicionarFuncionario, excluirFuncionario, atualizarFuncionario };
 }
 
 export default Funcionarios
