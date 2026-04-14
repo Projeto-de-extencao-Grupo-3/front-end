@@ -305,7 +305,11 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico }) {
             )}
 
             {modalAtivo === "veiculo" && (
-                <VeiculoEEmpresa aberto aoFechar={fecharModal} />
+                <VeiculoEEmpresa
+                    isOpen={true}
+                    onClose={fecharModal}
+                    dadosRecebidos={ordemServicoDados}
+                />
             )}
 
             {modalAtivo === "entrada" && (

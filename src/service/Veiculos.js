@@ -29,7 +29,8 @@ function Veiculos() {
     return {
         buscarVeiculosPorCliente,
         buscarOrdensPorVeiculo
-    };
+    }
 }
+
 
 export default Veiculos
