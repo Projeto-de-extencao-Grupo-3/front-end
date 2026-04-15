@@ -5,8 +5,8 @@ import "./HistoricoVeiculos.css";
 
 function HistoricoVeiculosServico() {
     const location = useLocation();
-    const { modelo, placa, fromProduction } = location.state || {};
-    console.log('HistoricoVeiculosServico - fromProduction from state:', fromProduction);
+    const { modelo, placa, veiculo } = location.state || {};
+    // console.log('HistoricoVeiculosServico - fromProduction from state:', fromProduction);
 
     const tituloH1 = modelo && placa ? `${modelo} - ${placa}` : "Serviço em produção";
 
@@ -24,7 +24,7 @@ function HistoricoVeiculosServico() {
                     </Link>
                 </div>
             </div>
-            <TabelaServicos modelo={modelo} placa={placa} />
+            <TabelaServicos modelo={modelo} placa={placa} veiculo={veiculo} />
         </Layout>
     );
 }

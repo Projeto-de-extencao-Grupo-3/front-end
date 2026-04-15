@@ -89,17 +89,8 @@ function TabelaVeiculos() {
 
           {/* Botões */}
           <div className="d-flex gap-2 flex-shrink-0">
-            {veiculo.emProducao && (
-              <a
-                href="#"
-                onClick={(e) => { e.preventDefault(); navigate('/clientes/veiculos/servico', { state: { modelo: veiculo.modelo, placa: veiculo.placa, fromProduction: true } }); }}
-                className={`${styles['btn-outline-navy']} d-flex align-items-center gap-1`}
-              >
-                Ver Carro em Produção <span style={{ opacity: 0.7 }}>›</span>
-              </a>
-            )}
             <a className={`${styles['btn-navy']} d-flex align-items-center gap-1`}
-              onClick={(e) => { e.preventDefault(); navigate('/clientes/veiculos/servico', { state: {modelo: veiculo.modelo, placa: veiculo.placa, veiculo: veiculo } }); }}  
+              onClick={(e) => { e.preventDefault(); navigate('/clientes/veiculos/servico', { state: {modelo: veiculo.modelo, placa: veiculo.placa, veiculo: veiculo.id_veiculo } }); }}
             >
               <IconeOlho />
               Ver Histórico <span style={{ opacity: 0.7 }}>›</span>
