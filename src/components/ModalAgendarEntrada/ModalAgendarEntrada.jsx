@@ -52,8 +52,8 @@ function ModalAgendarEntrada({ isOpen, onClose, onAgendamentoSuccess }) {
     };
 
     const handleAgendar = (data) => async () => {
-        const response = await api.post("/entrada/agendamento", {
-            dt_entrada_prevista: data,
+        const response = await api.post("/jornada/agendamento", {
+            data_entrada_prevista: data,
             fk_veiculo: cliente.veiculo.id_veiculo
         })
         .catch(error => {
