@@ -1,7 +1,7 @@
 import { useState } from "react";
 import api from "./api";
 
-function useEndereco() {
+function Enderecos() {
     const [loading, setLoading] = useState(false);
 
     const buscarEnderecoViaCEP = async (cep) => {
@@ -23,17 +23,35 @@ function useEndereco() {
         }
     };
 
-const cadastrarEnderecoVazio = async () => {
-    try {
-        const response = await api.post(`/enderecos/registrar-vazio`); 
-        return response.data; 
-    } catch (error) {
-        console.error("Erro ao cadastrar endereço vazio:", error);
-        return null;
+    const atualizarEndereco = async (dadosEndereco) => {
+        console.log(dadosEndereco)
+
+        const payload = {
+            "id_endereco": dadosEndereco.id_endereco,
+            "cep": dadosEndereco.cep,
+            "logradouro": dadosEndereco.logradouro,
+            "complemento": dadosEndereco.complemento,
+            "numero": dadosEndereco.numero,
+            "bairro": dadosEndereco.bairro,
+            "cidade": dadosEndereco.cidade,
+            "estado": dadosEndereco.estado,
+            "correspondencia": dadosEndereco.correspondencia
+        }
+
+        const response = api.put("/enderecos", payload)
     }
+
+    const cadastrarEnderecoVazio = async () => {
+        try {
+            const response = await api.post(`/enderecos/registrar-vazio`);
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao cadastrar endereço vazio:", error);
+            return null;
+        }
+    }
+
+    return { buscarEnderecoViaCEP, cadastrarEnderecoVazio, atualizarEndereco, loading };
 }
 
-    return { buscarEnderecoViaCEP, cadastrarEnderecoVazio, loading };
-}
-
-export default useEndereco;
+export default Enderecos;

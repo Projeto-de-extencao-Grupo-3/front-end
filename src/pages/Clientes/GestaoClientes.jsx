@@ -3,6 +3,7 @@ import Layout from "../../components/Layout/Layout.jsx";
 import Tabela from "../../components/Layout/Tabela.jsx";
 import ModalAdicionar from "../../components/ModalClientesFuncionarios/ModalAdicionar.jsx";
 import Clientes from "../../service/Clientes.js";
+import Enderecos from "../../service/Endereco.js";
 import "./GestaoClientes.css";
 import ModalDesativar from "../../components/ModalClientesFuncionarios/ModalDesativar.jsx";
 import ModalAdicionarEndereco from "../../components/ModalEnderecos/ModalAdicionarEndereco.jsx";
@@ -10,6 +11,7 @@ import ModalEditarCliente from "../../components/ModalClientesFuncionarios/Modal
 
 function GestaoClientes() {
     const { clientes, _loading, listarClientesPaginados, excluirCliente, adicionarCliente, atualizarCliente } = Clientes();
+    const { buscarEnderecoViaCEP, cadastrarEnderecoVazio, atualizarEndereco } = Enderecos();
 
     const [mostrarModalAdicionar, setMostrarModalAdicionar] = useState(false);
     const [mostrarModalEndereco, setMostrarModalEndereco] = useState(false);
@@ -49,7 +51,29 @@ function GestaoClientes() {
         setModalEditarAberto(true);
     };
 
-    const handleSalvarEdicao = async (dadosNovos) => {
+    const handleSalvarCliente = async (dadosNovos) => {
+        try {
+            await atualizarCliente(dadosNovos);
+
+            setModalEditarAberto(false);
+        } catch (error) {
+            console.error("Erro capturado no componente:", error);
+            alert("Erro ao atualizar cliente.");
+        }
+    };
+
+    const handleSalvarEndereco = async (dadosNovos) => {
+        try {
+            await atualizarEndereco(dadosNovos);
+
+            setModalEditarAberto(false);
+        } catch (error) {
+            console.error("Erro capturado no componente:", error);
+            alert("Erro ao atualizar cliente.");
+        }
+    };
+
+    const handleSalvarContato = async (dadosNovos) => {
         try {
             await atualizarCliente(dadosNovos);
 
@@ -162,15 +186,17 @@ function GestaoClientes() {
                     { label: "Nome", value: clienteParaDesativar.nome, fullWidth: true },
                     { label: "CPF/CNPJ", value: clienteParaDesativar.cpfCnpj || clienteParaDesativar.cpf_cnpj },
                     { label: "Tipo de Cliente", value: clienteParaDesativar.tipoCliente || clienteParaDesativar.tipo_cliente },
-                    { label: "Email", value: clienteParaDesativar.email, fullWidth: true },
-                    { label: "Telefone", value: clienteParaDesativar.telefone, fullWidth: true }
+                    { label: "Endereços", value: clienteParaDesativar.enderecos?.map((endereco) => endereco.logradouro).join(", "), fullWidth: true },
+                    { label: "Telefone", value: clienteParaDesativar.meios_contato.length, fullWidth: true }
                 ] : []}
             />
             <ModalEditarCliente
                 isOpen={modalEditarAberto}
                 onClose={() => setModalEditarAberto(false)}
                 clienteParaEditar={clienteSelecionado}
-                onSave={handleSalvarEdicao}
+                onSave={handleSalvarCliente}
+                onSaveEndereco={handleSalvarEndereco}
+                onSaveContato={handleSalvarContato}
             />
         </Layout>
     );

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import './ModalAdicionarEndereco.css';
-import useEndereco from "../../service/Endereco";
+import Enderecos from "../../service/Endereco";
 
 const estadoInicial = {
     cep: "",
@@ -14,7 +14,7 @@ const estadoInicial = {
 
 function ModalAdicionarEndereco({ isOpen, onClose, onSaveEndereco }) {
     const [formData, setFormData] = useState(estadoInicial);
-    const { buscarEnderecoViaCEP, _loading } = useEndereco();
+    const { buscarEnderecoViaCEP, _loading } = Enderecos();
 
     const handleCEPChange = async (valor) => {
         setFormData(prev => ({ ...prev, cep: valor }));

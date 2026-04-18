@@ -20,8 +20,8 @@ function Tabela({ clientes, excluirCliente, editarCliente }) {
                         <th className="px-4">Código</th>
                         <th>Nome</th>
                         <th>CPF/CNPJ</th>
-                        <th>Telefone</th>
-                        <th>Email</th>
+                        <th>Meios de Contato</th>
+                        <th>Endereços</th>
                         <th>Tipo</th>
                         <th>Veículos</th>
                         <th className="text-center">Opções</th>
@@ -38,11 +38,13 @@ function Tabela({ clientes, excluirCliente, editarCliente }) {
                                         {String(idAtual).padStart(5, '0')}
                                     </span>
                                 </td>
-                                <td className="fw-bold">{cliente.nome}</td>
-                                <td>{cliente.cpfCnpj || cliente.cpf_cnpj}</td>
-                                <td>{cliente.telefone}</td>
+                                <td style={{ maxWidth: '150px' }} className="fw-bold">
+                                    {cliente.nome}
+                                </td>
+                                <td>{formatarCpfCnpj(cliente.cpf_cnpj)}</td>
+                                <td>{cliente.meios_contato.length + " Meios"}</td>
                                 <td className="text-truncate" style={{ maxWidth: '150px' }}>
-                                    {cliente.email || "N/A"}
+                                    {cliente.enderecos.length + " Endereços" || "N/A"}
                                 </td>
                                 <td>{cliente.tipoCliente || cliente.tipo_cliente}</td> 
                                 <td>
@@ -80,6 +82,19 @@ function Tabela({ clientes, excluirCliente, editarCliente }) {
             </table>
         </div>
     );
+}
+
+function formatarCpfCnpj(cpfCnpj) {
+    if (!cpfCnpj) return "N/A";
+    
+    const apenasNumeros = cpfCnpj.replace(/\D/g, '');
+    if (apenasNumeros.length === 11) {
+        return apenasNumeros.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    } else if (apenasNumeros.length === 14) {
+        return apenasNumeros.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+    }
+
+    return cpfCnpj;
 }
 
 export default Tabela;
