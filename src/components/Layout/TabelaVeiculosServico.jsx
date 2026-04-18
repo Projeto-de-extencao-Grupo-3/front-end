@@ -26,10 +26,7 @@ function TabelaServicos({ modelo, placa, veiculo }) {
   };
 
   const traduzirStatus = (status) => {
-  if (!status) return "Desconhecido";
-
-  if (status === "Sem agendamento") return "Em andamento";
-    return status;
+    return status || "Status indisponivel";
   };
 
   useEffect(() => {
@@ -40,7 +37,13 @@ function TabelaServicos({ modelo, placa, veiculo }) {
 
       console.log("🔎 VEICULO ENVIADO:", veiculo);
 
-      const dados = await buscarOrdensPorVeiculo(veiculo, 12);
+      const mapaFiltro = {
+        '3meses': 3,
+        '6meses': 6,
+        '1ano': 12
+      };
+
+      const dados = await buscarOrdensPorVeiculo(veiculo, mapaFiltro[filtro]);
 
       console.log("🔥 DADOS QUE CHEGARAM:", dados);
 
@@ -70,7 +73,7 @@ function TabelaServicos({ modelo, placa, veiculo }) {
     carregarServicos();
   }
 
-}, [veiculo]);
+}, [veiculo, filtro]);
 
   // 🔐 Parser de data seguro
   const parsarData = (dataStr) => {
@@ -184,14 +187,27 @@ function TabelaServicos({ modelo, placa, veiculo }) {
                   className={`badge fs-5 p-3 ${(() => {
                     let statusClasses = 'bg-secondary-subtle border border-secondary text-secondary';
 
-                    if (servico.status === 'Concluído') {
+                    if (servico.status === 'Com agendamento') {
                       statusClasses = 'bg-success-subtle border border-success text-success';
-                    } else if (servico.status === 'Em andamento') {
-                      statusClasses = 'bg-warning-subtle border border-warning text-warning';
+                    } 
+                    else if (servico.status === 'Em produção') {
+                      statusClasses = 'bg-secondary-subtle border border-secondary text-secondary';
+                    } 
+                    else if (servico.status === 'Sem agendamento') {
+                      statusClasses = '';
                     }
 
                     return statusClasses;
                   })()}`}
+                  style={
+                    servico.status === 'Sem agendamento'
+                      ? {
+                          backgroundColor: '#0C2F52',
+                          border: '1px solid #0C2F52',
+                          color: '#fff'
+                        }
+                      : {}
+                  }
                 >
                   {servico.status}
                 </span>

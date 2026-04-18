@@ -90,7 +90,7 @@ function TabelaVeiculos() {
           {/* Botões */}
           <div className="d-flex gap-2 flex-shrink-0">
             <a className={`${styles['btn-navy']} d-flex align-items-center gap-1`}
-              onClick={(e) => { e.preventDefault(); navigate('/clientes/veiculos/servico', { state: {modelo: veiculo.modelo, placa: veiculo.placa, veiculo: veiculo.id_veiculo } }); }}
+              onClick={(e) => { e.preventDefault(); navigate('/clientes/veiculos/servico', { state: {modelo: veiculo.modelo, placa: veiculo.placa, veiculo: veiculo.id_veiculo, cliente: veiculo.id_cliente } }); }}
             >
               <IconeOlho />
               Ver Histórico <span style={{ opacity: 0.7 }}>›</span>
