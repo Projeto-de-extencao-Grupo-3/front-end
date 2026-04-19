@@ -1,6 +1,7 @@
 import { useState } from "react";
 import './ModalAdicionarEndereco.css';
 import Enderecos from "../../service/Endereco";
+import { exibirAlertaErro } from "../../service/alertas";
 
 const estadoInicial = {
     cep: "",
@@ -9,8 +10,14 @@ const estadoInicial = {
     complemento: "",
     bairro: "",
     cidade: "",
-    estado: ""
+    estado: "",
+    correspondencia: false,
 };
+
+function possuiValor(valor) {
+    if (valor === null || valor === undefined) return false;
+    return String(valor).trim() !== "";
+}
 
 function ModalAdicionarEndereco({ isOpen, onClose, onSaveEndereco }) {
     const [formData, setFormData] = useState(estadoInicial);
@@ -35,7 +42,13 @@ function ModalAdicionarEndereco({ isOpen, onClose, onSaveEndereco }) {
     };
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const { name, value, type, checked } = e.target;
+
+        if (type === "checkbox") {
+            setFormData(prev => ({ ...prev, [name]: checked }));
+            return;
+        }
+
         if (name === "cep") {
             handleCEPChange(value);
         } else {
@@ -49,6 +62,24 @@ function ModalAdicionarEndereco({ isOpen, onClose, onSaveEndereco }) {
     };
 
     const handleFinalizar = async () => {
+        const camposObrigatoriosEndereco = [
+            { label: "CEP", value: formData.cep },
+            { label: "Numero", value: formData.numero },
+            { label: "Logradouro", value: formData.logradouro },
+            { label: "Bairro", value: formData.bairro },
+            { label: "Cidade", value: formData.cidade },
+            { label: "Estado", value: formData.estado },
+        ];
+
+        const camposFaltantes = camposObrigatoriosEndereco
+            .filter((campo) => !possuiValor(campo.value))
+            .map((campo) => campo.label);
+
+        if (camposFaltantes.length > 0) {
+            exibirAlertaErro(`Preencha os campos obrigatorios do endereco: ${camposFaltantes.join(", ")}.`);
+            return;
+        }
+
         await onSaveEndereco(formData);
         handleCancelar();
     };
@@ -81,7 +112,7 @@ function ModalAdicionarEndereco({ isOpen, onClose, onSaveEndereco }) {
                                 <div className="row g-3">
                                     {/* CEP */}
                                     <div className="col-12">
-                                        <label className="form-label mb-1 text-dark fw-normal">CEP</label>
+                                        <label className="form-label mb-1 text-dark fw-normal">CEP*</label>
                                         <input
                                             type="text"
                                             name="cep"
@@ -95,17 +126,17 @@ function ModalAdicionarEndereco({ isOpen, onClose, onSaveEndereco }) {
 
                                     {/* Logradouro e Número */}
                                     <div className="col-8">
-                                        <label className="form-label mb-1 text-dark fw-normal">Logradouro</label>
+                                        <label className="form-label mb-1 text-dark fw-normal">Logradouro*</label>
                                         <input type="text" name="logradouro" value={formData.logradouro} onChange={handleChange} className="form-control bg-light border-0" placeholder="Rua..." />
                                     </div>
                                     <div className="col-4">
-                                        <label className="form-label mb-1 text-dark fw-normal">Nº</label>
+                                        <label className="form-label mb-1 text-dark fw-normal">Nº*</label>
                                         <input type="text" name="numero" value={formData.numero} onChange={handleChange} className="form-control bg-light border-0" placeholder="123" />
                                     </div>
 
                                     {/* Bairro e Complemento */}
                                     <div className="col-6">
-                                        <label className="form-label mb-1 text-dark fw-normal">Bairro</label>
+                                        <label className="form-label mb-1 text-dark fw-normal">Bairro*</label>
                                         <input type="text" name="bairro" value={formData.bairro} onChange={handleChange} className="form-control bg-light border-0" />
                                     </div>
                                     <div className="col-6">
@@ -115,12 +146,28 @@ function ModalAdicionarEndereco({ isOpen, onClose, onSaveEndereco }) {
 
                                     {/* Cidade e UF */}
                                     <div className="col-9">
-                                        <label className="form-label mb-1 text-dark fw-normal">Cidade</label>
+                                        <label className="form-label mb-1 text-dark fw-normal">Cidade*</label>
                                         <input type="text" name="cidade" value={formData.cidade} onChange={handleChange} className="form-control bg-light border-0" />
                                     </div>
                                     <div className="col-3">
-                                        <label className="form-label mb-1 text-dark fw-normal">UF</label>
+                                        <label className="form-label mb-1 text-dark fw-normal">UF*</label>
                                         <input type="text" name="estado" value={formData.estado} onChange={handleChange} className="form-control bg-light border-0" maxLength={2} />
+                                    </div>
+
+                                    <div className="col-12">
+                                        <div className="form-check">
+                                            <input
+                                                className="form-check-input"
+                                                type="checkbox"
+                                                id="enderecoCorrespondenciaCadastro"
+                                                name="correspondencia"
+                                                checked={Boolean(formData.correspondencia)}
+                                                onChange={handleChange}
+                                            />
+                                            <label className="form-check-label" htmlFor="enderecoCorrespondenciaCadastro">
+                                                Endereço de correspondência
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

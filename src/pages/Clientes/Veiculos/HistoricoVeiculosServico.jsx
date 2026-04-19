@@ -17,7 +17,7 @@ function HistoricoVeiculosServico() {
             <div className="header-clientes">
                 <div>
                     <h1>Historico de serviços</h1>
-                    <h3 class="display-6">{tituloH1}</h3>
+                    <h3 className="display-6">{tituloH1}</h3>
                     <p>Controle completo dos serviços</p>
                 </div>
                 <div className="d-flex gap-3 align-items-center">

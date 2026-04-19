@@ -1,13 +1,13 @@
 import { useState } from "react";
 import './ModalAdicionar.css';
+import { exibirAlertaErro } from "../../service/alertas";
 
 function ModalAdicionar({ isOpen, onClose, onSave }) {
     const estadoInicial = {
         nome: "",
         cpf_cnpj: "",
-        tipo: "PESSOA_FISICA",
-        telefone: "",
-        email: "",
+        tipo_cliente: "PESSOA_FISICA",
+        inscricao_estadual: "",
     };
 
     const [formData, setFormData] = useState(estadoInicial);
@@ -24,11 +24,19 @@ function ModalAdicionar({ isOpen, onClose, onSave }) {
 
     const handleFinalizar = async () => {
         try {
-            await onSave(formData);
+            if (!formData.nome?.trim() || !formData.cpf_cnpj?.trim()) {
+                exibirAlertaErro("Preencha os campos obrigatórios de cliente: Nome e CPF/CNPJ.");
+                return;
+            }
+
+            await onSave({
+                ...formData,
+                cpf_cnpj: String(formData.cpf_cnpj).replace(/\D/g, ""),
+            });
             handleCancelar();
         } catch (error) {
             console.error("Erro ao salvar:", error);
-            alert("Erro ao salvar cliente.");
+            exibirAlertaErro("Erro ao salvar cliente.");
         }
     };
 
@@ -82,8 +90,8 @@ function ModalAdicionar({ isOpen, onClose, onSave }) {
                                     <div className="col-6">
                                         <label className="form-label mb-1 text-dark fw-normal">Tipo de Cliente</label>
                                         <select
-                                            name="tipo"
-                                            value={formData.tipo}
+                                            name="tipo_cliente"
+                                            value={formData.tipo_cliente}
                                             onChange={handleChange}
                                             className="form-select bg-light border-0"
                                         >
@@ -92,29 +100,19 @@ function ModalAdicionar({ isOpen, onClose, onSave }) {
                                         </select>
                                     </div>
 
-                                    <div className="col-12">
-                                        <label className="form-label mb-1 text-dark fw-normal">Email</label>
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            value={formData.email}
-                                            onChange={handleChange}
-                                            className="form-control bg-light border-0"
-                                            placeholder="grotrack@gmail.com"
-                                        />
-                                    </div>
-
-                                    <div className="col-12">
-                                        <label className="form-label mb-1 text-dark fw-normal">Telefone</label>
-                                        <input
-                                            type="text"
-                                            name="telefone"
-                                            value={formData.telefone}
-                                            onChange={handleChange}
-                                            className="form-control bg-light border-0"
-                                            placeholder="11999999999"
-                                        />
-                                    </div>
+                                    {formData.tipo_cliente === "PESSOA_JURIDICA" && (
+                                        <div className="col-12">
+                                            <label className="form-label mb-1 text-dark fw-normal">Inscrição Estadual</label>
+                                            <input
+                                                type="text"
+                                                name="inscricao_estadual"
+                                                value={formData.inscricao_estadual}
+                                                onChange={handleChange}
+                                                className="form-control bg-light border-0"
+                                                placeholder="123456789"
+                                            />
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 

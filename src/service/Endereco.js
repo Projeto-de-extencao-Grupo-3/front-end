@@ -1,5 +1,6 @@
 import { useState } from "react";
 import api from "./api";
+import { exibirAlertaConfirmacao, exibirAlertaErro, exibirAlertaSucesso } from "./alertas";
 
 function Enderecos() {
     const [loading, setLoading] = useState(false);
@@ -11,7 +12,7 @@ function Enderecos() {
 
         setLoading(true);
         try {
-            const response = await api.get(`/enderecos/viacep/${cepLimpo}`);
+            const response = await api.get(`/clientes/sem_id/enderecos/viacep/${cepLimpo}`);
 
             console.log("Endereço encontrado:", response.data);
             return response.data;
@@ -23,35 +24,65 @@ function Enderecos() {
         }
     };
 
-    const atualizarEndereco = async (dadosEndereco) => {
-        console.log(dadosEndereco)
+    const atualizarEndereco = async (dados) => {
+        const idCliente = dados.id_cliente;
+        const idEndereco = dados.id_endereco;
+        const payload = dados.endereco;
 
-        const payload = {
-            "id_endereco": dadosEndereco.id_endereco,
-            "cep": dadosEndereco.cep,
-            "logradouro": dadosEndereco.logradouro,
-            "complemento": dadosEndereco.complemento,
-            "numero": dadosEndereco.numero,
-            "bairro": dadosEndereco.bairro,
-            "cidade": dadosEndereco.cidade,
-            "estado": dadosEndereco.estado,
-            "correspondencia": dadosEndereco.correspondencia
+        if (!idCliente || !idEndereco) {
+            throw new Error("id_cliente e id_endereco são obrigatórios para atualizar endereço.");
         }
 
-        const response = api.put("/enderecos", payload)
-    }
+        const response = await api.put(`/clientes/${idCliente}/enderecos/${idEndereco}`, payload);
+        return response.data;
+    };
 
-    const cadastrarEnderecoVazio = async () => {
+    const adicionarEndereco = async (dados) => {
+        const idCliente = dados.id_cliente;
+        const payload = dados.endereco;
+
+        if (!idCliente) {
+            throw new Error("id_cliente é obrigatório para adicionar endereço.");
+        }
+
+        const response = await api.post(`/clientes/${idCliente}/enderecos`, payload);
+        return response.data;
+    };
+
+    const cadastrarEnderecoVazio = async (idCliente) => {
         try {
-            const response = await api.post(`/enderecos/registrar-vazio`);
+            const response = await api.post(`/clientes/${idCliente}/enderecos/registrar-vazio`);
             return response.data;
         } catch (error) {
             console.error("Erro ao cadastrar endereço vazio:", error);
             return null;
         }
-    }
+    };
 
-    return { buscarEnderecoViaCEP, cadastrarEnderecoVazio, atualizarEndereco, loading };
+    const excluirEndereco = async (idCliente, idEndereco) => {
+        const confirmacao = await exibirAlertaConfirmacao(
+            "Deseja realmente excluir este endereço?",
+            "Sim, excluir",
+            "Cancelar"
+        );
+
+        if (!confirmacao.isConfirmed) {
+            return false;
+        }
+
+        try {
+            await api.delete(`/clientes/${idCliente}/enderecos/${idEndereco}`);
+            exibirAlertaSucesso("Endereço excluído com sucesso!");
+            return true;
+        } catch (error) {
+            console.error("Erro ao excluir endereço:", error);
+            exibirAlertaErro("Erro ao excluir no servidor.");
+            return false;
+        }
+    };
+
+
+    return { adicionarEndereco, buscarEnderecoViaCEP, cadastrarEnderecoVazio, atualizarEndereco, loading, excluirEndereco };
 }
 
 export default Enderecos;

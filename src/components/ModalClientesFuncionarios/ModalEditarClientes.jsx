@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import "./ModalEditar.css";
+import { exibirAlertaErro } from "../../service/alertas";
 
 const estadoClienteInicial = {
     id_cliente: "",
     nome: "",
     cpf_cnpj: "",
+    inscricao_estadual: "",
     tipo_cliente: "PESSOA_FISICA",
 };
 
@@ -29,11 +31,14 @@ const estadoContatoInicial = {
 };
 
 function normalizarCliente(cliente = {}) {
+    console.log("Normalizando cliente:", cliente);
+
     return {
         ...estadoClienteInicial,
         ...cliente,
-        id_cliente: cliente.id_cliente ?? cliente.idCliente ?? "",
+        id_cliente: cliente.id_cliente  ?? "",
         cpf_cnpj: cliente.cpf_cnpj ?? cliente.cpfCnpj ?? "",
+        inscricao_estadual: cliente.inscricao_estadual ?? cliente.inscricaoEstadual ?? "",
         tipo_cliente: cliente.tipo_cliente ?? cliente.tipoCliente ?? "PESSOA_FISICA",
     };
 }
@@ -43,7 +48,7 @@ function normalizarEndereco(endereco = {}) {
         ...estadoEnderecoInicial,
         ...endereco,
         id_endereco: endereco.id_endereco ?? endereco.idEndereco ?? "",
-        correspondencia: endereco.correspondencia
+        correspondencia: Boolean(endereco.correspondencia)
     };
 }
 
@@ -54,6 +59,36 @@ function normalizarContato(contato = {}) {
     };
 }
 
+function somenteNumeros(valor = "") {
+    return String(valor).replace(/\D/g, "");
+}
+
+function possuiValor(valor) {
+    if (valor === null || valor === undefined) return false;
+    return String(valor).trim() !== "";
+}
+
+function formatarCpfOuCnpj(valor = "", isPessoaJuridica = false) {
+    const digitos = somenteNumeros(valor);
+
+    if (isPessoaJuridica) {
+        const cnpj = digitos.slice(0, 14);
+
+        return cnpj
+            .replace(/^(\d{2})(\d)/, "$1.$2")
+            .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+            .replace(/\.(\d{3})(\d)/, ".$1/$2")
+            .replace(/(\d{4})(\d)/, "$1-$2");
+    }
+
+    const cpf = digitos.slice(0, 11);
+
+    return cpf
+        .replace(/^(\d{3})(\d)/, "$1.$2")
+        .replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3")
+        .replace(/\.(\d{3})(\d)/, ".$1-$2");
+}
+
 function ModalEditarCliente({
     isOpen,
     onClose,
@@ -61,6 +96,8 @@ function ModalEditarCliente({
     onSave,
     onSaveEndereco,
     onSaveContato,
+    onDeleteEndereco,
+    onDeleteContato,
 }) {
     const [abaAtiva, setAbaAtiva] = useState("cliente");
     const [clienteEditado, setClienteEditado] = useState(estadoClienteInicial);
@@ -104,12 +141,24 @@ function ModalEditarCliente({
 
     const handleChangeCliente = (e) => {
         const { name, value } = e.target;
+
+        if (name === "cpf_cnpj") {
+            const isPessoaJuridica = clienteEditado.tipo_cliente === "PESSOA_JURIDICA";
+            const valorFormatado = formatarCpfOuCnpj(value, isPessoaJuridica);
+
+            setClienteEditado((prev) => ({ ...prev, [name]: valorFormatado }));
+            return;
+        }
+
         setClienteEditado((prev) => ({ ...prev, [name]: value }));
     };
 
     const handleChangeEndereco = (e) => {
-        const { name, value } = e.target;
-        setFormEndereco((prev) => ({ ...prev, [name]: value }));
+        const { name, value, type, checked } = e.target;
+        setFormEndereco((prev) => ({
+            ...prev,
+            [name]: type === "checkbox" ? checked : value,
+        }));
     };
 
     const handleChangeContato = (e) => {
@@ -128,7 +177,6 @@ function ModalEditarCliente({
 
     const selecionarEndereco = (endereco) => {
         const normalizado = normalizarEndereco(endereco);
-        console.log(normalizado)
         setModoEndereco("editar");
         setEnderecoSelecionadoId(normalizado.id_endereco);
         setFormEndereco(normalizado);
@@ -144,7 +192,6 @@ function ModalEditarCliente({
         const normalizado = normalizarContato(contato);
         setModoContato("editar");
         setContatoSelecionadoId(normalizado.id_contato);
-        console.log(normalizado)
         setFormContato(normalizado);
     };
 
@@ -153,9 +200,11 @@ function ModalEditarCliente({
 
         const payloadCliente = {
             ...clienteEditado,
+            operacao: modoEndereco,
             id_cliente: clienteEditado.id_cliente,
             nome: clienteEditado.nome,
-            cpf_cnpj: clienteEditado.cpf_cnpj,
+            cpf_cnpj: somenteNumeros(clienteEditado.cpf_cnpj),
+            inscricao_estadual: clienteEditado.inscricao_estadual,
             tipo_cliente: clienteEditado.tipo_cliente,
         };
 
@@ -165,23 +214,175 @@ function ModalEditarCliente({
     const salvarEndereco = async () => {
         if (typeof onSaveEndereco !== "function") return;
 
-        await onSaveEndereco(formEndereco);
+        const camposObrigatoriosEndereco = [
+            { label: "CEP", value: formEndereco.cep },
+            { label: "Numero", value: formEndereco.numero },
+            { label: "Logradouro", value: formEndereco.logradouro },
+            { label: "Bairro", value: formEndereco.bairro },
+            { label: "Cidade", value: formEndereco.cidade },
+            { label: "Estado", value: formEndereco.estado },
+        ];
+
+        const camposFaltantes = camposObrigatoriosEndereco
+            .filter((campo) => !possuiValor(campo.value))
+            .map((campo) => campo.label);
+
+        if (camposFaltantes.length > 0) {
+            exibirAlertaErro(`Preencha os campos obrigatorios do endereco: ${camposFaltantes.join(", ")}.`);
+            return;
+        }
+
+        const operacao = modoEndereco === "novo" ? "novo" : "editar";
+
+        const payloadEndereco = {
+            operacao,
+            id_cliente: clienteEditado.id_cliente,
+            id_endereco: formEndereco.id_endereco,
+            endereco: {
+                cep: formEndereco.cep,
+                logradouro: formEndereco.logradouro,
+                complemento: formEndereco.complemento,
+                numero: formEndereco.numero,
+                bairro: formEndereco.bairro,
+                cidade: formEndereco.cidade,
+                estado: formEndereco.estado,
+                correspondencia: Boolean(formEndereco.correspondencia)
+            }
+        };
+
+        const retorno = await onSaveEndereco(payloadEndereco);
+
+        if (!retorno) {
+            return;
+        }
+
+        const enderecoPersistido = normalizarEndereco(
+            retorno?.endereco ?? retorno
+        );
+
+        if (operacao === "novo") {
+            setListaEnderecos((prev) => [...prev, enderecoPersistido]);
+        } else {
+            setListaEnderecos((prev) =>
+                prev.map((item) =>
+                    String(item.id_endereco) === String(payloadEndereco.id_endereco)
+                        ? { ...item, ...enderecoPersistido }
+                        : item
+                )
+            );
+        }
+
+        const idSelecionado =
+            enderecoPersistido.id_endereco ?? payloadEndereco.id_endereco ?? "";
+
+        setEnderecoSelecionadoId(idSelecionado);
+        setFormEndereco({ ...estadoEnderecoInicial, ...enderecoPersistido });
+        setModoEndereco("editar");
     };
 
     const salvarContato = async () => {
         if (typeof onSaveContato !== "function") return;
 
-        console.log(formContato)
+        const camposObrigatoriosContato = [
+            { label: "Telefone", value: formContato.telefone },
+            { label: "Email", value: formContato.email },
+        ];
+
+        const camposFaltantes = camposObrigatoriosContato
+            .filter((campo) => !possuiValor(campo.value))
+            .map((campo) => campo.label);
+
+        if (camposFaltantes.length > 0) {
+            exibirAlertaErro(`Preencha os campos obrigatorios do contato: ${camposFaltantes.join(", ")}.`);
+            return;
+        }
+
+        const operacao = modoContato === "novo" ? "novo" : "editar";
 
         const payloadContato = {
+            operacao,
             id_cliente: clienteEditado.id_cliente,
             contato: {
                 id_contato: formContato.id_contato,
-                tipo_contato: formContato.tipo_contato,
-                valor: formContato.valor,
+                telefone: formContato.telefone,
+                email: formContato.email,
+                nome_contato: formContato.nome_contato,
+                departamento_contato: formContato.departamento_contato
             }
         };
-        await onSaveContato(payloadContato);
+
+        const retorno = await onSaveContato(payloadContato);
+
+        if (!retorno) {
+            return;
+        }
+
+        const contatoPersistido = normalizarContato(
+            retorno?.contato ?? retorno
+        );
+
+        if (operacao === "novo") {
+            setListaContatos((prev) => [...prev, contatoPersistido]);
+        } else {
+            setListaContatos((prev) =>
+                prev.map((item) =>
+                    String(item.id_contato) === String(payloadContato.contato.id_contato)
+                        ? { ...item, ...contatoPersistido }
+                        : item
+                )
+            );
+        }
+
+        const idSelecionado =
+            contatoPersistido.id_contato ?? payloadContato.contato.id_contato ?? "";
+
+        setContatoSelecionadoId(idSelecionado);
+        setFormContato({ ...estadoContatoInicial, ...contatoPersistido });
+        setModoContato("editar");
+    };
+
+    const excluirEnderecoItem = async (idEndereco) => {
+        if (typeof onDeleteEndereco !== "function") return;
+
+        const excluiu = await onDeleteEndereco({
+            idCliente: clienteEditado.id_cliente,
+            idEndereco,
+        });
+
+        if (!excluiu) return;
+
+        const listaAtualizada = listaEnderecos.filter(
+            (item) => String(item.id_endereco) !== String(idEndereco)
+        );
+
+        setListaEnderecos(listaAtualizada);
+
+        const proximoEndereco = listaAtualizada[0] ?? null;
+        setEnderecoSelecionadoId(proximoEndereco?.id_endereco ?? "");
+        setFormEndereco(proximoEndereco ?? estadoEnderecoInicial);
+        setModoEndereco(proximoEndereco ? "editar" : "lista");
+    };
+
+    const excluirContatoItem = async (idContato) => {
+        if (typeof onDeleteContato !== "function") return;
+
+        const excluiu = await onDeleteContato({
+            idCliente: clienteEditado.id_cliente,
+            idContato,
+        });
+
+        if (!excluiu) return;
+
+        const listaAtualizada = listaContatos.filter(
+            (item) => String(item.id_contato) !== String(idContato)
+        );
+
+        setListaContatos(listaAtualizada);
+
+        const proximoContato = listaAtualizada[0] ?? null;
+        setContatoSelecionadoId(proximoContato?.id_contato ?? "");
+        setFormContato(proximoContato ?? estadoContatoInicial);
+        setModoContato(proximoContato ? "editar" : "lista");
     };
 
     const tituloAba =
@@ -197,6 +398,8 @@ function ModalEditarCliente({
             : abaAtiva === "endereco"
                 ? "Selecione um endereço para editar ou crie um novo"
                 : "Selecione um contato para editar ou crie um novo";
+
+    const isPessoaJuridica = clienteEditado.tipo_cliente === "PESSOA_JURIDICA";
 
     return (
         <div className="modal-overlay">
@@ -272,39 +475,53 @@ function ModalEditarCliente({
                     {abaAtiva === "cliente" ? (
                         <div className="row g-3">
                             <div className="col-12">
-                                <label className="form-label text-dark">Nome</label>
+                                <label className="form-label text-dark">
+                                    {isPessoaJuridica ? "Razão Social" : "Nome"}
+                                </label>
                                 <input
                                     type="text"
                                     className="form-control bg-light border-0"
                                     name="nome"
                                     value={clienteEditado.nome || ""}
                                     onChange={handleChangeCliente}
-                                    placeholder="Exemplo: Gabriel"
+                                    placeholder={isPessoaJuridica ? "Exemplo: Oficina ABC LTDA" : "Exemplo: Gabriel"}
                                 />
                             </div>
                             <div className="col-6">
-                                <label className="form-label text-dark">CPF/CNPJ</label>
+                                <label className="form-label text-dark">{isPessoaJuridica ? "CNPJ" : "CPF"}</label>
                                 <input
                                     type="text"
                                     className="form-control bg-light border-0"
                                     name="cpf_cnpj"
-                                    value={clienteEditado.cpf_cnpj || ""}
+                                    value={formatarCpfOuCnpj(clienteEditado.cpf_cnpj, isPessoaJuridica)}
                                     onChange={handleChangeCliente}
-                                    placeholder="Somente leitura opcional"
+                                    placeholder={isPessoaJuridica ? "00.000.000/0000-00" : "000.000.000-00"}
                                 />
                             </div>
                             <div className="col-6">
                                 <label className="form-label text-dark">Tipo de Cliente</label>
-                                <select
-                                    className="form-select bg-light border-0"
+                                <input
+                                    type="text"
+                                    className="form-control bg-light border-0"
                                     name="tipo_cliente"
                                     value={clienteEditado.tipo_cliente || "PESSOA_FISICA"}
-                                    onChange={handleChangeCliente}
-                                >
-                                    <option value="PESSOA_FISICA">PESSOA_FISICA</option>
-                                    <option value="PESSOA_JURIDICA">PESSOA_JURIDICA</option>
-                                </select>
+                                    disabled
+                                />
                             </div>
+
+                            {isPessoaJuridica && (
+                                <div className="col-12">
+                                    <label className="form-label text-dark">Inscrição Estadual</label>
+                                    <input
+                                        type="text"
+                                        className="form-control bg-light border-0"
+                                        name="inscricao_estadual"
+                                        value={clienteEditado.inscricao_estadual || ""}
+                                        onChange={handleChangeCliente}
+                                        placeholder="Exemplo: 123.456.789.000"
+                                    />
+                                </div>
+                            )}
 
                             <div className="col-12 d-flex justify-content-end pt-2">
                                 <button
@@ -332,16 +549,33 @@ function ModalEditarCliente({
                                             const ativo = String(endereco.id_endereco) === String(enderecoSelecionadoId);
 
                                             return (
-                                                <button
+                                                <div
                                                     key={endereco.id_endereco || `${endereco.logradouro}-${endereco.numero}`}
-                                                    className={`btn text-start ${ativo ? "btn-primary" : "btn-outline-secondary"}`}
-                                                    onClick={() => selecionarEndereco(endereco)}
+                                                    className="d-flex gap-2"
                                                 >
-                                                    <div className="fw-medium">{endereco.logradouro || "Endereço sem logradouro"}</div>
-                                                    <small>
-                                                        {endereco.numero || "S/N"} - {endereco.cidade || "Cidade"}/{endereco.estado || "UF"}
-                                                    </small>
-                                                </button>
+                                                    <button
+                                                        className={`btn text-start flex-grow-1 ${ativo ? "btn-primary" : "btn-outline-secondary"}`}
+                                                        onClick={() => selecionarEndereco(endereco)}
+                                                    >
+                                                        <div className="fw-medium">{endereco.logradouro || "Endereço sem logradouro"}</div>
+                                                        <small>
+                                                            {endereco.numero || "S/N"} - {endereco.cidade || "Cidade"}/{endereco.estado || "UF"}
+                                                        </small>
+                                                    </button>
+
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-outline-danger px-2"
+                                                        title="Excluir endereço"
+                                                        aria-label="Excluir endereço"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            excluirEnderecoItem(endereco.id_endereco);
+                                                        }}
+                                                    >
+                                                        <i className="bx bx-trash"></i>
+                                                    </button>
+                                                </div>
                                             );
                                         })
                                     ) : (
@@ -488,14 +722,36 @@ function ModalEditarCliente({
                                             const ativo = String(contato.id_contato) === String(contatoSelecionadoId);
 
                                             return (
-                                                <button
-                                                    key={contato.id_contato || `${contato.tipo_contato}-${contato.valor}`}
-                                                    className={`btn text-start ${ativo ? "btn-primary" : "btn-outline-secondary"}`}
-                                                    onClick={() => selecionarContato(contato)}
+                                                <div
+                                                    key={contato.id_contato || `${contato.telefone}-${contato.email}`}
+                                                    className="d-flex gap-2"
                                                 >
-                                                    <div className="fw-medium">{contato.tipo_contato || "Contato"}</div>
-                                                    <small>{contato.valor || "Sem valor informado"}</small>
-                                                </button>
+                                                    <button
+                                                        className={`btn text-start flex-grow-1 ${ativo ? "btn-primary" : "btn-outline-secondary"}`}
+                                                        onClick={() => selecionarContato(contato)}
+                                                    >
+                                                        <div className="fw-medium">
+                                                            {contato.nome_contato || "Contato"}
+                                                        </div>
+                                                        <small>
+                                                            {contato.telefone || "Sem telefone"}
+                                                            {contato.email ? ` | ${contato.email}` : ""}
+                                                        </small>
+                                                    </button>
+
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-outline-danger px-2"
+                                                        title="Excluir contato"
+                                                        aria-label="Excluir contato"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            excluirContatoItem(contato.id_contato);
+                                                        }}
+                                                    >
+                                                        <i className="bx bx-trash"></i>
+                                                    </button>
+                                                </div>
                                             );
                                         })
                                     ) : (
@@ -523,10 +779,10 @@ function ModalEditarCliente({
                                             <input
                                                 type="text"
                                                 className="form-control bg-light border-0"
-                                                name="descricao"
+                                                name="telefone"
                                                 value={formContato.telefone || ""}
                                                 onChange={handleChangeContato}
-                                                placeholder="Ex.: contato financeiro"
+                                                placeholder="(11) 99999-9999"
                                             />
                                         </div>
                                         <div className="col-12">
@@ -534,10 +790,10 @@ function ModalEditarCliente({
                                             <input
                                                 type="text"
                                                 className="form-control bg-light border-0"
-                                                name="valor"
+                                                name="email"
                                                 value={formContato.email || ""}
                                                 onChange={handleChangeContato}
-                                                placeholder="(11) 99999-9999 ou email@dominio.com"
+                                                placeholder="contato@empresa.com"
                                             />
                                         </div>
                                         <div className="col-6">
@@ -556,7 +812,7 @@ function ModalEditarCliente({
                                             <input
                                                 type="text"
                                                 className="form-control bg-light border-0"
-                                                name="departamento"
+                                                name="departamento_contato"
                                                 value={formContato.departamento_contato || ""}
                                                 onChange={handleChangeContato}
                                                 placeholder="Ex.: contato financeiro"

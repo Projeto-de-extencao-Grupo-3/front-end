@@ -37,7 +37,7 @@ function ZoomButtons() {
         onClick={() => setAberto(!aberto)}
         title="Zoom"
       >
-        <i class="bx bx-search" />
+        <i className="bx bx-search" />
       </button>
     </div>
   );
