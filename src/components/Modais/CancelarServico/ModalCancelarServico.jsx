@@ -9,7 +9,7 @@ function ModalCancelarServico({ os, onSuccess }) {
 
     const handleCancelarOS = async () => {
         try {
-            await api.delete(`/ordens/${os.id_ordem_servico}`);
+            await api.delete(`/jornada/${os.id_ordem_servico}/cancelar-ordem`);
             setAberto(false);
             if (onSuccess) onSuccess();
             alert("Ordem de serviço cancelada com sucesso!");
