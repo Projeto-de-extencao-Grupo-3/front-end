@@ -42,8 +42,7 @@ function App() {
         <Route path="/painelControle" element={<PainelControle />} />
         <Route path="/painelControle/entradaCamera" element={<EntradaVeiculoCamera />} />
         <Route path="/painelControle/entrada" element={<EntradaVeiculo />} />
-        <Route path="/painelControle/entrada/:placa" element={<EntradaVeiculoCamera />} />
-        <Route path="/painelControle/entrada/:idOrdemServico" element={<EntradaVeiculoCamera />} />
+        <Route path="/painelControle/entrada/:placa" element={<EntradaVeiculo />} />
         <Route path="/painelControle/orcamento" element={<EtapaOrcamento />} />
         <Route path="/painelControle/orcamento/:idOrdemServico" element={<EtapaOrcamento />} />
         <Route path="/painelControle/autorizacao" element={<AutorizacaoVeiculo />} />
