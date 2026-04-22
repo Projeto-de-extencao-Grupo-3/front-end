@@ -12,6 +12,33 @@ import api, { buscarVeiculoPorPlaca } from "../../../service/api";
 
 function EntradaVeiculo() {
 
+    const obterIdRegistroEntrada = (os) => (
+        os?.fk_entrada ||
+        os?.entrada?.id_registro_entrada ||
+        os?.entrada?.fk_registro ||
+        os?.entrada?.idRegistroEntrada ||
+        null
+    );
+
+    const obterIdOrdemServico = (os) => (
+        os?.id_ordem_servico ||
+        os?.idOrdemServico ||
+        os?.ordemServico?.id_ordem_servico ||
+        null
+    );
+
+    const obterIdVeiculo = (os) => (
+        os?.veiculo?.id_veiculo ||
+        os?.veiculo?.idVeiculo ||
+        null
+    );
+
+    const obterIdCliente = (os) => (
+        os?.cliente?.id_cliente ||
+        os?.cliente?.idCliente ||
+        null
+    );
+
     const itensPadrao = ["Geladeira", "Macaco", "Extintor", "Estepe", "Monitor"];
 
     const { adicionarCliente } = Clientes()
@@ -25,15 +52,16 @@ function EntradaVeiculo() {
     const clienteState = location.state?.clienteDados;
 
     const [dadosEntradaExistente, setDadosEntradaExistente] = useState({
-        idCliente: dadosOS?.cliente?.id_cliente || dadosOS?.cliente?.idCliente || null,
-        idVeiculo: dadosOS?.veiculo?.id_veiculo || dadosOS?.veiculo?.idVeiculo || null,
-        idOrdemServico: dadosOS?.id_ordem_servico || null,
-        idRegistroEntrada: dadosOS?.fk_entrada || null
+        idCliente: obterIdCliente(dadosOS),
+        idVeiculo: obterIdVeiculo(dadosOS),
+        idOrdemServico: obterIdOrdemServico(dadosOS),
+        idRegistroEntrada: obterIdRegistroEntrada(dadosOS)
     });
     const [clientesDisponiveis, setClientesDisponiveis] = useState([]);
     const [clienteSelecionado, setClienteSelecionado] = useState(null);
     const [veiculosDisponiveis, setVeiculosDisponiveis] = useState([]);
     const [veiculoSelecionado, setVeiculoSelecionado] = useState(null);
+    const [preencherComDadosCliente, setPreencherComDadosCliente] = useState(false);
 
     const clientePreenchido = {
         cpf_cnpj: dadosOS?.cliente?.cpf_cnpj || clienteState?.cpf_cnpj || "",
@@ -132,10 +160,10 @@ function EntradaVeiculo() {
 
         setDadosEntradaExistente((prev) => ({
             ...prev,
-            idCliente: dadosOS?.cliente?.id_cliente || dadosOS?.cliente?.idCliente || prev.idCliente,
-            idVeiculo: dadosOS?.veiculo?.id_veiculo || dadosOS?.veiculo?.idVeiculo || prev.idVeiculo,
-            idOrdemServico: dadosOS?.id_ordem_servico || prev.idOrdemServico,
-            idRegistroEntrada: dadosOS?.fk_entrada || prev.idRegistroEntrada
+            idCliente: obterIdCliente(dadosOS) || prev.idCliente,
+            idVeiculo: obterIdVeiculo(dadosOS) || prev.idVeiculo,
+            idOrdemServico: obterIdOrdemServico(dadosOS) || prev.idOrdemServico,
+            idRegistroEntrada: obterIdRegistroEntrada(dadosOS) || prev.idRegistroEntrada
         }));
     }, [dadosOS]);
 
@@ -145,6 +173,8 @@ function EntradaVeiculo() {
     }, [placa]);
 
     useEffect(() => {
+        if (dadosOS) return;
+
         if (!clienteSelecionado?.id_cliente || placa) {
             setVeiculosDisponiveis([]);
             setVeiculoSelecionado(null);
@@ -156,9 +186,13 @@ function EntradaVeiculo() {
     }, [clienteSelecionado, placa]);
 
     useEffect(() => {
-        const carregarDadosPorPlaca = async () => {
-            if (!placa || dadosOS) return;
+        // Só busca por placa se:
+        // 1. Há placa no parâmetro
+        // 2. NÃO tem dadosOS (não é um agendamento)
+        // 3. NÃO tem idVeiculo ainda preenchido
+        if (!placa || dadosOS || dadosEntradaExistente.idVeiculo) return;
 
+        const carregarDadosPorPlaca = async () => {
             try {
                 const [veiculoResponse, clienteResponse] = await Promise.all([
                     buscarVeiculoPorPlaca(placa),
@@ -195,12 +229,37 @@ function EntradaVeiculo() {
         };
 
         carregarDadosPorPlaca();
-    }, [placa, dadosOS]);
+    }, [placa, dadosOS, dadosEntradaExistente.idVeiculo]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
+
+    useEffect(() => {
+        if (formData.tipoCliente !== "PESSOA_FISICA" && preencherComDadosCliente) {
+            setPreencherComDadosCliente(false);
+        }
+    }, [formData.tipoCliente, preencherComDadosCliente]);
+
+    useEffect(() => {
+        if (!preencherComDadosCliente || formData.tipoCliente !== "PESSOA_FISICA") return;
+
+        setFormData((prev) => {
+            const novoResponsavel = prev.nome || "";
+            const novoCpfResponsavel = prev.cpf_cnpj || "";
+
+            if (prev.responsavel === novoResponsavel && prev.cpfResponsavel === novoCpfResponsavel) {
+                return prev;
+            }
+
+            return {
+                ...prev,
+                responsavel: novoResponsavel,
+                cpfResponsavel: novoCpfResponsavel
+            };
+        });
+    }, [preencherComDadosCliente, formData.tipoCliente, formData.nome, formData.cpf_cnpj]);
 
     const selecionarCliente = (idSelecionado) => {
         const cliente = clientesDisponiveis.find((item) => Number(item.id_cliente) === Number(idSelecionado));
@@ -322,17 +381,18 @@ function EntradaVeiculo() {
 
     const handleFinalizar = async () => {
         try {
-            if (placa && !dadosEntradaExistente.idVeiculo) {
-                alert("Nao foi possivel localizar os dados do veiculo para essa placa.");
-                return;
-            }
-
             const itensEntradaPayload = formData.itensEntrada
+                .filter((item) => String(item.nome_item || "").trim().length > 0)
                 .map((item) => ({
-                    nomeItem: item.nome_item.trim(),
+                    nome_item: String(item.nome_item).trim(),
                     quantidade: Number(item.quantidade_item) || 0
                 }))
-                .filter((item) => item.nomeItem);
+                .filter((item) => String(item.nome_item || "").trim().length > 0 && item.quantidade > 0);
+
+            if (itensEntradaPayload.length === 0) {
+                alert("Adicione pelo menos um item válido com nome e quantidade maior que zero.");
+                return;
+            }
 
             const payloadEntrada = {
                 dataEntradaPrevista: formData.dataEntrada,
@@ -344,6 +404,43 @@ function EntradaVeiculo() {
                 fk_oficina: 1
             };
 
+            const payloadConfirmacaoEntrada = {
+                responsavel: formData.responsavel,
+                cpf: formData.cpfResponsavel,
+                itens_entrada: itensEntradaPayload
+            };
+
+            const agendamentoExistente = Boolean(
+                dadosEntradaExistente.idOrdemServico && dadosEntradaExistente.idRegistroEntrada && dadosEntradaExistente.idVeiculo
+            );
+
+            if (agendamentoExistente) {
+                const resultadoEntrada = await confirmarEntradaAgendada({
+                    fk_registro: dadosEntradaExistente.idRegistroEntrada,
+                    entrada: payloadConfirmacaoEntrada
+                });
+
+                const idOrdemServicoGerada =
+                    dadosEntradaExistente.idOrdemServico ||
+                    resultadoEntrada?.entrada?.fkOrdemServico ||
+                    resultadoEntrada?.fk_ordem_servico;
+
+                navigate(`/painelControle/orcamento/${idOrdemServicoGerada}`, {
+                    state: {
+                        idOrdemServico: idOrdemServicoGerada,
+                        veiculoDados: {
+                            marca: formData.marca,
+                            prefixo: formData.prefixo,
+                            modelo: formData.modelo,
+                            nome: formData.nome,
+                            placa: formData.placa
+                        }
+                    }
+                });
+
+                return;
+            }
+
             const clienteSelecionadoSemVeiculo = Boolean(
                 clienteSelecionado?.id_cliente && !veiculoSelecionado?.id_veiculo && !placa
             );
@@ -352,15 +449,19 @@ function EntradaVeiculo() {
                 ? null
                 : dadosEntradaExistente.idVeiculo;
 
+            // Se tem veículo (seja de agendamento ou seleção), processa entrada do veículo existente
             if (idVeiculoParaEntrada) {
                 let resultadoEntrada;
 
+                // Se é um agendamento (tem ordem de serviço e registro), confirma agendamento
                 if (dadosEntradaExistente.idOrdemServico && dadosEntradaExistente.idRegistroEntrada) {
                     resultadoEntrada = await confirmarEntradaAgendada({
                         fk_registro: dadosEntradaExistente.idRegistroEntrada,
-                        entrada: payloadEntrada
+                        entrada: payloadConfirmacaoEntrada
                     });
-                } else {
+                } 
+                // Caso contrário, adiciona novo registro de entrada
+                else {
                     resultadoEntrada = await adicionarRegistroEntrada({
                         fk_veiculo: idVeiculoParaEntrada,
                         entrada: {
@@ -391,6 +492,7 @@ function EntradaVeiculo() {
                 return;
             }
 
+            // Se não tem veículo existente, cria novo cliente + veículo
             let idClienteParaEntrada = dadosEntradaExistente.idCliente;
             let nomeClienteParaEntrada = formData.nome;
 
@@ -566,13 +668,37 @@ function EntradaVeiculo() {
                             <label>Data de Entrada*</label>
                             <input type="date" name="dataEntrada" value={formData.dataEntrada} onChange={handleChange} />
                         </div>
+                        {formData.tipoCliente === "PESSOA_FISICA" && (
+                            <div className="input-field">
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        checked={preencherComDadosCliente}
+                                        onChange={(e) => setPreencherComDadosCliente(e.target.checked)}
+                                    />
+                                    {' '}Preencher responsavel com dados do cliente
+                                </label>
+                            </div>
+                        )}
                         <div className="input-field">
                             <label>Nome do responsável*</label>
-                            <input name="responsavel" value={formData.responsavel} onChange={handleChange} placeholder="Ex: João da Silva" />
+                            <input
+                                name="responsavel"
+                                value={formData.responsavel}
+                                onChange={handleChange}
+                                placeholder="Ex: João da Silva"
+                                disabled={preencherComDadosCliente && formData.tipoCliente === "PESSOA_FISICA"}
+                            />
                         </div>
                         <div className="input-field">
                             <label>CPF do responsável*</label>
-                            <input name="cpfResponsavel" value={formData.cpfResponsavel} onChange={handleChange} placeholder="Ex: 123.456.789-00" />
+                            <input
+                                name="cpfResponsavel"
+                                value={formData.cpfResponsavel}
+                                onChange={handleChange}
+                                placeholder="Ex: 123.456.789-00"
+                                disabled={preencherComDadosCliente && formData.tipoCliente === "PESSOA_FISICA"}
+                            />
                         </div>
                     </InformacoesCard>
                 </div>
