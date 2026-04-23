@@ -8,6 +8,7 @@ import ModalAgendarEntrada from "../../components/ModalAgendarEntrada/ModalAgend
 import { useNavigate } from "react-router-dom";
 import "./PainelControle.css";
 import ModalCancelarServico from "../../components/Modais/CancelarServico/ModalCancelarServico";
+import Loading from "../../components/Loading/Loading";
 
 function PainelControle() {
     const [kpiAtiva, setKpiAtiva] = useState("entrada");
@@ -81,6 +82,7 @@ function PainelControle() {
 
     return (
         <Layout ativo="painel">
+            <Loading isLoading={!servicos} message="Carregando Painel de Controle...">
             <div className="d-flex flex-column">
                 <div className="d-flex justify-content-between align-items-center mb-4">
                     <div className="d-flex flex-column">
@@ -329,6 +331,7 @@ function PainelControle() {
                     })}
                 </div>
             </div>
+            </Loading>
         </Layout>
     );
 }

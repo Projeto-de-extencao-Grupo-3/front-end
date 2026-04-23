@@ -7,6 +7,7 @@ import ModalNovoItem from "../../components/ModalNovoItem/ModalNovoItem.jsx";
 import ModalDesativarEstoque from "../../components/ModalClientesFuncionarios/ModalDesativarEstoque.jsx";
 import EditarQuantidadeEstoque from "../../components/ModalNovoItem/EditarQuantidadeEstoque.jsx";
 import Produtos from "../../service/Produtos.js";
+import Loading from "../../components/Loading/Loading.jsx";
 
 function ControleEstoque() {
     const { produtos, listarProdutosPaginados, listarProdutosPaginadosPorServico, excluirProduto, adicionarProduto, atualizarProduto, realizarBaixaEstoqueProduto } = Produtos();
@@ -106,6 +107,7 @@ function ControleEstoque() {
 
     return (
         <Layout ativo={"estoque"}>
+            <Loading isLoading={!produtos.content} message="Carregando Estoque...">
             <div className="header-clientes">
                 <div>
                     <h1>Catálogo do Estoque</h1>
@@ -198,6 +200,7 @@ function ControleEstoque() {
                 handleConfirm={confirmarAjusteEstoque}
                 itemParaAjustarEstoque={itemParaAjustarEstoque}
             />
+            </Loading>
         </Layout>
     );
 }

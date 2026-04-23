@@ -6,6 +6,7 @@ import ServicoCard from "../../components/ServicoCard/ServicoCard";
 import { useNavigate } from "react-router-dom";
 import CalendarIcon from "../../assets/icons/CalendarIcon.png";
 import "./AnaliseFinanceira.css";
+import Loading from "../../components/Loading/Loading";
 
 function AnaliseFinanceira() {
     // funcionalidade puxar data atual para filtro inicial
@@ -65,6 +66,7 @@ function AnaliseFinanceira() {
 
     return (
         <Layout ativo="financeiro">
+            <Loading isLoading={!financeiro} message="Carregando Análise Financeira...">
             <div className="analise-financeira d-flex flex-column w-100">
 
                 <div className="d-flex justify-content-between align-items-center mb-4">
@@ -154,6 +156,7 @@ function AnaliseFinanceira() {
                     </div>
                 </div>
             </div>
+            </Loading>
         </Layout>
     );
 }

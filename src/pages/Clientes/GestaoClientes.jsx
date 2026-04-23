@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Layout from "../../components/Layout/Layout.jsx";
 import Tabela from "../../components/Layout/Tabela.jsx";
 import ModalAdicionar from "../../components/ModalClientesFuncionarios/ModalAdicionar.jsx";
+import Loading from "../../components/Loading/Loading.jsx";
 import Clientes from "../../service/Clientes.js";
 import Enderecos from "../../service/Endereco.js";
 import Contatos from "../../service/Contato.js";
@@ -13,7 +14,7 @@ import ModalEditarCliente from "../../components/ModalClientesFuncionarios/Modal
 import { exibirAlertaErro, exibirAlertaSucesso } from "../../service/alertas";
 
 function GestaoClientes() {
-    const { clientes, _loading, listarClientesPaginados, excluirCliente, adicionarCliente, atualizarCliente } = Clientes();
+    const { clientes, loading, listarClientesPaginados, excluirCliente, adicionarCliente, atualizarCliente } = Clientes();
     const { buscarEnderecoViaCEP, cadastrarEnderecoVazio, atualizarEndereco, adicionarEndereco, excluirEndereco } = Enderecos();
     const { adicionarContato, atualizarContato, excluirContato } = Contatos();
 
@@ -209,12 +210,13 @@ function GestaoClientes() {
 
     return (
         <Layout ativo={"clientes"}>
-            <div className="header-clientes">
-                <div>
-                    <h1>Gestão de Clientes</h1>
-                    <p>Visão geral dos Clientes</p>
-                </div>
-                <div className="d-flex gap-3 align-items-center">
+            <Loading isLoading={loading} message="Carregando clientes...">
+                <div className="header-clientes">
+                    <div>
+                        <h1>Gestão de Clientes</h1>
+                        <p>Visão geral dos Clientes</p>
+                    </div>
+                    <div className="d-flex gap-3 align-items-center">
                     <input
                         type="text"
                         className="form-control"
@@ -276,6 +278,7 @@ function GestaoClientes() {
                     </button>
                 </div>
             </div>
+            </Loading>
             <ModalDesativar
                 isOpen={isModalDesativarOpen}
                 onClose={() => {
