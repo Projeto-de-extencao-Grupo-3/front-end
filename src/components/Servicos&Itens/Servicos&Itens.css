@@ -97,9 +97,103 @@
 
 .progresso-servico {
     width: 100%;
+    padding: 16px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    border: 1px solid #e3e3e3;
+    margin-bottom: 15px;
 }
 
 .progresso-titulo {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
+}
+
+.progresso-info-texto {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.status-atrasado {
+    color: #dc3545;
+    font-weight: 700;
+    padding: 4px 8px;
+    background-color: #ffe5e5;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.status-finalizado {
+    color: #28a745;
+    font-weight: 700;
+    padding: 4px 8px;
+    background-color: #e5f5e5;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.progresso-barra {
+    position: relative;
+    width: 100%;
+    height: 24px;
+    background-color: #e3e3e3;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    border: 1px solid #d0d0d0;
+}
+
+.progresso-preenchimento {
+    height: 100%;
+    background-color: #164A81;
+    border-radius: 5px;
+    transition: width 0.4s ease, background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 8px;
+}
+
+.progresso-preenchimento.progresso-no_prazo {
+    background-color: #164A81;
+}
+
+.progresso-preenchimento.progresso-atrasado {
+    background-color: #dc3545;
+}
+
+.progresso-preenchimento.progresso-finalizado {
+    background-color: #28a745;
+}
+
+.progresso-preenchimento.progresso-neutro {
+    background-color: #cccccc;
+}
+
+.progresso-rodape {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #777;
+}
+
+.progresso-entrada {
+    font-weight: 500;
+}
+
+.progresso-saida {
+    font-weight: 500;
+}
+
+/* Estilos antigos mantidos para compatibilidade */
+.progresso-titulo-antigo {
     font-size: 1.2rem;
     color: #555;
 }
