@@ -8,11 +8,12 @@ import Funcionarios from "../../service/Funcionarios.js";
 import Loading from "../../components/Loading/Loading.jsx";
 
 function GestaoFuncionarios() {
-    const { funcionarios, listarFuncionariosPaginados, excluirFuncionario, adicionarFuncionario, atualizarFuncionario } = Funcionarios();
+    const { funcionarios, loading, listarFuncionariosPaginados, excluirFuncionario, adicionarFuncionario, atualizarFuncionario } = Funcionarios();
     const [funcionarioParaEditar, setFuncionarioParaEditar] = useState(null);
     const [modalAberto, setModalAberto] = useState(false);
     const [funcionarioParaDesativar, setFuncionarioParaDesativar] = useState(null);
     const [isModalDesativarOpen, setIsModalDesativarOpen] = useState(false);
+
     const lidarComEdicao = (funcionario) => {
         console.log("Abrindo modal para editar:", funcionario);
         setFuncionarioParaEditar(funcionario);
@@ -66,7 +67,7 @@ function GestaoFuncionarios() {
 
     return (
         <Layout ativo={"funcionarios"}>
-            <Loading isLoading={!funcionarios.content} message="Carregando Funcionários...">
+            <Loading isLoading={loading} message="Carregando Funcionários...">
                 <div className="header-funcionarios">
                     <div>
                         <h1>Gestão de Funcionários</h1>

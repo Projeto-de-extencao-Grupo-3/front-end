@@ -15,6 +15,7 @@ function PainelControle() {
     const [servicos, setServicos] = useState(null);
     const [mostrarModalEntrada, setMostrarModalEntrada] = useState(false);
     const [mostrarModalAgendar, setMostrarModalAgendar] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const navigate = useNavigate();
 
@@ -43,8 +44,12 @@ function PainelControle() {
             .then((res) => {
                 setServicos(res.data);
                 console.log("Dados do painel de controle:", res.data);
+                setLoading(false);
             })
-            .catch((err) => console.error("Erro na API:", err));
+            .catch((err) => {
+                console.error("Erro na API:", err);
+                setLoading(false);
+            });
     };
 
     useEffect(() => {
@@ -82,7 +87,7 @@ function PainelControle() {
 
     return (
         <Layout ativo="painel">
-            <Loading isLoading={!servicos} message="Carregando Painel de Controle...">
+            <Loading isLoading={loading} message="Carregando Painel de Controle...">
             <div className="d-flex flex-column">
                 <div className="d-flex justify-content-between align-items-center mb-4">
                     <div className="d-flex flex-column">

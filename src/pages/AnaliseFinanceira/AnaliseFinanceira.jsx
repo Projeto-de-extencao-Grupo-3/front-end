@@ -16,12 +16,12 @@ function AnaliseFinanceira() {
 
     const anoMesAtual = `${ano}-${mes}`;
 
-
-
     const [financeiro, setFinanceiro] = useState(null);
     const [anoMes, setAnoMes] = useState(anoMesAtual);
     const [mostrarModalFiltro, setMostrarModalFiltro] = useState(false);
     const navigate = useNavigate();
+
+    const [loading, setLoading] = useState(true);
 
     const categorias = {
         pagamento: "SERVICOS_PAGAMENTO_PENDENTE",
@@ -38,8 +38,12 @@ function AnaliseFinanceira() {
         })
             .then((res) => {
                 setFinanceiro(res.data);
+                setLoading(false);
             })
-            .catch((err) => console.error("Erro na API Financeira:", err));
+            .catch((err) => {
+                console.error("Erro na API Financeira:", err);
+                setLoading(false);
+            });
     };
 
 
@@ -66,7 +70,7 @@ function AnaliseFinanceira() {
 
     return (
         <Layout ativo="financeiro">
-            <Loading isLoading={!financeiro} message="Carregando Análise Financeira...">
+            <Loading isLoading={loading} message="Carregando Análise Financeira...">
             <div className="analise-financeira d-flex flex-column w-100">
 
                 <div className="d-flex justify-content-between align-items-center mb-4">

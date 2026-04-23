@@ -10,7 +10,7 @@ import Produtos from "../../service/Produtos.js";
 import Loading from "../../components/Loading/Loading.jsx";
 
 function ControleEstoque() {
-    const { produtos, listarProdutosPaginados, listarProdutosPaginadosPorServico, excluirProduto, adicionarProduto, atualizarProduto, realizarBaixaEstoqueProduto } = Produtos();
+    const { produtos, loading, listarProdutosPaginados, listarProdutosPaginadosPorServico, excluirProduto, adicionarProduto, atualizarProduto, realizarBaixaEstoqueProduto } = Produtos();
 
     const [produtosParaEditar, setProdutosParaEditar] = useState(null);
     const [itemParaDesativar, setItemParaDesativar] = useState(null);
@@ -107,7 +107,7 @@ function ControleEstoque() {
 
     return (
         <Layout ativo={"estoque"}>
-            <Loading isLoading={!produtos.content} message="Carregando Estoque...">
+            <Loading isLoading={loading} message="Carregando Estoque...">
             <div className="header-clientes">
                 <div>
                     <h1>Catálogo do Estoque</h1>
