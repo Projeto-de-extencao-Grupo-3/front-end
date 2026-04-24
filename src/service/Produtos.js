@@ -60,11 +60,8 @@ function Produtos() {
         if (confirmacao.isConfirmed) {
             try {
                 await api.delete(`/produtos/${id}`);
-                setProdutos(prev => prev.filter(produto => {
-                    const atualId = produto.id_peca || produto.idPeca;
-                    return Number(atualId) !== Number(id);
-                }));
                 exibirAlertaSucesso("Produto excluído com sucesso!");
+                return true;
             } catch (error) {
                 exibirAlertaErro("Erro ao excluir produto.");
                 throw error

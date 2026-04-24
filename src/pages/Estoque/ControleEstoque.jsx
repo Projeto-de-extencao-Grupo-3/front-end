@@ -29,6 +29,13 @@ function ControleEstoque() {
     const categorias = [
         { id: "FUNILARIA", label: "FUNILARIA", icon: "bx-gear" },
         { id: "PINTURA", label: "PINTURA", icon: "bx-paint-roll" },
+        { id: "VEDACAO", label: "VEDACAO", icon: "bx-package" },
+        { id: "POLIMENTO", label: "POLIMENTO", icon: "bx-paint-roll" },
+        { id: "RECUPERACAO", label: "RECUPERACAO", icon: "bx-recycle" },
+        { id: "DESMONTAGEM", label: "DESMONTAGEM", icon: "bx-package" },
+        { id: "MONTAGEM", label: "MONTAGEM", icon: "bx-package" },
+        { id: "TROCA", label: "TROCA", icon: "bx-package" },
+        { id: "ELETRICA", label: "ELETRICA", icon: "bx-light-bulb" },
         { id: "MECANICA", label: "MECANICA", icon: "bx-spanner" },
         { id: "OUTROS", label: "OUTROS", icon: "bx-package" },
     ];

@@ -83,7 +83,6 @@ function Clientes() {
     const atualizarCliente = async (dadosAtualizados) => {
         try {
             const response = await api.put("/clientes", dadosAtualizados);
-            await listarClientesPaginados(0, 8);
             exibirAlertaSucesso("Cliente atualizado com sucesso!");
             return response.data;
         } catch (error) {
