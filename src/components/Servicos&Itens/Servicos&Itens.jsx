@@ -74,9 +74,9 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
 
         return {
             percentual: Math.min(100, Math.max(0, percentual)),
-            diasDecorridos: Math.max(0, diasDecorridos),
+            diasDecorridos: diasDecorridos + 1, // Contar o dia de entrada como 1
             diasRestantes,
-            diasTotais: Math.max(1, diasTotais),
+            diasTotais: Math.max(1, diasTotais) + 1, // Contar o dia de entrada como 1
             status
         };
     };
@@ -116,7 +116,9 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
                         <span className="progresso-entrada">Entrada: <b>{formatarDataBR(ticket.data_entrada_efetiva)}</b></span>
                         <div style={{ display: "flex", gap: "16px", justifyContent: "space-between" }}>
                             <span className="progresso-saida-prevista">Saída Prevista: <b>{formatarDataBR(ticket.data_saida_prevista)}</b></span>
-                            <span className="progresso-saida">Saída Efetiva: <b>{formatarDataBR(ticket.data_saida_efetiva)}</b></span>
+                            {ticket.data_saida_efetiva && (
+                                <span className="progresso-saida">Saída Efetiva: <b>{formatarDataBR(ticket.data_saida_efetiva)}</b></span>
+                            )}
                         </div>
 
                     </div>

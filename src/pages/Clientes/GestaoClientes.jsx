@@ -210,7 +210,7 @@ function GestaoClientes() {
 
     return (
         <Layout ativo={"clientes"}>
-            <Loading isLoading={loading} message="Carregando clientes...">
+            <Loading isLoading={loading} message="Carregando Clientes...">
                 <div className="header-clientes">
                     <div>
                         <h1>Gestão de Clientes</h1>
