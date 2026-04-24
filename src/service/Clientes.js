@@ -11,8 +11,10 @@ function Clientes() {
             const response = await api.get(`/clientes/clientes-paginados?page=${pagina}&size=${tamanho}`);
             console.log("Resposta da API Clientes Paginados:", response.data);
             setClientes(response.data);
+            return response.data;
         } catch (error) {
             console.error("Erro ao buscar clientes:", error);
+            return null;
         } finally {
             setLoading(false);
         }
@@ -23,12 +25,14 @@ function Clientes() {
             const payload = {
                 nome: dados.nome,
                 cpf_cnpj: dados.cpf_cnpj,
-                telefone: dados.telefone,
-                email: dados.email,
-                tipo_cliente: dados.tipo_cliente === "Pessoa Física" ? "PESSOA_FISICA" : "PESSOA_JURIDICA",
+                tipo_cliente: dados.tipo_cliente || dados.tipo || "PESSOA_FISICA",
+                inscricao_estadual: dados.inscricao_estadual,
                 fk_oficina: 1,
-                endereco: dados.endereco
+                endereco: dados.endereco,
+                contatos: Array.isArray(dados.contatos) ? dados.contatos : []
             };
+
+            console.log("Payload para adicionar cliente:", payload);
 
             const response = await api.post("/clientes", payload);
             await listarClientesPaginados(0, 8);
@@ -51,10 +55,23 @@ function Clientes() {
         if (confirmacao.isConfirmed) {
             try {
                 await api.delete(`/clientes/${id}`);
-                setClientes(prev => prev.filter(c => {
-                    const atualId = c.idCliente || c.id_cliente || c.id;
-                    return Number(atualId) !== Number(id);
-                }));
+                setClientes((prev) => {
+                    const removerCliente = (lista) =>
+                        lista.filter((c) => {
+                            const atualId = c.idCliente || c.id_cliente || c.id;
+                            return Number(atualId) !== Number(id);
+                        });
+
+                    if (Array.isArray(prev)) {
+                        return removerCliente(prev);
+                    }
+
+                    if (prev && Array.isArray(prev.content)) {
+                        return { ...prev, content: removerCliente(prev.content) };
+                    }
+
+                    return prev;
+                });
                 exibirAlertaSucesso("Cliente excluído com sucesso!");
             } catch (error) {
                 console.error("Erro ao excluir cliente:", error);

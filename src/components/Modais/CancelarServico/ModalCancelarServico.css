@@ -1,0 +1,119 @@
+
+.modal-cancelar {
+    width: 550px !important; 
+    max-width: 95vw !important; 
+    padding: 35px !important;
+    border-radius: 15px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+}
+
+.titulo-confirmacao {
+    font-size: 1.7rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: #333;
+    text-align: center;
+}
+
+
+.modal-cancelar .dados-reconhecidos {
+    display: flex !important;
+    flex-direction: row !important; 
+    align-items: center !important;
+    width: 100% !important;
+    background-color: #12447E !important;
+    padding: 20px !important;
+    border-radius: 10px !important;
+    gap: 20px !important;
+    box-sizing: border-box !important;
+    text-align: left !important;
+}
+
+
+.modal-cancelar .bus-icon {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.modal-cancelar .bus-icon i {
+    font-size: 45px !important;
+    color: white !important;
+}
+
+
+.modal-cancelar .section {
+    flex: 1 !important; 
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 2px !important;
+}
+
+.modal-cancelar .section p {
+    margin: 0 !important;
+    color: white !important;
+    font-size: 0.95rem !important;
+    line-height: 1.3 !important;
+}
+
+
+.modal-cancelar .divider {
+    display: block !important;
+    width: 1px !important;
+    height: 50px !important;
+    background-color: rgba(255, 255, 255, 0.4) !important;
+    margin: 0 10px !important;
+}
+
+
+.info-data-agendada {
+    display: flex !important;
+    align-items: center !important;
+    gap: 15px !important;
+    background: #FFFFFF !important;
+    border: 1px solid #ddd !important;
+    border-radius: 8px !important;
+    padding: 15px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    color: #444 !important;
+    font-size: 1.1rem !important;
+}
+
+
+.rs-botoes {
+    display: flex !important;
+    gap: 15px !important;
+    width: 100% !important;
+    margin-top: 15px !important;
+}
+
+.btn-confirmar-verde {
+    flex: 1 !important;
+    background-color: #4CAF50 !important;
+    color: white !important;
+    border: none !important;
+    padding: 14px !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    cursor: pointer !important;
+}
+
+.btn-voltar-branco {
+    flex: 1 !important;
+    background-color: white !important;
+    color: #666 !important;
+    border: 1px solid #ccc !important;
+    padding: 14px !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    font-size: 1.1rem !important;
+    cursor: pointer !important;
+}

@@ -6,6 +6,7 @@ import ServicoCard from "../../components/ServicoCard/ServicoCard";
 import { useNavigate } from "react-router-dom";
 import CalendarIcon from "../../assets/icons/CalendarIcon.png";
 import "./AnaliseFinanceira.css";
+import Loading from "../../components/Loading/Loading";
 
 function AnaliseFinanceira() {
     // funcionalidade puxar data atual para filtro inicial
@@ -15,12 +16,12 @@ function AnaliseFinanceira() {
 
     const anoMesAtual = `${ano}-${mes}`;
 
-
-
     const [financeiro, setFinanceiro] = useState(null);
     const [anoMes, setAnoMes] = useState(anoMesAtual);
     const [mostrarModalFiltro, setMostrarModalFiltro] = useState(false);
     const navigate = useNavigate();
+
+    const [loading, setLoading] = useState(true);
 
     const categorias = {
         pagamento: "SERVICOS_PAGAMENTO_PENDENTE",
@@ -37,8 +38,12 @@ function AnaliseFinanceira() {
         })
             .then((res) => {
                 setFinanceiro(res.data);
+                setLoading(false);
             })
-            .catch((err) => console.error("Erro na API Financeira:", err));
+            .catch((err) => {
+                console.error("Erro na API Financeira:", err);
+                setLoading(false);
+            });
     };
 
 
@@ -65,6 +70,7 @@ function AnaliseFinanceira() {
 
     return (
         <Layout ativo="financeiro">
+            <Loading isLoading={loading} message="Carregando Análise Financeira...">
             <div className="analise-financeira d-flex flex-column w-100">
 
                 <div className="d-flex justify-content-between align-items-center mb-4">
@@ -154,6 +160,7 @@ function AnaliseFinanceira() {
                     </div>
                 </div>
             </div>
+            </Loading>
         </Layout>
     );
 }

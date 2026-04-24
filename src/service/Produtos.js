@@ -39,7 +39,7 @@ function Produtos() {
         } catch (error) {
             exibirAlertaErro("Erro ao buscar produtos.");
             throw error
-        } 
+        }
     };
 
     const adicionarProduto = async (dadosDoFormulario) => {
@@ -56,7 +56,7 @@ function Produtos() {
 
     const excluirProduto = async (id) => {
         const confirmacao = await exibirAlertaConfirmacao("Deseja realmente excluir este produto?");
-        
+
         if (confirmacao.isConfirmed) {
             try {
                 await api.delete(`/produtos/${id}`);
@@ -75,13 +75,8 @@ function Produtos() {
     const atualizarProduto = async (id, dadosAtualizados) => {
         try {
             const response = await api.put(`/produtos/${id}`, dadosAtualizados);
-            const produtoAtualizado = response.data;
-            setProdutos(prev => prev.map(p => {
-                const isTarget = p.id_peca === id || p.idPeca === id || p.id === id;
-                return isTarget ? produtoAtualizado : p;
-            }));
             exibirAlertaSucesso("Produto atualizado com sucesso!");
-            return produtoAtualizado;
+            return response.data; 
         } catch (error) {
             exibirAlertaErro("Erro ao atualizar produto.");
             throw error;
@@ -100,16 +95,17 @@ function Produtos() {
         }
     };
 
-    return { 
-        produtos, 
+    return {
+        produtos,
         listarProdutosById,
         listarProdutosPaginados,
         listarProdutosPaginadosPorServico,
-        loading, 
-        adicionarProduto, 
-        excluirProduto, 
-        atualizarProduto, 
-        realizarBaixaEstoqueProduto };
+        loading,
+        adicionarProduto,
+        excluirProduto,
+        atualizarProduto,
+        realizarBaixaEstoqueProduto
+    };
 }
 
 export default Produtos;

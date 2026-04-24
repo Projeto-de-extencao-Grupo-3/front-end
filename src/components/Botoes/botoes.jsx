@@ -1,5 +1,5 @@
 import "./botoes.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // COMPONENTES
@@ -24,13 +24,14 @@ import iconConcluido from "../../assets/icons/concluido icon.png";
 import iconPagGreen from "../../assets/icons/pag green icon.png";
 import iconRevisar from "../../assets/icons/revisar icon.png";
 
-function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico }) {
+function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarData }) {
     const navigate = useNavigate();
     const { atualizarStatus, definirDataPrevista } = BotoesLogic();
 
     const [modalAtivo, setModalAtivo] = useState(null);
 
     const fecharModal = () => setModalAtivo(null);
+    const [dataPrevisaSaida, setDataPrevistaSaida] = useState(ordemServicoDados.data_saida_prevista || "");
 
     const navegarPara = (rota) => {
         navigate(`${rota}/${idOrdemServico}`, {
@@ -147,7 +148,7 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico }) {
                 <div className="button container4">
                     <div className="icon" style={{ backgroundImage: `url(${CalendarIcon})` }} />
                     <button className="botao" onClick={() => setModalAtivo("reagendar")}>
-                        Alternar data de entrega
+                        Atualizar data de saída
                     </button>
                 </div>
             )}
@@ -313,9 +314,9 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico }) {
             )}
 
             {modalAtivo === "entrada" && (
-                <EntradaVeiculo 
-                aberto 
-                aoFechar={fecharModal}
+                <EntradaVeiculo
+                    aberto
+                    aoFechar={fecharModal}
                 />
             )}
 
@@ -329,6 +330,7 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico }) {
                         });
 
                         fecharModal();
+                        aoAtualizarData(data);
 
                     }}
                     aoCancelar={fecharModal}

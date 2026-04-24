@@ -78,7 +78,8 @@ function Producao() {
                         pagina={paginaAtual}
                         placa={ticket.veiculo}
                         ordemServicoDados={ticket}
-                        idOrdemServico={idOrdemServico} 
+                        idOrdemServico={idOrdemServico}
+                        aoAtualizarData={carregarOrdem}
                     />
                 </div>
             </div>

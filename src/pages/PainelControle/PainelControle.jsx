@@ -7,12 +7,15 @@ import ModalEntradaVeiculo from "../../components/ModalEntradaVeiculo/ModalEntra
 import ModalAgendarEntrada from "../../components/ModalAgendarEntrada/ModalAgendarEntrada";
 import { useNavigate } from "react-router-dom";
 import "./PainelControle.css";
+import ModalCancelarServico from "../../components/Modais/CancelarServico/ModalCancelarServico";
+import Loading from "../../components/Loading/Loading";
 
 function PainelControle() {
     const [kpiAtiva, setKpiAtiva] = useState("entrada");
     const [servicos, setServicos] = useState(null);
     const [mostrarModalEntrada, setMostrarModalEntrada] = useState(false);
     const [mostrarModalAgendar, setMostrarModalAgendar] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const navigate = useNavigate();
 
@@ -41,8 +44,12 @@ function PainelControle() {
             .then((res) => {
                 setServicos(res.data);
                 console.log("Dados do painel de controle:", res.data);
+                setLoading(false);
             })
-            .catch((err) => console.error("Erro na API:", err));
+            .catch((err) => {
+                console.error("Erro na API:", err);
+                setLoading(false);
+            });
     };
 
     useEffect(() => {
@@ -80,6 +87,7 @@ function PainelControle() {
 
     return (
         <Layout ativo="painel">
+            <Loading isLoading={loading} message="Carregando Painel de Controle...">
             <div className="d-flex flex-column">
                 <div className="d-flex justify-content-between align-items-center mb-4">
                     <div className="d-flex flex-column">
@@ -216,7 +224,7 @@ function PainelControle() {
                                     {kpiAtiva === 'producao' && (
                                         <>
                                             <div><b>Total do Serviço:</b> R${os.valor_total?.toLocaleString('pt-BR') || '0,00'}</div>
-                                            <div><b>Dias em produção:</b> <b className={`cor-fonte-${corCard}`}>{calcularDias(null, os.data_entrada_efetiva)} Dias</b></div>
+                                            <div><b>Dias em produção:</b> <b className={`cor-fonte-${corCard}`}>{calcularDias(null, os.data_ultima_atualizacao)} Dias</b></div>
                                         </>
                                     )}
 
@@ -231,18 +239,13 @@ function PainelControle() {
 
                                 <div className="d-flex gap-2">
                                     {kpiAtiva === "entrada" && (
-                                        <>
-                                            <button className={`btn flex-grow-1 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/entrada/${os.veiculo?.placa}`, { state: { dadosOS: os } })}>
-                                                Fazer Entrada
-                                            </button>
-                                            <button className="btn btn-outline-secondary px-3">
-                                                Cancelar
-                                            </button>
-                                        </>
+                                        <button className={`btn flex-grow-1 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/entrada/${os.veiculo?.placa}`, { state: { dadosOS: os } })}>
+                                            Fazer Entrada
+                                        </button>
                                     )}
 
                                     {kpiAtiva === "orcamento" && (
-                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/orcamento/${os.id_ordem_servico}`, {
+                                        <button className={`btn flex-grow-1 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/orcamento/${os.id_ordem_servico}`, {
                                             state: {
                                                 veiculoDados: {
                                                     placa: os.veiculo?.placa,
@@ -258,7 +261,7 @@ function PainelControle() {
                                     )}
 
                                     {kpiAtiva === "autorizacao" && (
-                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/autorizacao/${os.id_ordem_servico}`, {
+                                        <button className={`btn flex-grow-1 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/autorizacao/${os.id_ordem_servico}`, {
                                             state: {
                                                 veiculoDados: {
                                                     placa: os.veiculo?.placa,
@@ -274,7 +277,7 @@ function PainelControle() {
                                     )}
 
                                     {kpiAtiva === "vaga" && (
-                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/aguardandoVaga/${os.id_ordem_servico}`, {
+                                        <button className={`btn flex-grow-1 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/aguardandoVaga/${os.id_ordem_servico}`, {
                                             state: {
                                                 veiculoDados: {
                                                     placa: os.veiculo?.placa,
@@ -290,7 +293,7 @@ function PainelControle() {
                                     )}
 
                                     {kpiAtiva === "producao" && (
-                                        <button className={`btn w-100 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/producao/${os.id_ordem_servico}`, {
+                                        <button className={`btn flex-grow-1 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/producao/${os.id_ordem_servico}`, {
                                             state: {
                                                 veiculoDados: {
                                                     placa: os.veiculo?.placa,
@@ -320,12 +323,20 @@ function PainelControle() {
                                             Analisar Ordem de Serviço
                                         </button>
                                     )}
+
+                                    {kpiAtiva !== "finalizados" && (
+                                        <ModalCancelarServico 
+                                            os={os} 
+                                            onSuccess={fetchServicos} 
+                                        />
+                                    )}
                                 </div>
                             </ServicoCard>
                         );
                     })}
                 </div>
             </div>
+            </Loading>
         </Layout>
     );
 }

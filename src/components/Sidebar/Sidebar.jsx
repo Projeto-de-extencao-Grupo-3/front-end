@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 function Sidebar({ ativo }) {
 
   const navigate = useNavigate();
+  const [sidebarAberta, setSidebarAberta] = useState(true);
 
   const [usuario, _setUsuario] = useState(() => {
     const nomeSalvo = sessionStorage.getItem("NOME_USUARIO");
@@ -15,9 +16,46 @@ function Sidebar({ ativo }) {
       cargo: cargoSalvo || "Colaborador"
     };
   });
-  return (
 
-    <div className="sidebar col-12 col-md-4 col-lg-2 d-flex flex-column p-3" style={{ height: "100vh", position: "sticky", top: 0, overflowY: "auto" }}>
+  const estaTabletOuMobile = window.innerWidth < 992;
+
+  const alternarSidebar = () => {
+    setSidebarAberta((prev) => !prev);
+  };
+
+  const fecharSidebarNoTablet = () => {
+    if (window.innerWidth < 992) {
+      setSidebarAberta(false);
+    }
+  };
+
+  const navegarPara = (rota) => {
+    navigate(rota);
+    fecharSidebarNoTablet();
+  };
+
+  return (
+    <>
+      <button
+        type="button"
+        className="btn btn-dark sidebar-toggle-btn"
+        onClick={alternarSidebar}
+        aria-label={sidebarAberta ? "Fechar menu lateral" : "Abrir menu lateral"}
+      >
+        <i className={`bx ${sidebarAberta ? "bx-x" : "bx-menu"}`} />
+      </button>
+
+      {sidebarAberta && estaTabletOuMobile && (
+        <div
+          className="sidebar-backdrop d-lg-none"
+          onClick={() => setSidebarAberta(false)}
+        />
+      )}
+
+    <div
+      className={`sidebar collapse ${sidebarAberta ? "show d-flex" : ""} col-12 col-md-4 col-lg-2 flex-column p-3`}
+      style={{ height: "100vh", position: "sticky", top: 0, overflowY: "auto" }}
+    >
       {/* LOGO */}
       <div className="d-flex align-items-center mb-4 logo-box">
         <img src="/src/assets/images/logoEscura.svg" className="logo-img" alt="Logo" />
@@ -29,20 +67,29 @@ function Sidebar({ ativo }) {
             Reformadora de Ônibus
           </small>
         </div>
+
+        <button
+          type="button"
+          className="btn btn-sm btn-outline-light ms-auto"
+          onClick={() => setSidebarAberta(false)}
+          aria-label="Fechar menu lateral"
+        >
+          <i className="bx bx-x" />
+        </button>
       </div>
 
       {/* NAV */}
       {/* Checa qual ta ativo para aplicar estilo, !!atenção aos nomes!! */}
       <ul className="menu list-unstyled flex-grow-1">
-        <li className={ativo === "painel" ? "ativo" : ""} onClick={() => navigate("/painelControle")}>
+        <li className={ativo === "painel" ? "ativo" : ""} onClick={() => navegarPara("/painelControle")}>
           <i className='bx bxs-layout' style={{ fontSize: "25px" }}></i>  Painel de Controle
         </li>
 
-        <li className={ativo === "financeiro" ? "ativo" : ""} onClick={() => navigate("/analiseFinanceira")}>
+        <li className={ativo === "financeiro" ? "ativo" : ""} onClick={() => navegarPara("/analiseFinanceira")}>
           <i className='bx  bx-chart-bar-columns' style={{ fontSize: "25px" }} ></i> Análise Financeira
         </li>
 
-        <li className={ativo === "clientes" ? "ativo" : ""} onClick={() => navigate("/clientes")}>
+        <li className={ativo === "clientes" ? "ativo" : ""} onClick={() => navegarPara("/clientes")}>
           <i className='bx bxs-group' style={{ fontSize: "25px" }}></i> Clientes
         </li>
 
@@ -50,11 +97,11 @@ function Sidebar({ ativo }) {
           <i className='bx bxs-spanner' style={{ fontSize: "25px" }}></i> Serviços
         </li> */}
 
-        <li className={ativo === "estoque" ? "ativo" : ""} onClick={() => navigate("/estoque")}>
+        <li className={ativo === "estoque" ? "ativo" : ""} onClick={() => navegarPara("/estoque")}>
           <i className='bx bxs-package' style={{ fontSize: "25px" }}></i> Estoque
         </li>
 
-        <li className={ativo === "funcionarios" ? "ativo" : ""} onClick={() => navigate("/funcionarios")}>
+        <li className={ativo === "funcionarios" ? "ativo" : ""} onClick={() => navegarPara("/funcionarios")}>
           <i className='bx bxs-briefcase-alt-2' style={{ fontSize: "25px" }}></i> Funcionários
         </li>
 
@@ -77,10 +124,11 @@ function Sidebar({ ativo }) {
       </div>
 
       {/* SAIR */}
-      <button className="logout-btn btn w-100 text-start" onClick={() => navigate("/")}>
+      <button className="logout-btn btn w-100 text-start" onClick={() => navegarPara("/")}>
         <i className="me-2" >↩</i> Sair
       </button>
     </div>
+    </>
   );
 }
 

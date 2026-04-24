@@ -5,20 +5,22 @@ import "./GestaoFuncionarios.css";
 import ModalDesativar from "../../components/ModalClientesFuncionarios/ModalDesativar.jsx";
 import TabelaFuncionarios from "../../components/Layout/TabelaFuncionarios.jsx";
 import Funcionarios from "../../service/Funcionarios.js";
+import Loading from "../../components/Loading/Loading.jsx";
 
 function GestaoFuncionarios() {
-    const { funcionarios, listarFuncionariosPaginados, excluirFuncionario, adicionarFuncionario, atualizarFuncionario } = Funcionarios();
+    const { funcionarios, loading, listarFuncionariosPaginados, excluirFuncionario, adicionarFuncionario, atualizarFuncionario } = Funcionarios();
     const [funcionarioParaEditar, setFuncionarioParaEditar] = useState(null);
     const [modalAberto, setModalAberto] = useState(false);
     const [funcionarioParaDesativar, setFuncionarioParaDesativar] = useState(null);
     const [isModalDesativarOpen, setIsModalDesativarOpen] = useState(false);
+
     const lidarComEdicao = (funcionario) => {
         console.log("Abrindo modal para editar:", funcionario);
         setFuncionarioParaEditar(funcionario);
         setModalAberto(true);
     };
 
-        const [paginaAtual, setPaginaAtual] = useState(0);
+    const [paginaAtual, setPaginaAtual] = useState(0);
     const [tamanhoPagina] = useState(8);
 
     const abrirModalNovo = () => {
@@ -31,6 +33,7 @@ function GestaoFuncionarios() {
         try {
             if (id) {
                 await atualizarFuncionario(id, dados);
+                listarFuncionariosPaginados(paginaAtual, tamanhoPagina);
             } else {
                 await adicionarFuncionario(dados);
             }
@@ -65,75 +68,77 @@ function GestaoFuncionarios() {
 
     return (
         <Layout ativo={"funcionarios"}>
-            <div className="header-funcionarios">
-                <div>
-                    <h1>Gestão de Funcionários</h1>
-                    <p>Visão geral dos Funcionários</p>
+            <Loading isLoading={loading} message="Carregando Funcionários...">
+                <div className="header-funcionarios">
+                    <div>
+                        <h1>Gestão de Funcionários</h1>
+                        <p>Visão geral dos Funcionários</p>
+                    </div>
+                    <div className="d-flex gap-3 align-items-center">
+                        <input type="text" className="form-control" placeholder="Filtrar por nome" />
+
+                        <button className="add_funcionario btn btn-dark" onClick={abrirModalNovo}>
+                            Adicionar novo Funcionário +
+                        </button>
+
+                        <ModalDesativar
+                            isOpen={isModalDesativarOpen}
+                            onClose={() => setIsModalDesativarOpen(false)}
+                            onConfirm={confirmarDesativacao}
+                            titulo="Desativar Funcionário"
+                            subtitulo="Dados do Colaborador"
+                            textoBotao="Desativar"
+                            corBotao="#dc3545"
+                            iconClass="bx-briefcase"
+                            dados={funcionarioParaDesativar ? [
+                                { label: "Nome Completo", value: funcionarioParaDesativar.nome, fullWidth: true },
+                                { label: "Cargo", value: funcionarioParaDesativar.cargo },
+                                { label: "Especialidade", value: funcionarioParaDesativar.especialidade },
+                                { label: "Email Profissional", value: funcionarioParaDesativar.email, fullWidth: true },
+                                { label: "Telefone", value: funcionarioParaDesativar.telefone, fullWidth: true }
+                            ] : []}
+                        />
+
+                        <ModalAdicionarFuncionario
+                            isOpen={modalAberto}
+                            onClose={() => setModalAberto(false)}
+                            funcionarioParaEditar={funcionarioParaEditar}
+                            onSave={salvar}
+                        />
+                    </div>
                 </div>
-                <div className="d-flex gap-3 align-items-center">
-                    <input type="text" className="form-control" placeholder="Filtrar por nome" />
 
-                    <button className="add_funcionario btn btn-dark" onClick={abrirModalNovo}>
-                        Adicionar novo Funcionário +
-                    </button>
+                <TabelaFuncionarios
+                    funcionarios={funcionarios.content || []}
+                    excluirFuncionario={abrirModalDesativar}
+                    editarFuncionario={lidarComEdicao}
+                />
 
-                    <ModalDesativar
-                        isOpen={isModalDesativarOpen}
-                        onClose={() => setIsModalDesativarOpen(false)}
-                        onConfirm={confirmarDesativacao}
-                        titulo="Desativar Funcionário"
-                        subtitulo="Dados do Colaborador"
-                        textoBotao="Desativar"
-                        corBotao="#dc3545"
-                        iconClass="bx-briefcase"
-                        dados={funcionarioParaDesativar ? [
-                            { label: "Nome Completo", value: funcionarioParaDesativar.nome, fullWidth: true },
-                            { label: "Cargo", value: funcionarioParaDesativar.cargo },
-                            { label: "Especialidade", value: funcionarioParaDesativar.especialidade },
-                            { label: "Email Profissional", value: funcionarioParaDesativar.email, fullWidth: true },
-                            { label: "Telefone", value: funcionarioParaDesativar.telefone, fullWidth: true }
-                        ] : []}
-                    />
+                <div className="d-flex justify-content-between align-items-center mt-3">
+                    <span className="text-muted">
+                        Página {paginaAtual + 1} de {funcionarios?.page?.total_pages || 1}
+                    </span>
 
-                    <ModalAdicionarFuncionario
-                        isOpen={modalAberto}
-                        onClose={() => setModalAberto(false)}
-                        funcionarioParaEditar={funcionarioParaEditar}
-                        onSave={salvar}
-                    />
+                    <div className="btn-group">
+                        <button
+                            className="btn btn-outline-dark"
+                            disabled={paginaAtual === 0}
+                            onClick={() => setPaginaAtual(prev => prev - 1)}
+                        >
+                            Anterior
+                        </button>
+
+                        <button
+                            className="btn btn-outline-dark"
+                            // Se a página atual for a última (total - 1), desabilita
+                            disabled={paginaAtual >= (funcionarios?.page?.total_pages - 1)}
+                            onClick={() => setPaginaAtual(prev => prev + 1)}
+                        >
+                            Próximo
+                        </button>
+                    </div>
                 </div>
-            </div>
-
-            <TabelaFuncionarios
-                funcionarios={funcionarios.content || []}
-                excluirFuncionario={abrirModalDesativar}
-                editarFuncionario={lidarComEdicao}
-            />
-
-            <div className="d-flex justify-content-between align-items-center mt-3">
-                <span className="text-muted">
-                    Página {paginaAtual + 1} de {funcionarios?.page?.total_pages || 1}
-                </span>
-
-                <div className="btn-group">
-                    <button
-                        className="btn btn-outline-dark"
-                        disabled={paginaAtual === 0}
-                        onClick={() => setPaginaAtual(prev => prev - 1)}
-                    >
-                        Anterior
-                    </button>
-
-                    <button
-                        className="btn btn-outline-dark"
-                        // Se a página atual for a última (total - 1), desabilita
-                        disabled={paginaAtual >= (funcionarios?.page?.total_pages - 1)}
-                        onClick={() => setPaginaAtual(prev => prev + 1)}
-                    >
-                        Próximo
-                    </button>
-                </div>
-            </div>
+            </Loading>
         </Layout>
     );
 }
