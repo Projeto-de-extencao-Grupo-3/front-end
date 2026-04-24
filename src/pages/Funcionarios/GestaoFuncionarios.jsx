@@ -33,6 +33,7 @@ function GestaoFuncionarios() {
         try {
             if (id) {
                 await atualizarFuncionario(id, dados);
+                listarFuncionariosPaginados(paginaAtual, tamanhoPagina);
             } else {
                 await adicionarFuncionario(dados);
             }

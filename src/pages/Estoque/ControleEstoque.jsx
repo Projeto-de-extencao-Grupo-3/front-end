@@ -64,6 +64,14 @@ function ControleEstoque() {
         try {
             const idFinal = id || dados.id_peca || dados.idPeca || dados.id;
             await atualizarProduto(idFinal, dados);
+
+            // REFRESH: Busca os dados atualizados do banco
+            if (categoriaAtiva === "TODOS") {
+                await listarProdutosPaginados(paginaAtual, tamanhoPagina);
+            } else {
+                await listarProdutosPaginadosPorServico(categoriaAtiva, paginaAtual, tamanhoPagina);
+            }
+
             setMostrarModalExibir(false);
         } catch (error) {
             console.error("Erro no update:", error);
@@ -98,7 +106,7 @@ function ControleEstoque() {
         } else {
             listarProdutosPaginadosPorServico(categoriaAtiva, paginaAtual, tamanhoPagina);
         }
-    }, [paginaAtual, categoriaAtiva]); 
+    }, [paginaAtual, categoriaAtiva]);
 
     const mudarCategoria = (id) => {
         setPaginaAtual(0);
@@ -108,98 +116,98 @@ function ControleEstoque() {
     return (
         <Layout ativo={"estoque"}>
             <Loading isLoading={loading} message="Carregando Estoque...">
-            <div className="header-clientes">
-                <div>
-                    <h1>Catálogo do Estoque</h1>
-                    <p>Visão geral dos serviços/estoque</p>
+                <div className="header-clientes">
+                    <div>
+                        <h1>Catálogo do Estoque</h1>
+                        <p>Visão geral dos serviços/estoque</p>
+                    </div>
+                    <div className="d-flex gap-3 align-items-center">
+                        <input type="text" className="form-control" placeholder="Filtrar itens por nome" />
+                        <button className="add_client btn btn-dark d-flex align-items-center" onClick={() => setMostrarModalAdicionar(true)}>
+                            Adicionar novo item +
+                        </button>
+                    </div>
                 </div>
-                <div className="d-flex gap-3 align-items-center">
-                    <input type="text" className="form-control" placeholder="Filtrar itens por nome" />
-                    <button className="add_client btn btn-dark d-flex align-items-center" onClick={() => setMostrarModalAdicionar(true)}>
-                        Adicionar novo item +
-                    </button>
+
+                <div className="d-flex gap-2 mb-4 mt-3 flex-wrap">
+                    {categorias.map((cat) => (
+                        <button
+                            key={cat.id}
+                            onClick={() => mudarCategoria(cat.id)}
+                            className={`btn d-flex align-items-center gap-2 px-4 py-2 fw-semibold transition-all shadow-sm`}
+                            style={{
+                                borderRadius: '8px',
+                                border: '1px solid #ccc',
+                                backgroundColor: categoriaAtiva === cat.id ? '#1b4a7d' : '#fff',
+                                color: categoriaAtiva === cat.id ? '#fff' : '#888',
+                                fontSize: '0.9rem',
+                                textTransform: 'uppercase'
+                            }}
+                        >
+                            <i className={`bx ${cat.icon}`} style={{ fontSize: '1.2rem' }}></i>
+                            {cat.label}
+                        </button>
+                    ))}
                 </div>
-            </div>
 
-            <div className="d-flex gap-2 mb-4 mt-3 flex-wrap">
-                {categorias.map((cat) => (
-                    <button
-                        key={cat.id}
-                        onClick={() => mudarCategoria(cat.id)}
-                        className={`btn d-flex align-items-center gap-2 px-4 py-2 fw-semibold transition-all shadow-sm`}
-                        style={{
-                            borderRadius: '8px',
-                            border: '1px solid #ccc',
-                            backgroundColor: categoriaAtiva === cat.id ? '#1b4a7d' : '#fff',
-                            color: categoriaAtiva === cat.id ? '#fff' : '#888',
-                            fontSize: '0.9rem',
-                            textTransform: 'uppercase'
-                        }}
-                    >
-                        <i className={`bx ${cat.icon}`} style={{ fontSize: '1.2rem' }}></i>
-                        {cat.label}
-                    </button>
-                ))}
-            </div>
+                <TabelaEstoque
+                    produtos={produtos.content || []}
+                    excluirProdutos={lidarComDesativacao}
+                    editarProdutos={lidarComEdicao}
+                    editarQuantidadeEstoque={lidarComAjusteEstoque}
+                />
 
-            <TabelaEstoque
-                produtos={produtos.content || []}
-                excluirProdutos={lidarComDesativacao}
-                editarProdutos={lidarComEdicao}
-                editarQuantidadeEstoque={lidarComAjusteEstoque}
-            />
+                <div className="d-flex justify-content-between align-items-center mt-3">
+                    <span className="text-muted">
+                        Página {paginaAtual + 1} de {produtos?.page?.total_pages || 1}
+                    </span>
 
-            <div className="d-flex justify-content-between align-items-center mt-3">
-                <span className="text-muted">
-                    Página {paginaAtual + 1} de {produtos?.page?.total_pages || 1}
-                </span>
+                    <div className="btn-group">
+                        <button
+                            className="btn btn-outline-dark"
+                            disabled={paginaAtual === 0}
+                            onClick={() => setPaginaAtual(prev => prev - 1)}
+                        >
+                            Anterior
+                        </button>
 
-                <div className="btn-group">
-                    <button
-                        className="btn btn-outline-dark"
-                        disabled={paginaAtual === 0}
-                        onClick={() => setPaginaAtual(prev => prev - 1)}
-                    >
-                        Anterior
-                    </button>
-
-                    <button
-                        className="btn btn-outline-dark"
-                        // Se a página atual for a última (total - 1), desabilita
-                        disabled={paginaAtual >= (produtos?.page?.total_pages - 1)}
-                        onClick={() => setPaginaAtual(prev => prev + 1)}
-                    >
-                        Próximo
-                    </button>
+                        <button
+                            className="btn btn-outline-dark"
+                            // Se a página atual for a última (total - 1), desabilita
+                            disabled={paginaAtual >= (produtos?.page?.total_pages - 1)}
+                            onClick={() => setPaginaAtual(prev => prev + 1)}
+                        >
+                            Próximo
+                        </button>
+                    </div>
                 </div>
-            </div>
 
-            <ModalNovoItem
-                isOpen={mostrarModalAdicionar}
-                onClose={() => setMostrarModalAdicionar(false)}
-                onSave={salvarNovo}
-            />
+                <ModalNovoItem
+                    isOpen={mostrarModalAdicionar}
+                    onClose={() => setMostrarModalAdicionar(false)}
+                    onSave={salvarNovo}
+                />
 
-            <ExibirNovoItem
-                isOpen={mostrarModalExibir}
-                onClose={() => setMostrarModalExibir(false)}
-                onUpdate={salvarEdicao}
-                dadosDoProduto={produtosParaEditar}
-            />
+                <ExibirNovoItem
+                    isOpen={mostrarModalExibir}
+                    onClose={() => setMostrarModalExibir(false)}
+                    onUpdate={salvarEdicao}
+                    dadosDoProduto={produtosParaEditar}
+                />
 
-            <ModalDesativarEstoque
-                isOpen={isModalDesativarOpen}
-                onClose={() => setIsModalDesativarOpen(false)}
-                onConfirm={confirmarDesativacao}
-                itemParaDesativar={itemParaDesativar}
-            />
+                <ModalDesativarEstoque
+                    isOpen={isModalDesativarOpen}
+                    onClose={() => setIsModalDesativarOpen(false)}
+                    onConfirm={confirmarDesativacao}
+                    itemParaDesativar={itemParaDesativar}
+                />
 
-            <EditarQuantidadeEstoque
-                show={editarQuantidadeEstoque}
-                handleClose={() => setEditarQuantidadeEstoque(false)}
-                handleConfirm={confirmarAjusteEstoque}
-                itemParaAjustarEstoque={itemParaAjustarEstoque}
-            />
+                <EditarQuantidadeEstoque
+                    show={editarQuantidadeEstoque}
+                    handleClose={() => setEditarQuantidadeEstoque(false)}
+                    handleConfirm={confirmarAjusteEstoque}
+                    itemParaAjustarEstoque={itemParaAjustarEstoque}
+                />
             </Loading>
         </Layout>
     );

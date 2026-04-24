@@ -76,9 +76,6 @@ function Funcionarios() {
             };
 
             const response = await api.put(`/funcionarios`, payload);
-            setFuncionarios(prev => prev.map(f =>
-                (f.id_funcionario === id || f.idFuncionario === id) ? response.data : f
-            ));
             exibirAlertaSucesso("Funcionário atualizado com sucesso!")
             return response.data
         } catch (error) {
