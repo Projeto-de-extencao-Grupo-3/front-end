@@ -36,6 +36,7 @@ function GestaoFuncionarios() {
                 listarFuncionariosPaginados(paginaAtual, tamanhoPagina);
             } else {
                 await adicionarFuncionario(dados);
+                await listarFuncionariosPaginados(paginaAtual, tamanhoPagina);
             }
             setModalAberto(false);
             setFuncionarioParaEditar(null);
@@ -54,7 +55,7 @@ function GestaoFuncionarios() {
             const id = funcionarioParaDesativar.idFuncionario || funcionarioParaDesativar.id_funcionario;
 
             await excluirFuncionario(id);
-
+            await listarFuncionariosPaginados(paginaAtual, tamanhoPagina);
             setIsModalDesativarOpen(false);
             setFuncionarioParaDesativar(null);
         } catch (error) {

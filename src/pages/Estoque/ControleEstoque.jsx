@@ -59,7 +59,13 @@ function ControleEstoque() {
         try {
             const id = itemParaDesativar.id_peca || itemParaDesativar.id;
             await excluirProduto(id);
-            listarProdutosPaginados(paginaAtual, tamanhoPagina);
+
+            if (categoriaAtiva === "TODOS") {
+                await listarProdutosPaginados(paginaAtual, tamanhoPagina);
+            } else {
+                await listarProdutosPaginadosPorServico(categoriaAtiva, paginaAtual, tamanhoPagina);
+            }
+
             setIsModalDesativarOpen(false);
             setItemParaDesativar(null);
         } catch (error) {
@@ -72,7 +78,6 @@ function ControleEstoque() {
             const idFinal = id || dados.id_peca || dados.idPeca || dados.id;
             await atualizarProduto(idFinal, dados);
 
-            // REFRESH: Busca os dados atualizados do banco
             if (categoriaAtiva === "TODOS") {
                 await listarProdutosPaginados(paginaAtual, tamanhoPagina);
             } else {

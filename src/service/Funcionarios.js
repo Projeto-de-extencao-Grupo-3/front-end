@@ -49,13 +49,8 @@ function Funcionarios() {
 
             try {
                 await api.delete(`/funcionarios/${id}`);
-
-                setFuncionarios(prev => prev.filter(f => {
-                    const atualId = f.idFuncionario || f.id_funcionario || f.id;
-                    return Number(atualId) !== Number(id);
-                }));
-
                 exibirAlertaSucesso("Funcionário excluído com sucesso!")
+                return true
             } catch (error) {
                 exibirAlertaErro("Erro ao excluir Funcionários.")
                 throw error;
