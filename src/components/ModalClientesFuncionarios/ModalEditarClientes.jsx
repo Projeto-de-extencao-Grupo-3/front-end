@@ -36,7 +36,7 @@ function normalizarCliente(cliente = {}) {
     return {
         ...estadoClienteInicial,
         ...cliente,
-        id_cliente: cliente.id_cliente  ?? "",
+        id_cliente: cliente.id_cliente ?? "",
         cpf_cnpj: cliente.cpf_cnpj ?? cliente.cpfCnpj ?? "",
         inscricao_estadual: cliente.inscricao_estadual ?? cliente.inscricaoEstadual ?? "",
         tipo_cliente: cliente.tipo_cliente ?? cliente.tipoCliente ?? "PESSOA_FISICA",
@@ -125,16 +125,19 @@ function ModalEditarCliente({
                 ? clienteParaEditar.contatos.map(normalizarContato)
                 : [];
 
-        setClienteEditado(clienteNormalizado);
-        setListaEnderecos(enderecosNormalizados);
-        setListaContatos(contatosNormalizados);
-        setAbaAtiva("cliente");
-        setEnderecoSelecionadoId(enderecosNormalizados[0]?.id_endereco ?? "");
-        setContatoSelecionadoId(contatosNormalizados[0]?.id_contato ?? "");
-        setModoEndereco("lista");
-        setModoContato("lista");
-        setFormEndereco(enderecosNormalizados[0] ?? estadoEnderecoInicial);
-        setFormContato(contatosNormalizados[0] ?? estadoContatoInicial);
+        setTimeout(() => {
+            setClienteEditado(clienteNormalizado);
+            setListaEnderecos(enderecosNormalizados);
+            setListaContatos(contatosNormalizados);
+            setAbaAtiva("cliente");
+            setEnderecoSelecionadoId(enderecosNormalizados[0]?.id_endereco ?? "");
+            setContatoSelecionadoId(contatosNormalizados[0]?.id_contato ?? "");
+            setModoEndereco("lista");
+            setModoContato("lista");
+            setFormEndereco(enderecosNormalizados[0] ?? estadoEnderecoInicial);
+            setFormContato(contatosNormalizados[0] ?? estadoContatoInicial);
+        }, 0);
+
     }, [clienteParaEditar, isOpen]);
 
     if (!isOpen || !clienteParaEditar) return null;

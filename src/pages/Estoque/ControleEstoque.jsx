@@ -29,6 +29,13 @@ function ControleEstoque() {
     const categorias = [
         { id: "FUNILARIA", label: "FUNILARIA", icon: "bx-gear" },
         { id: "PINTURA", label: "PINTURA", icon: "bx-paint-roll" },
+        { id: "VEDACAO", label: "VEDACAO", icon: "bx-package" },
+        { id: "POLIMENTO", label: "POLIMENTO", icon: "bx-paint-roll" },
+        { id: "RECUPERACAO", label: "RECUPERACAO", icon: "bx-recycle" },
+        { id: "DESMONTAGEM", label: "DESMONTAGEM", icon: "bx-package" },
+        { id: "MONTAGEM", label: "MONTAGEM", icon: "bx-package" },
+        { id: "TROCA", label: "TROCA", icon: "bx-package" },
+        { id: "ELETRICA", label: "ELETRICA", icon: "bx-light-bulb" },
         { id: "MECANICA", label: "MECANICA", icon: "bx-spanner" },
         { id: "OUTROS", label: "OUTROS", icon: "bx-package" },
     ];
@@ -52,7 +59,13 @@ function ControleEstoque() {
         try {
             const id = itemParaDesativar.id_peca || itemParaDesativar.id;
             await excluirProduto(id);
-            listarProdutosPaginados(paginaAtual, tamanhoPagina);
+
+            if (categoriaAtiva === "TODOS") {
+                await listarProdutosPaginados(paginaAtual, tamanhoPagina);
+            } else {
+                await listarProdutosPaginadosPorServico(categoriaAtiva, paginaAtual, tamanhoPagina);
+            }
+
             setIsModalDesativarOpen(false);
             setItemParaDesativar(null);
         } catch (error) {
@@ -65,7 +78,6 @@ function ControleEstoque() {
             const idFinal = id || dados.id_peca || dados.idPeca || dados.id;
             await atualizarProduto(idFinal, dados);
 
-            // REFRESH: Busca os dados atualizados do banco
             if (categoriaAtiva === "TODOS") {
                 await listarProdutosPaginados(paginaAtual, tamanhoPagina);
             } else {

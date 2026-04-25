@@ -112,6 +112,14 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                     <div className="tabs-servico">
                                         <button className={aba === "FUNILARIA" ? "ativo" : ""} onClick={() => setAba("FUNILARIA")}>Funilaria</button>
                                         <button className={aba === "PINTURA" ? "ativo" : ""} onClick={() => setAba("PINTURA")}>Pintura</button>
+                                        <button className={aba === "VEDACAO" ? "ativo" : ""} onClick={() => setAba("VEDACAO")}>Vedação</button>
+                                        <button className={aba === "POLIMENTO" ? "ativo" : ""} onClick={() => setAba("POLIMENTO")}>Polimento</button>
+                                        <button className={aba === "RECUPERACAO" ? "ativo" : ""} onClick={() => setAba("RECUPERACAO")}>Recuperação</button>
+                                        <button className={aba === "DESMONTAGEM" ? "ativo" : ""} onClick={() => setAba("DESMONTAGEM")}>Desmontagem</button>
+                                        <button className={aba === "MONTAGEM" ? "ativo" : ""} onClick={() => setAba("MONTAGEM")}>Montagem</button>
+                                        <button className={aba === "TROCA" ? "ativo" : ""} onClick={() => setAba("TROCA")}>Troca</button>
+                                        <button className={aba === "ELETRICA" ? "ativo" : ""} onClick={() => setAba("ELETRICA")}>Elétrica</button>
+                                        <button className={aba === "MECANICA" ? "ativo" : ""} onClick={() => setAba("MECANICA")}>Mecânica</button>
                                         <button className={aba === "OUTROS" ? "ativo" : ""} onClick={() => setAba("OUTROS")}>Outros</button>
                                     </div>
                                 ) : (

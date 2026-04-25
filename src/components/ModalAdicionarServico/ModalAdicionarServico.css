@@ -20,8 +20,13 @@
 }
 
 .modal-dialog {
-  max-width: 800px; 
-  width: 100%;
+  max-width: 800px;
+  width: calc(100% - 2rem);
+  margin: 1rem auto;
+}
+
+.modal-body {
+  overflow-x: hidden;
 }
 
 .modal-servico {
@@ -50,22 +55,20 @@
 
 /* TABS */
 .tabs-servico {
-  display: inline-flex;
-  background: #e0e0e0;
-  border-radius: 10px;
-  padding: 3px;
-  gap: 2px;
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 100%;
+  gap: 6px;
+  padding: 6px;
   margin-bottom: 12px;
 }
 
 .tabs-servico button {
+  flex: 0 0 auto;
   border: none;
-  background: transparent;
-  padding: 4px 10px;
-  font-size: 13px;
-  border-radius: 8px;
-  color: #333;
-  transition: background-color 0.2s;
+  border-radius: 5px;
+  padding: 4px 8px;
+  font-size: 12px;
 }
 
 .tabs-servico button:hover {

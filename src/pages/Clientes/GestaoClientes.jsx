@@ -15,7 +15,7 @@ import { exibirAlertaErro, exibirAlertaSucesso } from "../../service/alertas";
 
 function GestaoClientes() {
     const { clientes, loading, listarClientesPaginados, excluirCliente, adicionarCliente, atualizarCliente } = Clientes();
-    const { buscarEnderecoViaCEP, cadastrarEnderecoVazio, atualizarEndereco, adicionarEndereco, excluirEndereco } = Enderecos();
+    const { _buscarEnderecoViaCEP, _cadastrarEnderecoVazio, atualizarEndereco, adicionarEndereco, excluirEndereco } = Enderecos();
     const { adicionarContato, atualizarContato, excluirContato } = Contatos();
 
     const [mostrarModalAdicionar, setMostrarModalAdicionar] = useState(false);
