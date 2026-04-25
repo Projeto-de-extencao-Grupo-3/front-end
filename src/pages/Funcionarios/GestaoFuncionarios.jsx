@@ -8,7 +8,7 @@ import Funcionarios from "../../service/Funcionarios.js";
 import Loading from "../../components/Loading/Loading.jsx";
 
 function GestaoFuncionarios() {
-    const { funcionarios, loading, listarFuncionariosPaginados, excluirFuncionario, adicionarFuncionario, atualizarFuncionario } = Funcionarios();
+    const { funcionarios, loading, listarFuncionariosPaginados, listarFuncionariosPorBuscaDeNome, excluirFuncionario, adicionarFuncionario, atualizarFuncionario } = Funcionarios();
     const [funcionarioParaEditar, setFuncionarioParaEditar] = useState(null);
     const [modalAberto, setModalAberto] = useState(false);
     const [funcionarioParaDesativar, setFuncionarioParaDesativar] = useState(null);
@@ -22,6 +22,7 @@ function GestaoFuncionarios() {
 
     const [paginaAtual, setPaginaAtual] = useState(0);
     const [tamanhoPagina] = useState(8);
+    const [isSearching, setIsSearching] = useState("");
 
     const abrirModalNovo = () => {
         console.log("Abrindo modal para novo");
@@ -64,8 +65,17 @@ function GestaoFuncionarios() {
     };
 
     useEffect(() => {
-        listarFuncionariosPaginados(paginaAtual, tamanhoPagina);
-    }, [paginaAtual]);
+        if (isSearching.trim() === "") {
+            listarFuncionariosPaginados(0, tamanhoPagina);
+            return;
+        }
+
+        const delayDebounce = setTimeout(() => {
+            listarFuncionariosPorBuscaDeNome(isSearching);
+        }, 500);
+
+        return () => clearTimeout(delayDebounce);
+    }, [isSearching]);
 
     return (
         <Layout ativo={"funcionarios"}>
@@ -76,8 +86,11 @@ function GestaoFuncionarios() {
                         <p>Visão geral dos Funcionários</p>
                     </div>
                     <div className="d-flex gap-3 align-items-center">
-                        <input type="text" className="form-control" placeholder="Filtrar por nome" />
-
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Filtrar itens por nome"
+                            onChange={(e) => setIsSearching(e.target.value)} />
                         <button className="add_funcionario btn btn-dark" onClick={abrirModalNovo}>
                             Adicionar novo Funcionário +
                         </button>

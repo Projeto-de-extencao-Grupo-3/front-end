@@ -92,10 +92,23 @@ function Produtos() {
         }
     };
 
+    const listarProdutosPorBuscaDeNome = async (nome) => {
+        try {
+            const response = await api.get(`/produtos/busca/nome?nome=${encodeURIComponent(nome)}`);
+            console.log("Resposta da API Produtos por Nome:", response.data);
+            setProdutos(response.data);
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao buscar produtos por nome:", error);
+            throw error;
+        }
+    }
+
     return {
         produtos,
         listarProdutosById,
         listarProdutosPaginados,
+        listarProdutosPorBuscaDeNome,
         listarProdutosPaginadosPorServico,
         loading,
         adicionarProduto,

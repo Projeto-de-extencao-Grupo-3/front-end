@@ -10,7 +10,7 @@ import Produtos from "../../service/Produtos.js";
 import Loading from "../../components/Loading/Loading.jsx";
 
 function ControleEstoque() {
-    const { produtos, loading, listarProdutosPaginados, listarProdutosPaginadosPorServico, excluirProduto, adicionarProduto, atualizarProduto, realizarBaixaEstoqueProduto } = Produtos();
+    const { produtos, loading, listarProdutosPaginados, listarProdutosPorBuscaDeNome, listarProdutosPaginadosPorServico, excluirProduto, adicionarProduto, atualizarProduto, realizarBaixaEstoqueProduto } = Produtos();
 
     const [produtosParaEditar, setProdutosParaEditar] = useState(null);
     const [itemParaDesativar, setItemParaDesativar] = useState(null);
@@ -25,6 +25,7 @@ function ControleEstoque() {
 
     const [paginaAtual, setPaginaAtual] = useState(0);
     const [tamanhoPagina] = useState(8);
+    const [isSearching, setIsSearching] = useState("");
 
     const categorias = [
         { id: "FUNILARIA", label: "FUNILARIA", icon: "bx-gear" },
@@ -113,12 +114,21 @@ function ControleEstoque() {
     };
 
     useEffect(() => {
-        if (categoriaAtiva === "TODOS") {
-            listarProdutosPaginados(paginaAtual, tamanhoPagina);
-        } else {
-            listarProdutosPaginadosPorServico(categoriaAtiva, paginaAtual, tamanhoPagina);
-        }
-    }, [paginaAtual, categoriaAtiva]);
+        const timeout = setTimeout(() => {
+            if (isSearching.trim()) {
+                listarProdutosPorBuscaDeNome(isSearching.trim());
+                return;
+            }
+
+            if (categoriaAtiva === "TODOS") {
+                listarProdutosPaginados(paginaAtual, tamanhoPagina);
+            } else {
+                listarProdutosPaginadosPorServico(categoriaAtiva, paginaAtual, tamanhoPagina);
+            }
+        }, 300);
+
+        return () => clearTimeout(timeout);
+    }, [paginaAtual, categoriaAtiva, isSearching]);
 
     const mudarCategoria = (id) => {
         setPaginaAtual(0);
@@ -134,7 +144,16 @@ function ControleEstoque() {
                         <p>Visão geral dos serviços/estoque</p>
                     </div>
                     <div className="d-flex gap-3 align-items-center">
-                        <input type="text" className="form-control" placeholder="Filtrar itens por nome" />
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Filtrar itens por nome"
+                            value={isSearching}
+                            onChange={(e) => {
+                                setPaginaAtual(0);
+                                setIsSearching(e.target.value);
+                            }}
+                        />
                         <button className="add_client btn btn-dark d-flex align-items-center" onClick={() => setMostrarModalAdicionar(true)}>
                             Adicionar novo item +
                         </button>
