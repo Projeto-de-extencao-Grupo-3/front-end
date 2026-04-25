@@ -22,12 +22,13 @@ function ModalEditarItem({ isOpen, onClose, placa, produto, onUpdate }) {
         if (!produto) return;
 
         setTimeout(() => {
+            console.log("produto: ", produto);
             setFormData({
                 id_item_produto: produto.id_item_produto,
                 fk_ordem_servico: idOrdemServico,
                 fk_produto: produto.id_produto_estoque,
                 nome_produto: produto.nome_produto,
-                visibilidade: produto.visivel_orcamento === true ? 1 : 0,
+                visibilidade: produto.visivel_orcamento_cliente ? "publico" : "privado",
                 quantidade: produto.quantidade,
                 preco_produto: produto.preco_peca,
                 baixado: produto.baixado
@@ -102,7 +103,7 @@ function ModalEditarItem({ isOpen, onClose, placa, produto, onUpdate }) {
                                             name="fk_produto"
                                             className="form-control form-select"
                                             disabled
-                                        >
+                                        >      {console.log(formData)}
                                             <option value={formData.fk_produto}>
                                                 {formatarTexto(formData.nome_produto)}
                                             </option>
@@ -110,7 +111,7 @@ function ModalEditarItem({ isOpen, onClose, placa, produto, onUpdate }) {
                                     </div>
 
                                     <div className="col-12">
-                                        <label>Visibilidade*</label>
+                                        <label>Visibilidade do Item no Orcamento*</label>
                                         <div className="radio-group">
                                             <label className="radio-label">
                                                 <input
@@ -118,7 +119,7 @@ function ModalEditarItem({ isOpen, onClose, placa, produto, onUpdate }) {
                                                     name="visibilidade"
                                                     value={0}
                                                     className="radio-custom"
-                                                    checked={formData.visibilidade === 0}
+                                                    checked={formData.visibilidade === "privado"}
                                                     disabled
                                                 />
                                                 Privado
@@ -130,7 +131,7 @@ function ModalEditarItem({ isOpen, onClose, placa, produto, onUpdate }) {
                                                     name="visibilidade"
                                                     value={1}
                                                     className="radio-custom"
-                                                    checked={formData.visibilidade === 1}
+                                                    checked={formData.visibilidade === "publico"}
                                                     disabled
                                                 />
                                                 Público

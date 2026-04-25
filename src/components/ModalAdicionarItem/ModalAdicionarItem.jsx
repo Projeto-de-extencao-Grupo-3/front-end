@@ -163,14 +163,14 @@ function ModalAdicionarItem({ isOpen, onClose, placa, onSave, _salvarNaOrdem }) 
 
                                     {/* VISIBILIDADE */}
                                     <div className="col-12">
-                                        <label>Visibilidade*</label>
+                                        <label>Visibilidade do Item no Orcamento*</label>
                                         <div className="radio-group">
                                             <label className="radio-label">
-
                                                 <input
                                                     type="radio"
-                                                    className="radio-custom"
+                                                    name="visibilidade"
                                                     checked={visibilidade === "privado"}
+                                                    className="radio-custom"
                                                     disabled
                                                 />
                                                 Privado
@@ -179,9 +179,10 @@ function ModalAdicionarItem({ isOpen, onClose, placa, onSave, _salvarNaOrdem }) 
                                             <label className="radio-label">
                                                 <input
                                                     type="radio"
+                                                    name="visibilidade"
                                                     className="radio-custom"
-                                                    checked={visibilidade === "publico" || visibilidade === "público"}
                                                     disabled
+                                                    checked={visibilidade === "publico"}
                                                 />
                                                 Público
                                             </label>
