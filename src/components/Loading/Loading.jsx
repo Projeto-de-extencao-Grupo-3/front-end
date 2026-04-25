@@ -6,9 +6,13 @@ function Loading({ isLoading, children, message = "Carregando..." }) {
 
     useEffect(() => {
         if (isLoading) {
-            setDisplayLoading(true);
+            setTimeout(() => {
+                setDisplayLoading(true);
+            }, 0)
         } else {
-            setDisplayLoading(false);
+            setTimeout(() => {
+                setDisplayLoading(false);
+            }, 0)
         }
     }, [isLoading]);
 

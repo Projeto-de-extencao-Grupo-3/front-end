@@ -1,5 +1,5 @@
 import "./botoes.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // COMPONENTES
@@ -31,7 +31,7 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
     const [modalAtivo, setModalAtivo] = useState(null);
 
     const fecharModal = () => setModalAtivo(null);
-    const [dataPrevisaSaida, setDataPrevistaSaida] = useState(ordemServicoDados.data_saida_prevista || "");
+    const [_dataPrevisaSaida, _setDataPrevistaSaida] = useState(ordemServicoDados.data_saida_prevista || "");
 
     const navegarPara = (rota) => {
         navigate(`${rota}/${idOrdemServico}`, {
