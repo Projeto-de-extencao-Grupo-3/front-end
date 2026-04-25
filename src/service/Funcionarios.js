@@ -80,7 +80,19 @@ function Funcionarios() {
         }
     };
 
-    return { funcionarios, loading,listarFuncionariosPaginados, adicionarFuncionario, excluirFuncionario, atualizarFuncionario };
+    const listarFuncionariosPorBuscaDeNome = async (nome) => {
+        try {
+            const response = await api.get(`/funcionarios/busca/nome?nome=${encodeURIComponent(nome)}`);
+            console.log("Resposta da API Funcionários por Nome:", response.data);
+            setFuncionarios(response.data);
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao buscar funcionários por nome:", error);
+            throw error;
+        }
+    }
+
+    return { funcionarios, loading,listarFuncionariosPaginados, listarFuncionariosPorBuscaDeNome, adicionarFuncionario, excluirFuncionario, atualizarFuncionario };
 }
 
 export default Funcionarios

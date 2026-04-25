@@ -92,7 +92,19 @@ function Clientes() {
         }
     };
 
-    return { clientes, loading, listarClientesPaginados, adicionarCliente, excluirCliente, atualizarCliente };
+    const listarClientesPorBuscaDeNome = async (nome) => {
+        try {
+            const response = await api.get(`/clientes/busca/nome?nome=${encodeURIComponent(nome)}`);
+            console.log("Resposta da API Clientes por Nome:", response.data);
+            setClientes(response.data);
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao buscar clientes por nome:", error);
+            throw error;
+        }
+    }
+
+    return { clientes, loading, listarClientesPaginados, listarClientesPorBuscaDeNome, adicionarCliente, excluirCliente, atualizarCliente };
 }
 
 export default Clientes;

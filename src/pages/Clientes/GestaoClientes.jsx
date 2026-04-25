@@ -14,7 +14,7 @@ import ModalEditarCliente from "../../components/ModalClientesFuncionarios/Modal
 import { exibirAlertaErro, exibirAlertaSucesso } from "../../service/alertas";
 
 function GestaoClientes() {
-    const { clientes, loading, listarClientesPaginados, excluirCliente, adicionarCliente, atualizarCliente } = Clientes();
+    const { clientes, loading, listarClientesPaginados, listarClientesPorBuscaDeNome, excluirCliente, adicionarCliente, atualizarCliente } = Clientes();
     const { _buscarEnderecoViaCEP, _cadastrarEnderecoVazio, atualizarEndereco, adicionarEndereco, excluirEndereco } = Enderecos();
     const { adicionarContato, atualizarContato, excluirContato } = Contatos();
 
@@ -30,6 +30,7 @@ function GestaoClientes() {
 
     const [paginaAtual, setPaginaAtual] = useState(0);
     const [tamanhoPagina] = useState(8);
+    const [isSearching, setIsSearching] = useState("");
 
     const obterMensagemErroApi = (error, mensagemPadrao) => {
         const status = error?.response?.status;
@@ -189,8 +190,17 @@ function GestaoClientes() {
     };
 
     useEffect(() => {
-        listarClientesPaginados(paginaAtual, tamanhoPagina);
-    }, [paginaAtual]);
+        if (isSearching.trim() === "") {
+            listarClientesPaginados(0, tamanhoPagina);
+            return;
+        }
+
+        const delayDebounce = setTimeout(() => {
+            listarClientesPorBuscaDeNome(isSearching);
+        }, 500);
+
+        return () => clearTimeout(delayDebounce);
+    }, [isSearching]);
 
     const confirmarDesativacao = async () => {
         try {
@@ -217,67 +227,67 @@ function GestaoClientes() {
                         <p>Visão geral dos Clientes</p>
                     </div>
                     <div className="d-flex gap-3 align-items-center">
-                    <input
-                        type="text"
-                        className="form-control"
-                        placeholder="Filtrar itens por nome"
-                    />
-                    <button className="add_client btn btn-dark d-flex align-items-center" onClick={() => setMostrarModalAdicionar(true)}>
-                        Adicionar novo Cliente +
-                    </button>
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Filtrar itens por nome"
+                            onChange={(e) => setIsSearching(e.target.value)} />
+                        <button className="add_client btn btn-dark d-flex align-items-center" onClick={() => setMostrarModalAdicionar(true)}>
+                            Adicionar novo Cliente +
+                        </button>
 
-                    {/* Modal 1: Informações Básicas */}
-                    <ModalAdicionar
-                        isOpen={mostrarModalAdicionar}
-                        onClose={() => setMostrarModalAdicionar(false)}
-                        onSave={handleAvancarParaEndereco}
-                    />
+                        {/* Modal 1: Informações Básicas */}
+                        <ModalAdicionar
+                            isOpen={mostrarModalAdicionar}
+                            onClose={() => setMostrarModalAdicionar(false)}
+                            onSave={handleAvancarParaEndereco}
+                        />
 
-                    {/* Modal 2: Endereço */}
-                    <ModalAdicionarEndereco
-                        isOpen={mostrarModalEndereco}
-                        onClose={() => setMostrarModalEndereco(false)}
-                        onSaveEndereco={handleFinalizarCadastroTotal}
-                    />
+                        {/* Modal 2: Endereço */}
+                        <ModalAdicionarEndereco
+                            isOpen={mostrarModalEndereco}
+                            onClose={() => setMostrarModalEndereco(false)}
+                            onSaveEndereco={handleFinalizarCadastroTotal}
+                        />
 
-                    {/* Modal 3: Contatos */}
-                    <ModalAdicionarContatos
-                        isOpen={mostrarModalContatos}
-                        onClose={() => setMostrarModalContatos(false)}
-                        onSaveContatos={handleFinalizarCadastroComContatos}
-                    />
+                        {/* Modal 3: Contatos */}
+                        <ModalAdicionarContatos
+                            isOpen={mostrarModalContatos}
+                            onClose={() => setMostrarModalContatos(false)}
+                            onSaveContatos={handleFinalizarCadastroComContatos}
+                        />
+                    </div>
                 </div>
-            </div>
-            <Tabela
-                clientes={clientes.content || []}
-                excluirCliente={abrirModalDesativar}
-                editarCliente={handleAbrirEdicao}>
-            </Tabela>
+                <Tabela
+                    clientes={clientes.content || []}
+                    excluirCliente={abrirModalDesativar}
+                    editarCliente={handleAbrirEdicao}>
+                </Tabela>
 
-            <div className="d-flex justify-content-between align-items-center mt-3">
-                <span className="text-muted">
-                    Página {paginaAtual + 1} de {clientes?.page?.total_pages || 1}
-                </span>
+                <div className="d-flex justify-content-between align-items-center mt-3">
+                    <span className="text-muted">
+                        Página {paginaAtual + 1} de {clientes?.page?.total_pages || 1}
+                    </span>
 
-                <div className="btn-group">
-                    <button
-                        className="btn btn-outline-dark"
-                        disabled={paginaAtual === 0}
-                        onClick={() => setPaginaAtual(prev => prev - 1)}
-                    >
-                        Anterior
-                    </button>
+                    <div className="btn-group">
+                        <button
+                            className="btn btn-outline-dark"
+                            disabled={paginaAtual === 0}
+                            onClick={() => setPaginaAtual(prev => prev - 1)}
+                        >
+                            Anterior
+                        </button>
 
-                    <button
-                        className="btn btn-outline-dark"
-                        // Se a página atual for a última (total - 1), desabilita
-                        disabled={paginaAtual >= (clientes?.page?.total_pages - 1)}
-                        onClick={() => setPaginaAtual(prev => prev + 1)}
-                    >
-                        Próximo
-                    </button>
+                        <button
+                            className="btn btn-outline-dark"
+                            // Se a página atual for a última (total - 1), desabilita
+                            disabled={paginaAtual >= (clientes?.page?.total_pages - 1)}
+                            onClick={() => setPaginaAtual(prev => prev + 1)}
+                        >
+                            Próximo
+                        </button>
+                    </div>
                 </div>
-            </div>
             </Loading>
             <ModalDesativar
                 isOpen={isModalDesativarOpen}
