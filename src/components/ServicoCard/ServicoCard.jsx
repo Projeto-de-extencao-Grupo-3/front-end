@@ -15,12 +15,12 @@ const cores = {
   }
 };
 
-function ServicoCard({ cor, children }) {
+function ServicoCard({ cor, children, className = "" }) {
   const estilo = cores[cor];
 
   return (
     <div
-      className="servico-card"
+      className={`servico-card ${className}`.trim()}
       style={{ '--cor': estilo.cor, '--borda': estilo.borda }}
     >
       {children}

@@ -113,7 +113,7 @@ function PainelControle() {
                 />
                 <ModalEntradaVeiculo isOpen={mostrarModalEntrada} onClose={() => setMostrarModalEntrada(false)} />
 
-                <div className="d-flex gap-3">
+                <div className="row g-3">
                     {Object.keys(chavesStatus).map((id) => {
                         const dadosStatus = servicos?.listagem_painel_controle?.[chavesStatus[id]];
                         const qtd = dadosStatus?.quantidade_ordens || 0;
@@ -140,7 +140,7 @@ function PainelControle() {
                         else if (temAmarelo) corKpi = "amarelo";
 
                         return (
-                            <div key={id} className="flex-fill" style={{ minWidth: 0 }}>
+                            <div key={id} className="col-12 col-sm-6 col-lg-4 col-xl-2">
                                 <KpiStatus
                                     cor={corKpi}
                                     status={nomesExibicao[id]}
@@ -155,8 +155,12 @@ function PainelControle() {
 
                 <h4 className="fw-normal mt-4 mb-3 text-muted">{nomesExibicao[kpiAtiva]}</h4>
 
-                <div className="d-flex flex-wrap gap-4 justify-content-start">
-                    {listaOrdens.length === 0 && <p className="text-muted">Nenhum serviço encontrado.</p>}
+                <div className="row g-4 mx-0">
+                    {listaOrdens.length === 0 && (
+                        <div className="col-12">
+                            <p className="text-muted mb-0">Nenhum serviço encontrado.</p>
+                        </div>
+                    )}
 
                     {listaOrdens.map((os) => {
                         let corCard = "verde";
@@ -183,7 +187,8 @@ function PainelControle() {
                         }
 
                         return (
-                            <ServicoCard key={os.id_ordem_servico} cor={corCard}>
+                            <div key={os.id_ordem_servico} className="col-12 col-md-6 col-lg-4">
+                                <ServicoCard cor={corCard} className="w-100 h-100">
                                 <div className="d-flex align-items-center gap-2">
                                     {icone}
                                     <strong className="fs-5">{os.cliente?.nome}</strong>
@@ -331,7 +336,8 @@ function PainelControle() {
                                         />
                                     )}
                                 </div>
-                            </ServicoCard>
+                                </ServicoCard>
+                            </div>
                         );
                     })}
                 </div>
