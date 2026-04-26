@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./ModalNovoItem.css";
+import Produtos from "../../service/Produtos";
 
 const estadoInicial = {
     nome: "",
@@ -14,6 +15,8 @@ const estadoInicial = {
 function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
 
     const [form, setForm] = useState(estadoInicial);
+    const [tiposServico, setTiposServico] = useState([]);
+    const produtosService = Produtos();
 
     useEffect(() => {
         let montado = true;
@@ -36,6 +39,22 @@ function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
 
         return () => { montado = false; };
     }, [isOpen, produtosParaEditar]);
+
+    useEffect(() => {
+        const carregarTiposServico = async () => {
+            try {
+                const tipos = await produtosService.listarTipoServicos();
+                setTiposServico(Array.isArray(tipos) ? tipos : []);
+            } catch (error) {
+                console.error("Erro ao carregar tipos de serviço:", error);
+                setTiposServico([]);
+            }
+        };
+
+        if (isOpen) {
+            carregarTiposServico();
+        }
+    }, [isOpen]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -124,9 +143,10 @@ function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
                                 onChange={handleChange}
                             >
                                 <option value="" disabled>Selecione um serviço...</option>
-                                <option value="FUNILARIA">FUNILARIA</option>
-                                <option value="PINTURA">PINTURA</option>
-                                <option value="OUTROS">OUTROS</option>
+                                {tiposServico.map((tipo) => (
+                                    <option key={tipo} value={tipo}>{tipo}</option>
+                                ))}
+
                             </select>
 
                             <label className="form-label fw-semibold">

@@ -54,6 +54,16 @@ function Produtos() {
         }
     };
 
+    const listarTipoServicos = async () => {
+        try {
+            const response = await api.options("/produtos/tipos_servico");
+            return response.data;
+        } catch (error) {
+            exibirAlertaErro("Erro ao buscar tipos de serviços.");
+            throw error;
+        }
+    }
+
     const excluirProduto = async (id) => {
         const confirmacao = await exibirAlertaConfirmacao("Deseja realmente excluir este produto?");
 
@@ -114,7 +124,8 @@ function Produtos() {
         adicionarProduto,
         excluirProduto,
         atualizarProduto,
-        realizarBaixaEstoqueProduto
+        realizarBaixaEstoqueProduto,
+        listarTipoServicos
     };
 }
 

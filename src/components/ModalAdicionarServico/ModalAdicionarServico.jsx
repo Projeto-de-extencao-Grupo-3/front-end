@@ -3,9 +3,13 @@ import OrdemServicoCard from "../ServicoCard/OrdemServicoCard";
 import "./ModalAdicionarServico.css";
 import { formatarTexto, formatarMoedaBR } from "../../utils/formatarTexto.js";
 import { useParams } from "react-router-dom";
+import ServicosItens from "../../service/ServicosEItens.js";
 
 function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", servico, onSave, salvarNaOrdem }) {
     const [aba, setAba] = useState("FUNILARIA");
+    const [partesServico, setPartesServico] = useState([]);
+    const [ladosVeiculo, setLadosVeiculo] = useState([]);
+    const servicosItens = ServicosItens();
 
     const [formData, setFormData] = useState({
         preco_cobrado: "",
@@ -16,7 +20,30 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
         tipo_pintura: "NAO_APLICAVEL"
     });
 
+
     const { idOrdemServico } = useParams();
+
+    useEffect(() => {
+        const carregarListas = async () => {
+            try {
+                const [partes, lados] = await Promise.all([
+                    servicosItens.listarPartesVeiculo(),
+                    servicosItens.listarLadosVeiculo()
+                ]);
+
+                setPartesServico(Array.isArray(partes) ? partes : []);
+                setLadosVeiculo(Array.isArray(lados) ? lados : []);
+            } catch (error) {
+                console.error("Erro ao carregar partes/lados do veículo:", error);
+                setPartesServico([]);
+                setLadosVeiculo([]);
+            }
+        };
+
+        if (isOpen) {
+            carregarListas();
+        }
+    }, [isOpen]);
 
     useEffect(() => {
         let timer;
@@ -51,7 +78,7 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
 
         return () => clearTimeout(timer);
 
-    }, [isOpen, modo, servico, salvarNaOrdem, formatarMoedaBR, formatarTexto]);
+    }, [isOpen, modo, servico, salvarNaOrdem]);
 
     if (!isOpen) return null;
 
@@ -105,7 +132,7 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                             <div className={`card-info-servico text-start ${modo === "visualizar" ? "mt-3" : ""}`}>
                                 <div className="titulo-servico mb-2">
                                     <i className={`bx ${modo === "visualizar" ? 'bx-info-circle' : 'bx-wrench'}`}></i>
-                                    Informações do Serviço
+                                    Tipos de Serviço
                                 </div>
 
                                 {modo === "adicionar" ? (
@@ -133,8 +160,8 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                             <input
                                                 name="tipo_servico"
                                                 className="form-control"
-                                                placeholder="OUTROS"
-                                                value={formData.tipo_servico || "OUTROS"}
+                                                placeholder="Descreva o serviço aqui"
+                                                value={formData.tipo_servico || ""}
                                                 onChange={handleChange}
                                                 readOnly={modo === "visualizar"}
                                             />
@@ -151,18 +178,11 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                             disabled={modo === "visualizar"}
                                         >
                                             <option value="" disabled>Selecione a parte</option>
-                                            <option value="PARACHOQUE">PARACHOQUE</option>
-                                            <option value="GRADE">GRADE</option>
-                                            <option value="CAPO">CAPO</option>
-                                            <option value="TETO">TETO</option>
-                                            <option value="SAIA">SAIA</option>
-                                            <option value="PAINEL">PAINEL</option>
-                                            <option value="TAMPA_DO_MOTOR">TAMPA DO MOTOR</option>
-                                            <option value="PORTA_BAGAGEIRO">PORTA BAGAGEIRO</option>
-                                            <option value="CAIXA_DE_RODA">CAIXA DE RODA</option>
-                                            <option value="CURVAO">CURVAO</option>
-                                            <option value="PORTA">PORTA</option>
-                                            <option value="PORTA_DE_SERVICO">PORTA DE SERVICO</option>
+                                            {partesServico.map((parte) => (
+                                                <option key={parte} value={parte}>
+                                                    {parte}
+                                                </option>
+                                            ))}
                                         </select>
                                     </div>
 
@@ -176,16 +196,11 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                             disabled={modo === "visualizar"}
                                         >
                                             <option value="" disabled>Selecione o lado</option>
-                                            <option value="DIANTEIRO">DIANTEIRO</option>
-                                            <option value="TRASEIRO">TRASEIRO</option>
-                                            <option value="COMPLETO">COMPLETO</option>
-                                            <option value="DIREITO">DIREITO</option>
-                                            <option value="ESQUERDO">ESQUERDO</option>
-                                            <option value="DIANTEIRO_DIREITO">DIANTEIRO DIREITO</option>
-                                            <option value="DIANTEIRO_ESQUERDO">DIANTEIRO ESQUERDO</option>
-                                            <option value="TRASEIRO_DIREITO">TRASEIRO DIREITO</option>
-                                            <option value="TRASEIRO_ESQUERDO">TRASEIRO ESQUERDO</option>
-                                            <option value="SAIA">SAIA</option>
+                                            {ladosVeiculo.map((lado) => (
+                                                <option key={lado} value={lado}>
+                                                    {lado}
+                                                </option>
+                                            ))}
                                         </select>
                                     </div>
 

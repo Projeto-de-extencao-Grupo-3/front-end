@@ -37,7 +37,7 @@ function ServicosItens() {
         }
     };
 
-    const adicionarProduto = async ( idOrdemServico, dadosNecessarios) => {
+    const adicionarProduto = async (idOrdemServico, dadosNecessarios) => {
         try {
             const response = await api.post(`/jornada/${idOrdemServico}/produtos`, dadosNecessarios);
             exibirAlertaSucesso("Produto adicionado com sucesso!");
@@ -98,6 +98,46 @@ function ServicosItens() {
         }
     };
 
+    const listarPartesVeiculo = async () => {
+        try {
+            const response = await api.options("/itens-servicos/partes_veiculo");
+            return response.data;
+        } catch (error) {
+            exibirAlertaErro("Erro ao buscar partes do veículo.");
+            throw error;
+        }
+    };
+
+    const listarTiposPintura = async () => {
+        try {
+            const response = await api.options("/itens-servicos/tipos_pintura");
+            return response.data;
+        } catch (error) {
+            exibirAlertaErro("Erro ao buscar tipos de pintura.");
+            throw error;
+        }
+    };
+
+    const listarTiposServico = async () => {
+        try {
+            const response = await api.options("/itens-servicos/tipos_servico");
+            return response.data;
+        } catch (error) {
+            exibirAlertaErro("Erro ao buscar tipos de serviço.");
+            throw error;
+        }
+    };
+
+    const listarLadosVeiculo = async () => {
+        try {
+            const response = await api.options("/itens-servicos/lados_veiculo");
+            return response.data;
+        } catch (error) {
+            exibirAlertaErro("Erro ao buscar lados do veículo.");
+            throw error;
+        }
+    };
+
     const baixarProduto = async (idProduto) => {
         try {
             const _response = await api.patch(`/jornada/${idProduto}/saida-material`);
@@ -119,7 +159,11 @@ function ServicosItens() {
         editarProduto,
         excluirServico,
         excluirProduto,
-        baixarProduto
+        baixarProduto,
+        listarPartesVeiculo,
+        listarTiposPintura,
+        listarTiposServico,
+        listarLadosVeiculo
     };
 }
 
