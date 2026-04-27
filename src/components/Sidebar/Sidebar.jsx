@@ -1,11 +1,16 @@
 import "./Sidebar.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
 function Sidebar({ ativo }) {
 
   const navigate = useNavigate();
-  const [sidebarAberta, setSidebarAberta] = useState(true);
+  const [sidebarFixada, setSidebarFixada] = useState(() => {
+    const estadoSalvo = sessionStorage.getItem("SIDEBAR_FIXADA");
+    return estadoSalvo === null ? true : estadoSalvo === "true";
+  });
+  const [sidebarEmHover, setSidebarEmHover] = useState(false);
+  const [sidebarMobileAberta, setSidebarMobileAberta] = useState(true);
 
   const [usuario, _setUsuario] = useState(() => {
     const nomeSalvo = sessionStorage.getItem("NOME_USUARIO");
@@ -18,14 +23,26 @@ function Sidebar({ ativo }) {
   });
 
   const estaTabletOuMobile = window.innerWidth < 992;
+  const sidebarAberta = estaTabletOuMobile ? sidebarMobileAberta : sidebarFixada || sidebarEmHover;
+  const sidebarCompacta = !estaTabletOuMobile && !sidebarFixada && !sidebarEmHover;
 
   const alternarSidebar = () => {
-    setSidebarAberta((prev) => !prev);
+    if (estaTabletOuMobile) {
+      setSidebarMobileAberta((prev) => !prev);
+      return;
+    }
+
+    setSidebarFixada((prev) => !prev);
+    setSidebarEmHover(false);
   };
+
+  useEffect(() => {
+    sessionStorage.setItem("SIDEBAR_FIXADA", String(sidebarFixada));
+  }, [sidebarFixada]);
 
   const fecharSidebarNoTablet = () => {
     if (window.innerWidth < 992) {
-      setSidebarAberta(false);
+      setSidebarMobileAberta(false);
     }
   };
 
@@ -34,63 +51,97 @@ function Sidebar({ ativo }) {
     fecharSidebarNoTablet();
   };
 
+  const mostrarSidebarNoHover = () => {
+    if (!estaTabletOuMobile && !sidebarFixada) {
+      setSidebarEmHover(true);
+    }
+  };
+
+  const ocultarSidebarNoHover = () => {
+    if (!estaTabletOuMobile && !sidebarFixada) {
+      setSidebarEmHover(false);
+    }
+  };
+
   return (
     <>
-      <button
-        type="button"
-        className="btn btn-dark sidebar-toggle-btn"
-        onClick={alternarSidebar}
-        aria-label={sidebarAberta ? "Fechar menu lateral" : "Abrir menu lateral"}
-      >
-        <i className={`bx ${sidebarAberta ? "bx-x" : "bx-menu"}`} />
-      </button>
+      {estaTabletOuMobile && (
+        <button
+          type="button"
+          className="btn btn-dark sidebar-toggle-btn"
+          onClick={alternarSidebar}
+          aria-label={sidebarAberta ? "Fechar menu lateral" : "Abrir menu lateral"}
+        >
+          <i className={`bx ${sidebarAberta ? "bx-x" : "bx-menu"}`} />
+        </button>
+      )}
 
       {sidebarAberta && estaTabletOuMobile && (
         <div
           className="sidebar-backdrop d-lg-none"
-          onClick={() => setSidebarAberta(false)}
+          onClick={() => setSidebarMobileAberta(false)}
         />
-      )}
+      )} 
 
     <div
-      className={`sidebar collapse ${sidebarAberta ? "show d-flex" : ""} col-12 col-md-4 col-lg-2 flex-column p-3`}
+      className={`sidebar ${estaTabletOuMobile ? "sidebar-mobile" : sidebarCompacta ? "sidebar-compacta" : "sidebar-expandida"} ${estaTabletOuMobile ? (sidebarAberta ? "show d-flex" : "d-none") : "d-flex"} col-12 col-md-4 col-lg-2 flex-column p-3`}
       style={{ height: "100vh", position: "sticky", top: 0, overflowY: "auto" }}
+      // onMouseEnter={mostrarSidebarNoHover}
+      // onMouseLeave={ocultarSidebarNoHover}  
     >
       {/* LOGO */}
-      <div className="d-flex align-items-center mb-4 logo-box">
+      <div className="d-flex align-items-center mb-3 logo-box">
         <img src="/src/assets/images/logoEscura.svg" className="logo-img" alt="Logo" />
 
-        <div className="ms-2">
+        <div className="ms-2 logo-texto">
           <h5 className="m-0 fw-bold">GROTrack</h5>
-          <small className="text-white-50">
-            Sistema de Gestão da Geosmar<br />
-            Reformadora de Ônibus
-          </small>
+          {/* <small className="text-white-50">
+            Sistema de Gestão da Geosmar
+            Reformadora
+          </small> */}
         </div>
 
+        {estaTabletOuMobile && (
+          <button
+            type="button"
+            className="btn btn-sm btn-outline-light ms-auto"
+            onClick={() => setSidebarMobileAberta(false)}
+            aria-label="Fechar menu lateral"
+          >
+            <i className="bx bx-x" />
+          </button>
+        )}
+      </div>
+
+      {!estaTabletOuMobile && (
         <button
           type="button"
-          className="btn btn-sm btn-outline-light ms-auto"
-          onClick={() => setSidebarAberta(false)}
-          aria-label="Fechar menu lateral"
+          className="btn mb-3 btn-sm btn-outline-light sidebar-desktop-toggle-btn"
+          onClick={alternarSidebar}
+          aria-label={sidebarFixada ? "Recolher menu lateral" : "Fixar menu lateral"}
         >
-          <i className="bx bx-x" />
+          <i className={`bx ${sidebarFixada ? "bx-chevrons-left" : "bx-chevrons-right"}`} />
+          {sidebarFixada ? <span className="ms-1">Fechar Barra Lateral</span> : null}
         </button>
-      </div>
+      )}
+
 
       {/* NAV */}
       {/* Checa qual ta ativo para aplicar estilo, !!atenção aos nomes!! */}
       <ul className="menu list-unstyled flex-grow-1">
         <li className={ativo === "painel" ? "ativo" : ""} onClick={() => navegarPara("/painelControle")}>
-          <i className='bx bxs-layout' style={{ fontSize: "25px" }}></i>  Painel de Controle
+          <i className='bx bxs-layout' style={{ fontSize: "25px" }}></i>
+          <span className="menu-texto">Painel de Controle</span>
         </li>
 
         <li className={ativo === "financeiro" ? "ativo" : ""} onClick={() => navegarPara("/analiseFinanceira")}>
-          <i className='bx  bx-chart-bar-columns' style={{ fontSize: "25px" }} ></i> Análise Financeira
+          <i className='bx  bx-chart-bar-columns' style={{ fontSize: "25px" }} ></i>
+          <span className="menu-texto">Análise Financeira</span>
         </li>
 
         <li className={ativo === "clientes" ? "ativo" : ""} onClick={() => navegarPara("/clientes")}>
-          <i className='bx bxs-group' style={{ fontSize: "25px" }}></i> Clientes
+          <i className='bx bxs-group' style={{ fontSize: "25px" }}></i>
+          <span className="menu-texto">Clientes</span>
         </li>
 
         {/* <li className={ativo === "servicos" ? "ativo" : ""}>
@@ -98,11 +149,13 @@ function Sidebar({ ativo }) {
         </li> */}
 
         <li className={ativo === "estoque" ? "ativo" : ""} onClick={() => navegarPara("/estoque")}>
-          <i className='bx bxs-package' style={{ fontSize: "25px" }}></i> Estoque
+          <i className='bx bxs-package' style={{ fontSize: "25px" }}></i>
+          <span className="menu-texto">Estoque</span>
         </li>
 
         <li className={ativo === "funcionarios" ? "ativo" : ""} onClick={() => navegarPara("/funcionarios")}>
-          <i className='bx bxs-briefcase-alt-2' style={{ fontSize: "25px" }}></i> Funcionários
+          <i className='bx bxs-briefcase-alt-2' style={{ fontSize: "25px" }}></i>
+          <span className="menu-texto">Funcionários</span>
         </li>
 
         {/* <li className={ativo === "veiculos" ? "ativo" : ""}>
@@ -114,7 +167,7 @@ function Sidebar({ ativo }) {
       <div className="user-card p-2 rounded mb-3">
         <div className="d-flex align-items-center gap-2">
           <div ><i className='bx bxs-user-circle' style={{ fontSize: "45px" }}></i></div>
-          <div>
+          <div className="user-card-texto">
             <strong className="fs-6">{usuario.nome || "Não autenticado"}</strong>
             <div className="fs-6 text-muted" style={{ fontSize: "13px" }}>
               {usuario.cargo || "Não autenticado"}
@@ -125,7 +178,8 @@ function Sidebar({ ativo }) {
 
       {/* SAIR */}
       <button className="logout-btn btn w-100 text-start" onClick={() => navegarPara("/")}>
-        <i className="me-2" >↩</i> Sair
+        <i className="me-2" >↩</i>
+        <span className="menu-texto">Sair</span>
       </button>
     </div>
     </>
