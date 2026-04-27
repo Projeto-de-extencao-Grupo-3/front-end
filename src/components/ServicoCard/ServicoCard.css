@@ -3,7 +3,8 @@
 }
 
 .servico-card {
-  width: 520px;
+  /* width: 520px; */
+  width: 23.5%;
   border-radius: 12px;
   padding: 12px;
   border-style: solid;
