@@ -1,8 +1,10 @@
 import { useRef, useState } from "react";
 import './ModalEntradaVeiculo.css';
 import { useNavigate } from "react-router-dom";
+import ReconhecimentoPlaca from "../../service/ReconhecimentoPlaca";
 
 function ModalEntradaVeiculo({ isOpen, onClose }) {
+    const { send_to_gateway } = ReconhecimentoPlaca();
     const navigate = useNavigate()
     const fileInputRef = useRef(null)
     const [etapa, setEtapa] = useState("opcoes");
@@ -15,13 +17,11 @@ function ModalEntradaVeiculo({ isOpen, onClose }) {
         fileInputRef.current.click();
     }
 
-    const handleArquivoSelecionado = (e) => {
+    const handleArquivoSelecionado = async (e) => {
         const arquivo = e.target.files[0];
         if (arquivo) {
             console.log("Arquivo selecionado:", arquivo.name);
-            navigate("/painelControle/entradaCamera", { 
-                state: { arquivoCapturado: arquivo } 
-        });
+            await send_to_gateway(arquivo);
         }
     };
 

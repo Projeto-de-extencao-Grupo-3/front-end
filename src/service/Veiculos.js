@@ -10,7 +10,7 @@ function Veiculos() {
         } catch (error) {
             exibirAlertaErro("Erro ao buscar veículos do cliente!");
             console.error("Erro ao buscar veículos por cliente:", error);
-            throw error;
+            return [];
         }
     };
 

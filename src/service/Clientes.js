@@ -2,9 +2,25 @@ import { useState } from "react";
 import api from "./api";
 import { exibirAlertaSucesso, exibirAlertaErro, exibirAlertaConfirmacao } from './alertas';
 
+
 function Clientes() {
     const [clientes, setClientes] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    const buscarClientes = async () => {
+        try {
+            const response = await api.get("/clientes");
+            return response.data;
+        } catch (error) {
+            console.error("Erro ao listar clientes:", error);
+            return [];
+        }
+    }
+    
+    const buscarClientePorPlaca = async (placa) => {
+        var response = await api.get(`/clientes/placa/${placa}`)
+        return response.data;
+    };
 
     const listarClientesPaginados = async (pagina, tamanho) => {
         try {
@@ -104,7 +120,7 @@ function Clientes() {
         }
     }
 
-    return { clientes, loading, listarClientesPaginados, listarClientesPorBuscaDeNome, adicionarCliente, excluirCliente, atualizarCliente };
+    return { clientes, loading, listarClientesPaginados, listarClientesPorBuscaDeNome, adicionarCliente, excluirCliente, atualizarCliente, buscarClientes, buscarClientePorPlaca };
 }
 
 export default Clientes;

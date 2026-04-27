@@ -244,7 +244,7 @@ function PainelControle() {
 
                                 <div className="d-flex gap-2">
                                     {kpiAtiva === "entrada" && (
-                                        <button className={`btn flex-grow-1 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/entrada/${os.veiculo?.placa}`, { state: { dadosOS: os } })}>
+                                        <button className={`btn flex-grow-1 fs-5 btn-status-${corCard}`} onClick={() => navigate(`/painelControle/entrada/${os.veiculo?.placa}`)}>
                                             Fazer Entrada
                                         </button>
                                     )}
