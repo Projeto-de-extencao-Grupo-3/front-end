@@ -25,7 +25,6 @@ function ConfirmacaoAutorizacao({ aberto, onClose, onConfirm, placa, ordemServic
                     idOrdemServico={idOrdemServico}
                 />
 
-                <TempoEstimado dias={14} />
                 <ResumoDoOrcamento
                     ticket={ordemServicoDados.resumo}
                 />
