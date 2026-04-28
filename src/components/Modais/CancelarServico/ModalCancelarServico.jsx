@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import api from "../../../service/api";
 import OrdemServicoCard from "../../ServicoCard/OrdemServicoCard";
 import "./ModalCancelarServico.css";
+import { exibirAlertaErro, exibirAlertaSucesso } from "../../../service/alertas";
 
 function ModalCancelarServico({ os, onSuccess }) {
     const [aberto, setAberto] = useState(false);
@@ -12,10 +13,10 @@ function ModalCancelarServico({ os, onSuccess }) {
             await api.delete(`/jornada/${os.id_ordem_servico}/cancelar-ordem`);
             setAberto(false);
             if (onSuccess) onSuccess();
-            alert("Ordem de serviço cancelada com sucesso!");
+            exibirAlertaSucesso("Ordem de serviço cancelada com sucesso!");
         } catch (error) {
             console.error("Erro ao cancelar OS:", error);
-            alert("Erro ao cancelar a ordem de serviço.");
+            exibirAlertaErro("Erro ao cancelar a ordem de serviço.");
         }
     };
 

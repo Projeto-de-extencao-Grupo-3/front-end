@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./ModalEditar.css";
 import { exibirAlertaErro } from "../../service/alertas";
+import Enderecos from "../../service/Endereco";
 
 const estadoClienteInicial = {
     id_cliente: "",
@@ -109,6 +110,37 @@ function ModalEditarCliente({
     const [modoContato, setModoContato] = useState("lista");
     const [formEndereco, setFormEndereco] = useState(estadoEnderecoInicial);
     const [formContato, setFormContato] = useState(estadoContatoInicial);
+
+    const { buscarEnderecoViaCEP } = Enderecos();
+
+    const handleCEPChange = async (e) => {
+        const valor = e.target.value;
+
+        setFormEndereco((prev) => ({ ...prev, cep: valor }));
+
+        const cepLimpo = valor.replace(/\D/g, "");
+
+        if (cepLimpo.length === 8) {
+            try {
+                const dados = await buscarEnderecoViaCEP(cepLimpo);
+                const endereco = dados?.data ?? dados;
+
+                console.log("Endereço encontrado:", endereco);
+
+                if (endereco && !endereco.erro) {
+                    setFormEndereco((prev) => ({
+                        ...prev,
+                        logradouro: endereco.logradouro || prev.logradouro,
+                        bairro: endereco.bairro || prev.bairro,
+                        cidade: endereco.cidade || endereco.localidade || prev.cidade,
+                        estado: endereco.estado || endereco.uf || prev.estado,
+                    }));
+                }
+            } catch (error) {
+                exibirAlertaErro("Erro ao buscar CEP.");
+            }
+        }
+    };
 
     useEffect(() => {
         if (!isOpen || !clienteParaEditar) {
@@ -608,7 +640,7 @@ function ModalEditarCliente({
                                                 className="form-control bg-light border-0"
                                                 name="cep"
                                                 value={formEndereco.cep || ""}
-                                                onChange={handleChangeEndereco}
+                                                onChange={handleCEPChange}
                                                 placeholder="00000-000"
                                             />
                                         </div>
