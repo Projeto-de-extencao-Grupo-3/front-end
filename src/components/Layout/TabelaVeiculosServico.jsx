@@ -1,12 +1,12 @@
 import { useEffect, useState, useMemo } from 'react';
 import styles from "./TabelaVeiculos.module.css";
 import veiculosService from '../../service/Veiculos.js';
+import { useNavigate } from 'react-router-dom';
 
 function TabelaServicos({ modelo, placa, veiculo }) {
   console.log("TabelaVeiculosServico - modelo: " + modelo + ", placa: " + placa + ", veiculo: " + JSON.stringify(veiculo));
-
   const { buscarOrdensPorVeiculo } = veiculosService();
-
+  const navigate = useNavigate();
   const [servicos, setServicos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [erro, setErro] = useState(null);
@@ -19,9 +19,9 @@ function TabelaServicos({ modelo, placa, veiculo }) {
   ];
 
   const formatarData = (dataISO) => {
-  if (!dataISO) return "";
+    if (!dataISO) return "";
 
-  const data = new Date(dataISO);
+    const data = new Date(dataISO);
     return data.toLocaleDateString('pt-BR');
   };
 
@@ -30,50 +30,50 @@ function TabelaServicos({ modelo, placa, veiculo }) {
   };
 
   useEffect(() => {
-  async function carregarServicos() {
-    try {
-      setLoading(true);
-      setErro(null);
+    async function carregarServicos() {
+      try {
+        setLoading(true);
+        setErro(null);
 
-      console.log("🔎 VEICULO ENVIADO:", veiculo);
+        console.log("🔎 VEICULO ENVIADO:", veiculo);
 
-      const mapaFiltro = {
-        '3meses': 3,
-        '6meses': 6,
-        '1ano': 12
-      };
+        const mapaFiltro = {
+          '3meses': 3,
+          '6meses': 6,
+          '1ano': 12
+        };
 
-      const dados = await buscarOrdensPorVeiculo(veiculo, mapaFiltro[filtro]);
+        const dados = await buscarOrdensPorVeiculo(veiculo, mapaFiltro[filtro]);
 
-      console.log("🔥 DADOS QUE CHEGARAM:", dados);
+        console.log("🔥 DADOS QUE CHEGARAM:", dados);
 
-      const dadosFormatados = (dados || []).map((item) => ({
-        id: item.id_ordem_servico,
-        ordem: `#${item.id_ordem_servico}`,
-        data: item.data_saida_efetiva
-          ? formatarData(item.data_saida_efetiva)
-          : formatarData(item.data_saida_prevista),
-        valor: item.valor_total,
-        status: traduzirStatus(item.status)
-      }));
+        const dadosFormatados = (dados || []).map((item) => ({
+          id: item.id_ordem_servico,
+          ordem: `#${item.id_ordem_servico}`,
+          data: item.data_saida_efetiva
+            ? formatarData(item.data_saida_efetiva)
+            : formatarData(item.data_saida_prevista),
+          valor: item.valor_total,
+          status: traduzirStatus(item.status)
+        }));
 
-      console.log("✅ FORMATADOS:", dadosFormatados);
+        console.log("✅ FORMATADOS:", dadosFormatados);
 
-      setServicos(dadosFormatados);
+        setServicos(dadosFormatados);
 
-    } catch (error) {
-      console.error("❌ ERRO REAL:", error);
-      setErro('Não foi possível carregar os serviços.');
-    } finally {
-      setLoading(false);
+      } catch (error) {
+        console.error("❌ ERRO REAL:", error);
+        setErro('Não foi possível carregar os serviços.');
+      } finally {
+        setLoading(false);
+      }
     }
-  }
 
-  if (veiculo) {
-    carregarServicos();
-  }
+    if (veiculo) {
+      carregarServicos();
+    }
 
-}, [veiculo, filtro]);
+  }, [veiculo, filtro]);
 
   // 🔐 Parser de data seguro
   const parsarData = (dataStr) => {
@@ -114,7 +114,7 @@ function TabelaServicos({ modelo, placa, veiculo }) {
       </div>
     );
   }
-  
+
   // ⚠️ Erro
   if (erro) {
     return (
@@ -134,7 +134,7 @@ function TabelaServicos({ modelo, placa, veiculo }) {
 
   return (
 
-    
+
     <div className={styles.wrapper}>
 
       {/* Cabeçalho */}
@@ -189,10 +189,10 @@ function TabelaServicos({ modelo, placa, veiculo }) {
 
                     if (servico.status === 'Com agendamento') {
                       statusClasses = 'bg-success-subtle border border-success text-success';
-                    } 
+                    }
                     else if (servico.status === 'Em produção') {
                       statusClasses = 'bg-secondary-subtle border border-secondary text-secondary';
-                    } 
+                    }
                     else if (servico.status === 'Sem agendamento') {
                       statusClasses = '';
                     }
@@ -202,15 +202,29 @@ function TabelaServicos({ modelo, placa, veiculo }) {
                   style={
                     servico.status === 'Sem agendamento'
                       ? {
-                          backgroundColor: '#0C2F52',
-                          border: '1px solid #0C2F52',
-                          color: '#fff'
-                        }
+                        backgroundColor: '#0C2F52',
+                        border: '1px solid #0C2F52',
+                        color: '#fff'
+                      }
                       : {}
                   }
                 >
                   {servico.status}
                 </span>
+                <div className="d-flex gap-2 flex-shrink-0">
+                  <a
+                    className={`${styles['btn-navy']} ${styles['btn-vistorias']} d-flex align-items-center justify-content-center`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate('/clientes/veiculos/servico', {
+                        state: { modelo: veiculo.modelo, placa: veiculo.placa, veiculo: veiculo.id_veiculo, cliente: veiculo.id_cliente }
+                      });
+                    }}
+                  >
+                      <i className="bx bx-camera" style={{ marginRight: '0.5rem' }} ></i>
+                    Ver Vistorias
+                  </a>
+                </div>
               </div>
             </div>
           ))}
