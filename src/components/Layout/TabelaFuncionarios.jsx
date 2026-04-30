@@ -1,4 +1,6 @@
 import "./Tabela.css";
+import { formatarTexto,formatarTelefone } from "../../utils/formatarTexto.js";
+
 
 function TabelaFuncionarios({ funcionarios, excluirFuncionario, editarFuncionario }) {
 
@@ -33,10 +35,10 @@ function TabelaFuncionarios({ funcionarios, excluirFuncionario, editarFuncionari
                                     {String(funcionario.id_funcionario).padStart(5, '0')}
                                 </span>
                             </td>
-                            <td className="fw-bold">{funcionario.nome}</td>
-                            <td>{funcionario.cargo}</td>
-                            <td>{funcionario.especialidade}</td>
-                            <td>{funcionario.telefone}</td>
+                            <td className="fw-bold">{formatarTexto(funcionario.nome)}</td>
+                            <td>{formatarTexto(funcionario.cargo)}</td>
+                            <td>{formatarTexto(funcionario.especialidade)}</td>
+                            <td>{formatarTelefone(funcionario.telefone)}</td>
                             <td className="text-center">
                                 <div className="d-flex justify-content-center gap-3">
                                     <button

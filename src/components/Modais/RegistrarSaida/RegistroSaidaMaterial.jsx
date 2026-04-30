@@ -1,11 +1,13 @@
 import { createPortal } from "react-dom";
 import { useState, useEffect } from "react";
 import "./RegistroSaidaMaterial.css";
-import ListarQuantidade from "../../../service/Produtos"; // Mantive para a busca inicial
+import ListarQuantidade from "../../../service/Produtos";
+import { formatarTexto } from "../../../utils/formatarTexto.js";
 
 function RegistroSaidaMaterial({ aberto, aoConfirmar, aoCancelar, produto }) {
     const { listarProdutosById } = ListarQuantidade();
     const [infoDoProdutoEstoque, setInfoDoProdutoEstoque] = useState(null);
+    const [qtdEfetiva, setQtdEfetiva] = useState(0);
 
     const infoDoProdutoEstoqueGet = async () => {
         if (!produto) return;
@@ -20,18 +22,20 @@ function RegistroSaidaMaterial({ aberto, aoConfirmar, aoCancelar, produto }) {
     useEffect(() => {
         if (aberto) {
             infoDoProdutoEstoqueGet();
+            setQtdEfetiva(Number(produto?.quantidade || 0));
         }
     }, [produto, aberto]);
 
     if (!aberto) return null;
 
-    const qtdSaida = Number(produto?.quantidade || 0);
+    const qtdPlanejada = Number(produto?.quantidade || 0);
     const qtdEstoque = Number(infoDoProdutoEstoque?.quantidade_estoque || 0);
-    const resultado = qtdEstoque - qtdSaida; // Essa é a nova quantidade de estoque
-    const insuficiente = qtdSaida > qtdEstoque;
 
-    const jaBaixado = produto?.baixado === true; // Verifica se já foi dado baixa
-    const desabilitarBotao = insuficiente || jaBaixado;
+    const resultado = qtdEstoque - qtdEfetiva;
+    const insuficiente = qtdEfetiva > qtdEstoque;
+
+    const jaBaixado = produto?.baixado === true;
+    const desabilitarBotao = insuficiente || jaBaixado || qtdEfetiva < 0;
 
     return createPortal(
         <div className="rsm-fundo" onClick={aoCancelar}>
@@ -39,7 +43,6 @@ function RegistroSaidaMaterial({ aberto, aoConfirmar, aoCancelar, produto }) {
 
                 <h2 className="rsm-titulo">Registro de Saída de Material</h2>
 
-                {/* ALERTA */}
                 {insuficiente && (
                     <div className="rsm-alerta">
                         <span className="rsm-alerta-icone">!</span>
@@ -54,8 +57,6 @@ function RegistroSaidaMaterial({ aberto, aoConfirmar, aoCancelar, produto }) {
                     </div>
                 )}
 
-                {/* SEÇÃO MATERIAL */}
-                {/* ... (Todo o seu HTML da Seção de Material fica igualzinho!) ... */}
                 <div className="rsm-secao">
                     <div className="rsm-cabecalho-secao">
                         <span className="rsm-secao-icone">☰</span>
@@ -69,7 +70,7 @@ function RegistroSaidaMaterial({ aberto, aoConfirmar, aoCancelar, produto }) {
                         </div>
                         <div className="rsm-campo">
                             <label>Item/Produto</label>
-                            <div className="rsm-valor">{produto?.nome_produto || "—"}</div>
+                            <div className="rsm-valor">{formatarTexto(produto?.nome_produto || "—")}</div>
                         </div>
                     </div>
 
@@ -83,47 +84,54 @@ function RegistroSaidaMaterial({ aberto, aoConfirmar, aoCancelar, produto }) {
 
                     <div className="rsm-linha-dupla">
                         <div className="rsm-campo">
-                            <label>Quantidade de Saída</label>
-                            <div className="rsm-valor">{qtdSaida} Unidades</div>
+                            <label>Quantidade Planejada</label>
+                            <div className="rsm-valor">{qtdPlanejada} Unidades</div>
                         </div>
+
                         <div className="rsm-campo">
-                            <label>Preço por Unidade (R$)</label>
-                            <div className="rsm-valor">R$ {produto?.preco_peca || produto?.preco_venda || "0,00"}</div>
+                            <label>Quantidade de Saída Efetiva</label>
+                            <input
+                                type="number"
+                                min="0"
+                                value={qtdEfetiva}
+                                onChange={(e) => setQtdEfetiva(Number(e.target.value))}
+                                className="rsm-input"
+                                disabled={jaBaixado}
+                            />
                         </div>
                     </div>
                 </div>
 
-                {/* SEÇÃO ESTOQUE */}
-                { !jaBaixado && (
-                <div className="rsm-secao">
-                    <div className="rsm-cabecalho-secao">
-                        <span className="rsm-secao-icone">$</span>
-                        <span>Informações do Estoque</span>
-                    </div>
+                {!jaBaixado && (
+                    <div className="rsm-secao">
+                        <div className="rsm-cabecalho-secao">
+                            <span className="rsm-secao-icone">$</span>
+                            <span>Informações do Estoque</span>
+                        </div>
 
-                    <div className="rsm-info-linha">
-                        <span>Quantidade em Estoque:</span>
-                        <strong>{qtdEstoque} Unidades</strong>
-                    </div>
-                    <div className="rsm-info-linha">
-                        <span>Quantidade de Saída:</span>
-                        <strong>{qtdSaida} Unidades</strong>
-                    </div>
+                        <div className="rsm-info-linha">
+                            <span>Quantidade em Estoque:</span>
+                            <strong>{qtdEstoque} Unidades</strong>
+                        </div>
+                        
+                        <div className="rsm-info-linha">
+                            <span>Quantidade de Saída Efetiva:</span>
+                            <strong>{qtdEfetiva} Unidades</strong>
+                        </div>
 
-                    <div className="rsm-divisor" />
+                        <div className="rsm-divisor" />
 
-                    <div className={`rsm-info-linha rsm-resultado ${insuficiente ? "rsm-resultado-erro" : ""}`}>
-                        <span>Resultado Estoque:</span>
-                        <strong>{insuficiente ? "Insuficiente" : `${resultado} Unidades`}</strong>
+                        <div className={`rsm-info-linha rsm-resultado ${insuficiente ? "rsm-resultado-erro" : ""}`}>
+                            <span>Resultado Estoque:</span>
+                            <strong>{insuficiente ? "Insuficiente" : `${resultado} Unidades`}</strong>
+                        </div>
                     </div>
-                </div>
-                )
-                }
+                )}
 
                 <div className="rsm-botoes">
                     <button
                         className={`rsm-btn rsm-btn-confirmar ${desabilitarBotao ? "rsm-btn-desabilitado" : ""}`}
-                        onClick={() => !desabilitarBotao && aoConfirmar(produto, resultado)}
+                        onClick={() => !desabilitarBotao && aoConfirmar(produto, resultado, qtdEfetiva)}
                         disabled={desabilitarBotao}
                     >
                         {jaBaixado ? "Já Registrado" : "Confirmar"}

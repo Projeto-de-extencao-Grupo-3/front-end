@@ -1,4 +1,5 @@
 import "./TabelaEstoque.css";
+import { formatarTexto } from "../../utils/formatarTexto.js";
 
 function TabelaEstoque({ produtos, excluirProdutos, editarProdutos, editarQuantidadeEstoque }) {
 
@@ -32,7 +33,7 @@ function TabelaEstoque({ produtos, excluirProdutos, editarProdutos, editarQuanti
                             <td className="px-4">
                                 <span className="badge-codigo">{produto.id_peca}</span>
                             </td>
-                            <td className="fw-bold">{produto.nome}</td>
+                            <td className="fw-bold">{formatarTexto(produto.nome)}</td>
                             <td>{produto.quantidade_estoque}</td>
                             <td>{produto.fornecedor_nf}</td>
                             <td>R${produto.preco_compra}</td>

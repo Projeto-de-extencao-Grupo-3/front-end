@@ -30,7 +30,7 @@ function Tabela({ clientes, excluirCliente, editarCliente }) {
                 <tbody>
                     {clientes.map((cliente) => {
                         const idAtual = cliente.idCliente || cliente.id_cliente || cliente.id;
-                        
+
                         return (
                             <tr key={idAtual}>
                                 <td className="px-4">
@@ -46,29 +46,33 @@ function Tabela({ clientes, excluirCliente, editarCliente }) {
                                 <td className="text-truncate" style={{ maxWidth: '150px' }}>
                                     {cliente.enderecos.length + " Endereços" || "N/A"}
                                 </td>
-                                <td>{cliente.tipoCliente || cliente.tipo_cliente}</td> 
+                                <td>{{
+                                    "PESSOA_FISICA": "Pessoa Física",
+                                    "PESSOA_JURIDICA": "Pessoa Jurídica"
+                                    }[String(cliente.tipoCliente || cliente.tipo_cliente || "").toUpperCase().trim()]
+                                    || (cliente.tipoCliente || cliente.tipo_cliente)}</td>
                                 <td>
-                                    <button 
+                                    <button
                                         className="btn btn-outline-primary btn-sm"
                                         onClick={() => navigate(`/clientes/veiculos/${idAtual}`)}
-                                        >
+                                    >
                                         <i className='bx bx-car'></i> Ver Veículos
                                     </button>
                                 </td>
                                 <td className="text-center">
                                     <div className="d-flex justify-content-center gap-3">
-                                        <button 
-                                            className="btn-acao" 
+                                        <button
+                                            className="btn-acao"
                                             title="Editar"
                                             onClick={() => editarCliente(cliente)}
                                         >
                                             <i className='bx bx-edit-alt'></i>
                                         </button>
-                                        <button 
-                                            className="btn-acao btn-excluir" 
+                                        <button
+                                            className="btn-acao btn-excluir"
                                             title="Excluir"
                                             onClick={() => {
-                                                    excluirCliente(cliente);
+                                                excluirCliente(cliente);
                                             }}
                                         >
                                             <i className='bx bx-x'></i>
@@ -86,7 +90,7 @@ function Tabela({ clientes, excluirCliente, editarCliente }) {
 
 function formatarCpfCnpj(cpfCnpj) {
     if (!cpfCnpj) return "N/A";
-    
+
     const apenasNumeros = cpfCnpj.replace(/\D/g, '');
     if (apenasNumeros.length === 11) {
         return apenasNumeros.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
