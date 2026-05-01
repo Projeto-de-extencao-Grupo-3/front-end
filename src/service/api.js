@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BACKEND_URL // backend
+  baseURL: '/api'
 });
 
 // interceptor → roda antes de TODA requisição
