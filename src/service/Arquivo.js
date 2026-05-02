@@ -1,20 +1,16 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:8080/arquivos";
+import api from "./api";
 
 const Arquivo = {
-    buscarImagensVistoria: async (idOrdemServico) => {
-        const response = await axios.get(`${API_URL}/vistoria/${idOrdemServico}`);
+    buscarImagensVistoria: async (idOrdemServico, categoriaEnum) => {
+        const response = await api.get(`arquivos/vistoria/${idOrdemServico}/${categoriaEnum}`);
         return response.data;
     },
 
-    uploadVistoria: async (idOrdemServico, arquivo) => {
+    uploadVistoria: async (idOrdemServico, arquivo, categoriaEnum) => {
         const formData = new FormData();
         formData.append("file", arquivo);
-        const categoriaEnum = "ORDEM_SERVICO"; 
 
-        return await axios.post(
-            `${API_URL}/vistoria/${idOrdemServico}/${categoriaEnum}`, 
+        return await api.post(`arquivos/vistoria/${idOrdemServico}/${categoriaEnum}`, 
             formData, 
             { headers: { "Content-Type": "multipart/form-data" } }
         );

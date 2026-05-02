@@ -14,17 +14,36 @@ function ImagensAnexadas() {
    
     const [imagens, setImagens] = useState([]);
     const [carregando, setCarregando] = useState(false);
-    const [filtroVistoria, setFiltroVistoria] = useState("inicial");
+    const [filtroVistoria, setFiltroVistoria] = useState("VISTORIA_INICIAL");
+    const [imageCounts, setImageCounts] = useState({ VISTORIA_INICIAL: 0, VISTORIA_FINAL: 0 });
     const [ticket, setTicket] = useState(null);
 
     //busca imagens anexada via service
-    const carregarImagens = async () => {
+    const carregarImagens = async (categoria) => {
         if (!idOrdemServico) return;
         try {
-            const data = await Arquivo.buscarImagensVistoria(idOrdemServico);
-            setImagens(data);
+            const data = await Arquivo.buscarImagensVistoria(idOrdemServico, categoria);
+            setImagens(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error("Erro ao buscar imagens:", error);
+            setImagens([]);
+        }
+    };
+
+    const carregarContagens = async () => {
+        if (!idOrdemServico) return;
+        try {
+            const [inic, fina] = await Promise.all([
+                Arquivo.buscarImagensVistoria(idOrdemServico, 'VISTORIA_INICIAL'),
+                Arquivo.buscarImagensVistoria(idOrdemServico, 'VISTORIA_FINAL')
+            ]);
+            setImageCounts({
+                VISTORIA_INICIAL: Array.isArray(inic) ? inic.length : 0,
+                VISTORIA_FINAL: Array.isArray(fina) ? fina.length : 0
+            });
+        } catch (error) {
+            console.error('Erro ao carregar contagens de imagens:', error);
+            setImageCounts({ VISTORIA_INICIAL: 0, VISTORIA_FINAL: 0 });
         }
     };
 
@@ -47,10 +66,11 @@ function ImagensAnexadas() {
 
     useEffect(() => {
         if (idOrdemServico) {
-            carregarImagens();
+            carregarContagens();
+            carregarImagens(filtroVistoria);
             carregarDadosOrdem();
         }
-    }, [idOrdemServico]);
+    }, [idOrdemServico, filtroVistoria]);
 
     // Lógica de Upload via Service
     const handleFileUpload = async (event) => {
@@ -59,10 +79,11 @@ function ImagensAnexadas() {
 
         setCarregando(true);
         try {
-            await Arquivo.uploadVistoria(idOrdemServico, arquivoSelecionado);
-            alert("Imagem anexada com sucesso!");
-            carregarImagens(); 
+            await Arquivo.uploadVistoria(idOrdemServico, arquivoSelecionado, filtroVistoria);
+            await carregarImagens(filtroVistoria);
+            await carregarContagens();
         } catch (error) {
+            console.error('Erro no upload:', error);
             alert("Erro ao enviar imagem.");
         } finally {
             setCarregando(false);
@@ -132,18 +153,18 @@ function ImagensAnexadas() {
                 <div className="row mb-3">
                     <div className="col-6">
                         <button 
-                            className={`btn w-100 py-2 ${filtroVistoria === "inicial" ? "btn-light border shadow-sm" : "btn-outline-secondary"}`}
-                            onClick={() => setFiltroVistoria("inicial")}
+                            className={`btn w-100 py-2 ${filtroVistoria === "VISTORIA_INICIAL" ? "btn-light border shadow-sm" : "btn-outline-secondary"}`}
+                            onClick={() => setFiltroVistoria("VISTORIA_INICIAL")}
                         >
-                            Vistoria Inicial ({imagens.length})
+                            Vistoria Inicial ({imageCounts.VISTORIA_INICIAL})
                         </button>
                     </div>
                     <div className="col-6">
                         <button 
-                            className={`btn w-100 py-2 ${filtroVistoria === "final" ? "btn-light border shadow-sm" : "btn-outline-secondary"}`}
-                            onClick={() => setFiltroVistoria("final")}
+                            className={`btn w-100 py-2 ${filtroVistoria === "VISTORIA_FINAL" ? "btn-light border shadow-sm" : "btn-outline-secondary"}`}
+                            onClick={() => setFiltroVistoria("VISTORIA_FINAL")}
                         >
-                            Vistoria Final (0)
+                            Vistoria Final ({imageCounts.VISTORIA_FINAL})
                         </button>
                     </div>
                 </div>
