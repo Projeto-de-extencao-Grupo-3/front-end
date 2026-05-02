@@ -1,44 +1,45 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Layout from "../../../components/Layout/Layout";
 import OrdemServicoCard from "../../../components/ServicoCard/OrdemServicoCard";
-import ServicosEItensLogic from "../../../service/ServicosEItens.js"; // Importando a lógica real
+import ServicosEItensLogic from "../../../service/ServicosEItens.js";
+import Arquivo from "../../../service/Arquivo.js"; 
 import "../../ConfigLayoutWorkflow.css";
-
-const API_URL = "http://localhost:8080/arquivos";
 
 function ImagensAnexadas() {
     const { idOrdemServico } = useParams();
     const navigate = useNavigate();
-    const { buscarOrdem } = ServicosEItensLogic(); // Hook de serviço
+    const { buscarOrdem } = ServicosEItensLogic();
     
-    // Estados do componente
+   
     const [imagens, setImagens] = useState([]);
     const [carregando, setCarregando] = useState(false);
     const [filtroVistoria, setFiltroVistoria] = useState("inicial");
-    const [ticket, setTicket] = useState(null); // Inicializa como null
+    const [ticket, setTicket] = useState(null);
 
-    // 1. Buscar imagens anexadas
+    //busca imagens anexada via service
     const carregarImagens = async () => {
+        if (!idOrdemServico) return;
         try {
-            const response = await axios.get(`${API_URL}/vistoria/${idOrdemServico}`);
-            setImagens(response.data);
+            const data = await Arquivo.buscarImagensVistoria(idOrdemServico);
+            setImagens(data);
         } catch (error) {
             console.error("Erro ao buscar imagens:", error);
         }
     };
 
-    // 2. Buscar dados da Ordem de Serviço (INTEGRADO)
+    // busca dados da os
     const carregarDadosOrdem = async () => {
+        if (!idOrdemServico) return;
         try {
             const dados = await buscarOrdem(idOrdemServico);
-            // Seguindo a mesma estrutura da tela de orçamento
-            setTicket({
-                ...dados.busca_simples,
-                servicos: dados.busca_simples.servicos || [],
-                produtos: dados.busca_simples.produtos || []
-            });
+            if (dados && dados.busca_simples) {
+                setTicket({
+                    ...dados.busca_simples,
+                    servicos: dados.busca_simples.servicos || [],
+                    produtos: dados.busca_simples.produtos || []
+                });
+            }
         } catch (e) {
             console.error("Erro ao carregar dados da OS:", e);
         }
@@ -51,27 +52,17 @@ function ImagensAnexadas() {
         }
     }, [idOrdemServico]);
 
-    // Lógica de Upload
+    // Lógica de Upload via Service
     const handleFileUpload = async (event) => {
         const arquivoSelecionado = event.target.files[0];
-        if (!arquivoSelecionado) return;
-
-        const formData = new FormData();
-        formData.append("file", arquivoSelecionado);
+        if (!arquivoSelecionado || !idOrdemServico) return;
 
         setCarregando(true);
         try {
-            const categoriaEnum = "ORDEM_SERVICO"; 
-            await axios.post(
-                `${API_URL}/vistoria/${idOrdemServico}/${categoriaEnum}`, 
-                formData, 
-                { headers: { "Content-Type": "multipart/form-data" } }
-            );
-
+            await Arquivo.uploadVistoria(idOrdemServico, arquivoSelecionado);
             alert("Imagem anexada com sucesso!");
             carregarImagens(); 
         } catch (error) {
-            console.error("Erro no upload:", error);
             alert("Erro ao enviar imagem.");
         } finally {
             setCarregando(false);
@@ -79,11 +70,38 @@ function ImagensAnexadas() {
         }
     };
 
-    if (!ticket) return <Layout ativo={"painel"}><div className="p-4">Carregando dados...</div></Layout>;
+    // erro caso não tenha id
+    if (!idOrdemServico) {
+        return (
+            <Layout ativo={"painel"}>
+                <div className="container-fluid p-5 text-center">
+                    <i className='bx bx-error-circle' style={{ fontSize: '4rem', color: '#ccc' }}></i>
+                    <h2 className="mt-3">Nenhuma Ordem de Serviço Selecionada</h2>
+                    <p className="text-muted">Selecione uma OS na listagem para gerenciar as imagens.</p>
+                    <button className="btn btn-dark mt-3" onClick={() => navigate(-1)}>
+                        Voltar
+                    </button>
+                </div>
+            </Layout>
+        );
+    }
+
+    //  carregando
+    if (!ticket) {
+        return (
+            <Layout ativo={"painel"}>
+                <div className="p-5 text-center">
+                    <div className="spinner-border text-dark" role="status"></div>
+                    <p className="mt-2">Carregando dados da OS #{idOrdemServico}...</p>
+                </div>
+            </Layout>
+        );
+    }
 
     return (
         <Layout ativo={"painel"}>
             <div className="container-fluid p-4">
+                {/* Header */}
                 <div className="d-flex justify-content-between align-items-center mb-4">
                     <div>
                         <h1 className="titulo-principal" style={{ fontSize: '2rem', fontWeight: 'bold' }}>Imagens Anexadas</h1>
@@ -94,10 +112,11 @@ function ImagensAnexadas() {
                         onClick={() => navigate(-1)}
                         style={{ borderRadius: '8px' }}
                     >
-                        Voltar para Ordem de Serviço
+                        Voltar
                     </button>
                 </div>
 
+                {/* Card com dados da OS */}
                 <div className="mb-4">
                     <OrdemServicoCard
                         placa={ticket.veiculo.placa}
@@ -109,7 +128,7 @@ function ImagensAnexadas() {
                     />
                 </div>
 
-                {/* Filtros Visuais */}
+                {/* Filtros de Vistoria */}
                 <div className="row mb-3">
                     <div className="col-6">
                         <button 
@@ -129,7 +148,7 @@ function ImagensAnexadas() {
                     </div>
                 </div>
 
-                {/* Box de Upload */}
+                {/* Área de Upload */}
                 <label 
                     className="upload-box d-flex flex-column align-items-center justify-content-center mb-5"
                     style={{ 
@@ -154,7 +173,7 @@ function ImagensAnexadas() {
                     </span>
                 </label>
 
-                {/* Listagem Dinâmica */}
+                {/* Galeria de Imagens */}
                 <div className="row">
                     {imagens.length > 0 ? (
                         imagens.map((img) => (
