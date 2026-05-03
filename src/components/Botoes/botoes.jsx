@@ -23,6 +23,7 @@ import iconConfirmPgmt from "../../assets/icons/confirmPgmt icon.png";
 import iconConcluido from "../../assets/icons/concluido icon.png";
 import iconPagGreen from "../../assets/icons/pag green icon.png";
 import iconRevisar from "../../assets/icons/revisar icon.png";
+import imagemIcon from "../../assets/icons/imagem-icon.png";
 
 function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarData }) {
     const navigate = useNavigate();
@@ -152,6 +153,13 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
                     </button>
                 </div>
             )}
+
+            <div className="button container4">
+                    <div className="icon" style={{ backgroundImage: `url(${imagemIcon})` }} />
+                <button className="botao" onClick={() => navigate(`/painelControle/imagensAnexadas/${idOrdemServico}`)}>
+                    Anexar Vistorias
+                </button>
+            </div>
 
             <div className="button container4">
                 <button className="botao" onClick={() => navigate("/painelControle")}>

@@ -91,6 +91,15 @@ function ImagensAnexadas() {
         }
     };
 
+    const handleDeleteImage = async (idArquivo) => {
+        const removidoComSucesso = await Arquivo.deletarImagemVistoria(idArquivo);
+
+        if (removidoComSucesso) {
+            await carregarImagens(filtroVistoria);
+            await carregarContagens();
+        }
+    };
+
     // erro caso não tenha id
     if (!idOrdemServico) {
         return (
@@ -198,7 +207,7 @@ function ImagensAnexadas() {
                 <div className="row">
                     {imagens.length > 0 ? (
                         imagens.map((img) => (
-                            <div className="col-12 col-md-6 col-lg-3 mb-4" key={img.idArquivo}>
+                            <div className="col-12 col-md-6 col-lg-3 mb-4" key={img.id}>
                                 <div className="card border-0 shadow-sm" style={{ borderRadius: '15px', overflow: 'hidden' }}>
                                     <div style={{ height: '180px', backgroundColor: '#e9ecef' }}>
                                         <img 
@@ -219,7 +228,9 @@ function ImagensAnexadas() {
                                             >
                                                 Visualizar
                                             </button>
-                                            <button className="btn btn-outline-danger btn-sm w-100 py-2" disabled>
+                                            <button className="btn btn-outline-danger btn-sm w-100 py-2"
+                                                onClick={() => handleDeleteImage(img.id )}
+                                            >
                                                 Excluir
                                             </button>
                                         </div>
