@@ -23,16 +23,88 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
 
     const { idOrdemServico } = useParams();
 
+    const normalizarOpcoes = (payload, chavesPreferenciais = []) => {
+        let listaBruta = [];
+
+        if (Array.isArray(payload)) {
+            listaBruta = payload;
+        } else if (payload && typeof payload === "object") {
+            const chaves = Array.isArray(chavesPreferenciais) ? chavesPreferenciais : [chavesPreferenciais];
+
+            // Tenta encontrar a lista por chave direta (ex.: parte_veiculo / partes_veiculo)
+            for (const chave of chaves) {
+                if (Array.isArray(payload[chave])) {
+                    listaBruta = payload[chave];
+                    break;
+                }
+            }
+
+            // Suporte para retorno estilo DRF OPTIONS: actions.POST.<campo>.choices
+            if (
+                listaBruta.length === 0 &&
+                payload.actions?.POST &&
+                typeof payload.actions.POST === "object"
+            ) {
+                for (const chave of chaves) {
+                    const choices = payload.actions.POST?.[chave]?.choices;
+                    if (Array.isArray(choices)) {
+                        listaBruta = choices;
+                        break;
+                    }
+                }
+            }
+
+            // Fallback: procura recursivamente a primeira propriedade "choices" em arrays
+            if (listaBruta.length === 0) {
+                const procurarChoices = (obj) => {
+                    if (!obj || typeof obj !== "object") return null;
+                    if (Array.isArray(obj.choices)) return obj.choices;
+
+                    for (const valor of Object.values(obj)) {
+                        if (valor && typeof valor === "object") {
+                            const encontrado = procurarChoices(valor);
+                            if (Array.isArray(encontrado)) return encontrado;
+                        }
+                    }
+
+                    return null;
+                };
+
+                const choicesEncontrados = procurarChoices(payload);
+                if (Array.isArray(choicesEncontrados)) {
+                    listaBruta = choicesEncontrados;
+                }
+            }
+
+            // Ultimo fallback: primeira lista direta do objeto
+            if (listaBruta.length === 0) {
+                const primeiraLista = Object.values(payload).find((item) => Array.isArray(item));
+                listaBruta = Array.isArray(primeiraLista) ? primeiraLista : [];
+            }
+        }
+
+        return listaBruta
+            .map((item) => {
+                if (typeof item === "string") return item;
+                if (item && typeof item === "object") {
+                    return item.value || item.nome || item.label || item.display_name || "";
+                }
+                return "";
+            })
+            .filter(Boolean);
+    };
+
     useEffect(() => {
         const carregarListas = async () => {
             try {
-                const [partes, lados] = await Promise.all([
-                    servicosItens.listarPartesVeiculo(),
-                    servicosItens.listarLadosVeiculo()
-                ]);
+                const partes = await servicosItens.listarPartesVeiculo();
+                const lados = await servicosItens.listarLadosVeiculo();
 
-                setPartesServico(Array.isArray(partes) ? partes : []);
-                setLadosVeiculo(Array.isArray(lados) ? lados : []);
+                console.log("Partes do veículo (raw):", partes);
+                console.log("Lados do veículo (raw):", lados);
+
+                setPartesServico(normalizarOpcoes(partes, ["parte_veiculo", "partes_veiculo"]));
+                setLadosVeiculo(normalizarOpcoes(lados, ["lado_veiculo", "lados_veiculo"]));
             } catch (error) {
                 console.error("Erro ao carregar partes/lados do veículo:", error);
                 setPartesServico([]);
@@ -42,8 +114,8 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
 
         if (!isOpen) return;
 
-        // Em visualizacao, usa os dados do proprio servico e evita buscar listas no backend.
-        if (modo === "visualizar") {
+        // Em visualizacao com servico selecionado, usa os dados do proprio item.
+        if (modo === "visualizar" && servico) {
             setPartesServico(servico?.parte_veiculo ? [formatarTexto(servico.parte_veiculo)] : []);
             setLadosVeiculo(servico?.lado_veiculo ? [formatarTexto(servico.lado_veiculo)] : []);
             return;

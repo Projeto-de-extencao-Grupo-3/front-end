@@ -179,6 +179,7 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
                         placa={ticket.veiculo}
                         pagina={pagina}
                         onVisualizar={(dados) => {
+                            setModoServico("visualizar");
                             setServicoVisualizar(dados);
                             setMostrarModalServico(true);
                         }}
@@ -200,7 +201,11 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
 
             <ModalAdicionarServico
                 isOpen={mostrarModalServico}
-                onClose={() => setMostrarModalServico(false)}
+                onClose={() => {
+                    setMostrarModalServico(false);
+                    setModoServico("adicionar");
+                    setServicoVisualizar(null);
+                }}
                 placa={ticket.veiculo}
                 modo={modoServico}
                 servico={servicoVisualizar}
