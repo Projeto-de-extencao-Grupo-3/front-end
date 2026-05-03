@@ -34,11 +34,11 @@ function GestaoFuncionarios() {
         try {
             if (id) {
                 await atualizarFuncionario(id, dados);
-                listarFuncionariosPaginados(paginaAtual, tamanhoPagina);
             } else {
                 await adicionarFuncionario(dados);
-                await listarFuncionariosPaginados(paginaAtual, tamanhoPagina);
             }
+
+            await listarFuncionariosPaginados(paginaAtual, tamanhoPagina);
             setModalAberto(false);
             setFuncionarioParaEditar(null);
         } catch (error) {
@@ -131,14 +131,14 @@ function GestaoFuncionarios() {
                 </div>
 
                 <TabelaFuncionarios
-                    funcionarios={funcionarios.content || []}
+                    funcionarios={funcionarios?.content ?? []}
                     excluirFuncionario={abrirModalDesativar}
                     editarFuncionario={lidarComEdicao}
                 />
 
                 <div className="d-flex justify-content-between align-items-center mt-3">
                     <span className="text-muted">
-                        Página {paginaAtual + 1} de {funcionarios?.page?.total_pages || 1}
+                        Página {paginaAtual + 1} de {funcionarios?.page?.total_pages ?? 1}
                     </span>
 
                     <div className="btn-group">

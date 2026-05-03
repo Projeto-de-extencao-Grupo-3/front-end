@@ -33,7 +33,6 @@ function Funcionarios() {
             };
 
             const response = await api.post("/funcionarios", payload);
-            setFuncionarios(prev => [...prev, response.data]);
             exibirAlertaSucesso("Funcionário adicionado com sucesso!")
             return response.data;
         } catch (error) {
