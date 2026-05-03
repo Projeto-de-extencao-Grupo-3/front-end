@@ -23,6 +23,7 @@ import NotaFiscal from './pages/AnaliseServico/NotaFiscal.jsx';
 import ProdFinalizadaTela from './pages/PainelControle/TelasAnalises/ProdFinalizada/ProdFinalizada.jsx';
 import PgtoRealizadoTela from './pages/PainelControle/TelasAnalises/PgtoRealizado/PgtoRealizado.jsx';
 import NfGeradaTela from './pages/PainelControle/TelasAnalises/NfGerada/NfGerada.jsx';
+import ImagensAnexadas from './pages/PainelControle/Imagens/ImagensAnexadas.jsx';
 
 
 
@@ -50,7 +51,10 @@ function App() {
         <Route path="/painelControle/finalizado/:idOrdemServico" element={<Finalizado />} />
         <Route path="/analiseFinanceira/prodfinalizada/:idOrdemServico" element={<ProdFinalizadaTela />} />
         <Route path="/analiseFinanceira/pgtorealizado/:idOrdemServico" element={<PgtoRealizadoTela />} />
-        <Route path="/analiseFinanceira/nfgerada/:idOrdemServico" element={<NfGeradaTela />} />
+        <Route path="/analiseFinanceira/nfgerada/:idOrdemServico" element={<NfGeradaTela />} />     
+        <Route path="/painelControle/ImagensAnexadas" element={<ImagensAnexadas />} />
+        <Route path="/painelControle/ImagensAnexadas/:idOrdemServico" element={<ImagensAnexadas />} />
+
 
         {/* Roteamento de Clientes e Veículos */}
         <Route path="/clientes" element={<GestaoClientes />} />
