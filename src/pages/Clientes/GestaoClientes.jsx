@@ -190,17 +190,25 @@ function GestaoClientes() {
     };
 
     useEffect(() => {
-        if (isSearching.trim() === "") {
-            listarClientesPaginados(0, tamanhoPagina);
-            return;
-        }
+        let isMounted = true;
 
-        const delayDebounce = setTimeout(() => {
-            listarClientesPorBuscaDeNome(isSearching);
-        }, 500);
+        const fetchData = async () => {
+            if (isSearching.trim() !== "") {
+                // Se a busca for local ou não paginada no back-end
+                await listarClientesPorBuscaDeNome(isSearching);
+            } else {
+                // Carregamento paginado padrão
+                await listarClientesPaginados(paginaAtual, tamanhoPagina);
+            }
+        };
 
-        return () => clearTimeout(delayDebounce);
-    }, [isSearching]);
+        const delayDebounce = setTimeout(fetchData, isSearching ? 500 : 0);
+
+        return () => {
+            isMounted = false;
+            clearTimeout(delayDebounce);
+        };
+    }, [isSearching, paginaAtual]);;
 
     const confirmarDesativacao = async () => {
         try {

@@ -65,17 +65,25 @@ function GestaoFuncionarios() {
     };
 
     useEffect(() => {
-        if (isSearching.trim() === "") {
-            listarFuncionariosPaginados(0, tamanhoPagina);
-            return;
-        }
+        let isMounted = true;
 
-        const delayDebounce = setTimeout(() => {
-            listarFuncionariosPorBuscaDeNome(isSearching);
-        }, 500);
+        const fetchData = async () => {
+            if (isSearching.trim() !== "") {
+                // Se a busca for local ou não paginada no back-end
+                await listarFuncionariosPorBuscaDeNome(isSearching);
+            } else {
+                // Carregamento paginado padrão
+                await listarFuncionariosPaginados(paginaAtual, tamanhoPagina);
+            }
+        };
 
-        return () => clearTimeout(delayDebounce);
-    }, [isSearching]);
+        const delayDebounce = setTimeout(fetchData, isSearching ? 500 : 0);
+
+        return () => {
+            isMounted = false;
+            clearTimeout(delayDebounce);
+        };
+    }, [isSearching, paginaAtual]);;
 
     return (
         <Layout ativo={"funcionarios"}>
