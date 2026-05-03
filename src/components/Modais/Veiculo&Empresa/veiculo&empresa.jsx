@@ -67,17 +67,31 @@ function VeiculoEEmpresa({ isOpen, onClose, dadosRecebidos }) {
                         </div>
                     </div>
 
-                    <div className="linha-dupla">
-                        <div className="campo">
-                            <label>Telefone*</label>
-                            <div className="valor-campo">{dadosRecebidos.cliente.telefone}</div>
-                        </div>
-
-                        <div className="campo">
-                            <label>Email*</label>
-                            <div className="valor-campo">{dadosRecebidos.cliente.email}</div>
-                        </div>
+                    <div className="cabecalho-secao">
+                        <h4>Meios de Contato</h4>
                     </div>
+                    {dadosRecebidos.cliente.meios_contato.map((contato, index) => (
+                        <div className="linha-dupla">
+                            {(contato.nome_contato || contato.departamento_contato) && (
+
+                                <div className="campo">
+                                    <label>Nome/Departamento</label>
+                                    <div className="valor-campo">{contato.nome_contato + "/"}{contato.departamento_contato}</div>
+                                </div>
+                            )}
+
+                            <div className="campo">
+                                <label>Telefone*</label>
+                                <div className="valor-campo">{contato.telefone}</div>
+                            </div>
+
+                            <div className="campo">
+                                <label>Email*</label>
+                                <div className="valor-campo">{contato.email}</div>
+                            </div>
+                        </div>
+                    )
+                    )}
 
                     <div className="linha-unica">
                         <span>Tipo de Cliente</span>

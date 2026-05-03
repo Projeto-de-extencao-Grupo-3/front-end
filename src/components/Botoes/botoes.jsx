@@ -1,5 +1,5 @@
 import "./botoes.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // COMPONENTES
@@ -24,6 +24,7 @@ import iconConcluido from "../../assets/icons/concluido icon.png";
 import iconPagGreen from "../../assets/icons/pag green icon.png";
 import iconRevisar from "../../assets/icons/revisar icon.png";
 import imagemIcon from "../../assets/icons/imagem-icon.png";
+import api from "../../service/api.js";
 
 function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarData }) {
     const navigate = useNavigate();
@@ -33,12 +34,6 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
 
     const fecharModal = () => setModalAtivo(null);
     const [_dataPrevisaSaida, _setDataPrevistaSaida] = useState(ordemServicoDados.data_saida_prevista || "");
-
-    const navegarPara = (rota) => {
-        navigate(`${rota}/${idOrdemServico}`, {
-            state: { veiculoDados: ordemServicoDados }
-        });
-    };
 
     // 🔥 FUNÇÃO SEGURA
     const atualizar = async (dados) => {
@@ -94,7 +89,8 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
             {pagina === "analisar2" && (
                 <div className="button container1">
                     <div className="icon" style={{ backgroundImage: `url(${iconPag})` }} />
-                    <button className="botao" onClick={() => setModalAtivo("nota")}>
+                    <button className="botao" onClick={() => {
+                        setModalAtivo("nota")}}>
                         Concluir nota fiscal
                     </button>
                 </div>
@@ -182,7 +178,7 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
                         fecharModal();
                         if (!ok) return;
 
-                        navegarPara("/painelControle/aguardandoVaga");
+                        navigate("/painelControle/aguardandoVaga");
                     }}
                     placa={placa}
                     ordemServicoDados={ordemServicoDados}
@@ -208,7 +204,7 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
                         fecharModal();
                         if (!dataOk) return;
 
-                        navegarPara("/painelControle/producao");
+                        navigate("/painelControle/producao/" + idOrdemServico);
                     }}
                     aoCancelar={fecharModal}
                 />
@@ -226,7 +222,7 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
                         fecharModal();
                         if (!ok) return;
 
-                        navegarPara("/painelControle/autorizacao");
+                        navigate("/painelControle/autorizacao/" + idOrdemServico);
                     }}
                     aoCancelar={fecharModal}
                     icone={iconPag}
@@ -237,9 +233,15 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
             {modalAtivo === "pagamento" && (
                 <ModalConfirmacao
                     aberto
-                    aoConfirmar={() => {
+                    aoConfirmar={async () => {
+                        var response = await api.patch(`/jornada/${idOrdemServico}/definir-pagamento-realizado`);
+
+                        if (response.status !== 200) {
+                            alert("Erro ao atualizar pagamento. Tente novamente.");
+                            return;
+                        }
                         fecharModal();
-                        navegarPara("/painelControle/analisar2");
+                        navigate("/analiseFinanceira/pgtorealizado/" + idOrdemServico);
                     }}
                     aoCancelar={fecharModal}
                     icone={iconConfirmPgmt}
@@ -269,7 +271,7 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
 
                         if (!dataOk) return;
 
-                        navegarPara("/painelControle/finalizado");
+                        navigate("/painelControle/finalizado/" + idOrdemServico);
                     }}
                     aoCancelar={fecharModal}
                     icone={iconConcluido}
@@ -281,9 +283,18 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
             {modalAtivo === "nota" && (
                 <ModalConfirmacao
                     aberto
-                    aoConfirmar={() => {
+                    aoConfirmar={async () => {
+                        var response = await api.patch(`/jornada/${idOrdemServico}/definir-nota-fiscal-realizada`);
+
+                        console.log(response);
+
+                        if (response.status !== 200) {
+                            alert("Erro ao atualizar nota fiscal. Tente novamente.");
+                            return;
+                        }
+
                         fecharModal();
-                        navegarPara("/painelControle/analisar3");
+                        navigate("/analiseFinanceira/nfgerada/" + idOrdemServico);
                     }}
                     aoCancelar={fecharModal}
                     icone={iconPagGreen}
@@ -304,7 +315,7 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
                         fecharModal();
                         if (!ok) return;
 
-                        navegarPara("/painelControle/orcamento");
+                        navigate("/painelControle/orcamento/" + idOrdemServico);
                     }}
                     aoCancelar={fecharModal}
                     icone={iconRevisar}
@@ -314,6 +325,7 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
             )}
 
             {modalAtivo === "veiculo" && (
+                console.log(ordemServicoDados) || 
                 <VeiculoEEmpresa
                     isOpen={true}
                     onClose={fecharModal}
@@ -322,9 +334,11 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
             )}
 
             {modalAtivo === "entrada" && (
+                console.log(ordemServicoDados) ||
                 <EntradaVeiculo
                     aberto
                     aoFechar={fecharModal}
+                    dadosRecebidos={ordemServicoDados}
                 />
             )}
 

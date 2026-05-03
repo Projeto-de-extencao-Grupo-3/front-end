@@ -11,14 +11,8 @@ import Loading from "../../components/Loading/Loading";
 import { exibirAlertaErro, exibirAlertaSucesso } from "../../service/alertas";
 
 function AnaliseFinanceira() {
-    const agora = new Date();
-    const anoPadrao = agora.getFullYear();
-    const mesPadrao = String(agora.getMonth() + 1).padStart(2, '0');
-
-    const anoMesAtual = `${anoPadrao}-${mesPadrao}`;
-
     const [financeiro, setFinanceiro] = useState(null);
-    const [anoMes, setAnoMes] = useState(anoMesAtual);
+    const [anoMes, setAnoMes] = useState(null);
     const [mostrarModalFiltro, setMostrarModalFiltro] = useState(false);
     const navigate = useNavigate();
 
@@ -33,19 +27,20 @@ function AnaliseFinanceira() {
 
     const fetchDadosFinanceiros = () => {
         setLoading(true);
-        api.get("/jornada/listagem", {
-            params: {
-                map: "ANALISE_FINANCEIRA",
-                anoMes: anoMes
-            }
-        })
+        const params = {
+            map: "ANALISE_FINANCEIRA"
+        };
+        if (anoMes) {
+            params.anoMes = anoMes;
+        }
+        api.get("/jornada/listagem", { params })
             .then((res) => {
                 setFinanceiro(res.data);
                 setLoading(false);
             })
             .catch((err) => {
                 console.error("Erro na API Financeira:", err);
-                exibirAlertaErro("Não foi possível carregar os dados financeiros deste mês.");
+                exibirAlertaErro("Não foi possível carregar os dados financeiros.");
                 setLoading(false);
             });
     };
@@ -135,7 +130,7 @@ function AnaliseFinanceira() {
                         <div className="d-flex flex-column">
                             <h2 className="m-0">Análise Financeira</h2>
                             <span className="fs-5 text-muted">
-                                Situação financeira de <b>{anoMes.split('-').reverse().join('/')}</b>
+                                Situação financeira de <b>{anoMes ? anoMes.split('-').reverse().join('/') : 'Todas as datas'}</b>
                             </span>
                         </div>
                         <div className="d-flex gap-3">
@@ -209,7 +204,7 @@ function AnaliseFinanceira() {
                                 const ordens = dados.ordens_de_servicos || [];
                                 return (
                                     <>
-                                        <KpiStatus cor="verde" status="Pagamentos Realizados" valor={`${dados.quantidade_servicos_pagamento_concluido || 0} Serviços`} />
+                                        <KpiStatus cor="verde" status="Serviços Concluídos Sem Pendência" valor={`${dados.quantidade_servicos_pagamento_concluido || 0} Serviços`} />
                                         <p className="texto-raia m-0">Concluídos sem pendência</p>
                                         {ordens.map(os => <CardFinanceiro key={os.id_ordem_servico} os={os} categoria={categorias.realizado} navigate={navigate} />)}
                                     </>
@@ -270,9 +265,9 @@ function CardFinanceiro({ os, categoria, navigate }) {
     }
 
     if (categoria === "SERVICOS_NOTA_FISCAL_PENDENTE") {
-        rotaDestino = `/analiseFinanceira/nfgerada/${os.id_ordem_servico}`;
-    } else if (categoria === "SERVICOS_PAGAMENTO_REALIZADO") {
         rotaDestino = `/analiseFinanceira/pgtorealizado/${os.id_ordem_servico}`;
+    } else if (categoria === "SERVICOS_PAGAMENTO_REALIZADO") {
+        rotaDestino = `/analiseFinanceira/nfgerada/${os.id_ordem_servico}`;
     } else if (categoria === "SERVICOS_PAGAMENTO_PENDENTE") {
         rotaDestino = `/analiseFinanceira/prodfinalizada/${os.id_ordem_servico}`;
     }

@@ -40,10 +40,17 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
             }
         };
 
-        if (isOpen) {
-            carregarListas();
+        if (!isOpen) return;
+
+        // Em visualizacao, usa os dados do proprio servico e evita buscar listas no backend.
+        if (modo === "visualizar") {
+            setPartesServico(servico?.parte_veiculo ? [formatarTexto(servico.parte_veiculo)] : []);
+            setLadosVeiculo(servico?.lado_veiculo ? [formatarTexto(servico.lado_veiculo)] : []);
+            return;
         }
-    }, [isOpen]);
+
+        carregarListas();
+    }, [isOpen, modo, servico]);
 
     useEffect(() => {
         let timer;
