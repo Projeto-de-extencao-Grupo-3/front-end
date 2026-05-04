@@ -2,6 +2,7 @@ import "./Sidebar.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import ZoomButtons from "../ZoomButtons/ZoomButtons";
+import logo from '../../assets/images/logoEscura.svg';
 import { formatarTexto } from "../../utils/formatarTexto.js";
 
 
@@ -77,7 +78,7 @@ function Sidebar({ ativo }) {
       >
         {/* LOGO */}
         <div className="d-flex align-items-center mb-3 logo-box">
-          <img src="/src/assets/images/logoEscura.svg" className="logo-img" alt="Logo" />
+          <img src={logo} className="logo-img" alt="Logo" />
           <div className="ms-2 logo-texto">
             <h5 className="m-0 fw-bold">GROTrack</h5>
           </div>

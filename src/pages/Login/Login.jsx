@@ -2,6 +2,7 @@ import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import api from '../../service/api';
+import logo from '../../assets/images/logo.svg';
 
 function Login() {
   const navigate = useNavigate();
@@ -76,7 +77,7 @@ function Login() {
 
               {/* Direita */}
               <div className="col-md-6 login-img d-flex justify-content-center align-items-center">
-                <img src="/src/assets/images/logo.svg" className="img-fluid w-75" alt="Logo" />
+                <img src={logo} className="img-fluid w-75" alt="Logo" />
               </div>
 
             </div>
