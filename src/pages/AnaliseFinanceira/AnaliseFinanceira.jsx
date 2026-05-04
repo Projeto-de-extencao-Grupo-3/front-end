@@ -62,6 +62,11 @@ function AnaliseFinanceira() {
             return;
         }
 
+        if (anoMes === null) {
+            exibirAlertaErro("Por favor, selecione um mês para gerar o relatório.");
+            return;
+        }
+
         const [anoRef, mesRef] = anoMes.split("-");
         setGerandoRelatorio(true);
 
