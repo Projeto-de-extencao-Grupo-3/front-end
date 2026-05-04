@@ -100,11 +100,15 @@ function ControleEstoque() {
         }
     };
 
-    const confirmarAjusteEstoque = async (_novaQuantidade) => {
+    const confirmarAjusteEstoque = async (quantidade) => {
         try {
             const id = itemParaAjustarEstoque.id_peca || itemParaAjustarEstoque.id;
-
-            await realizarBaixaEstoqueProduto(id);
+            console.log("ID para ajuste:", id, "Nova Quantidade:", quantidade);
+            await realizarBaixaEstoqueProduto(
+                id,
+                quantidade,
+                2
+            );
             listarProdutosPaginados(paginaAtual, tamanhoPagina);
             setEditarQuantidadeEstoque(false);
             setItemParaAjustarEstoque(null);

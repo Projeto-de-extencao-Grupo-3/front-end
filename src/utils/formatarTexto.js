@@ -1,20 +1,33 @@
 export function formatarTexto(texto) {
     if (!texto) return "";
-    let textoCorrigido = texto;
+
+    let textoCorrigido;
 
     try {
-        // Windows
-        textoCorrigido = decodeURIComponent(escape(texto));
+        textoCorrigido = new TextDecoder("utf-8").decode(
+            Uint8Array.from(texto, c => c.charCodeAt(0))
+        );
     } catch {
-        // Linux/Mac
-        textoCorrigido = texto; 
+        textoCorrigido = texto;
     }
 
-    // Substitui os underlines por espaços e deixa tudo minúsculo
-    const textoFormatado = textoCorrigido.replaceAll("_", " ").toLowerCase();
+    const textoFormatado = textoCorrigido
+        .replaceAll("_", " ")
+        .toLowerCase();
 
-    // Retorna a primeira letra em maiúsculo concatenada com o resto da frase
     return textoFormatado.charAt(0).toUpperCase() + textoFormatado.slice(1);
+}
+
+export function corrigirTexto(texto) {
+    if (!texto) return "";
+
+    try {
+        return new TextDecoder("utf-8").decode(
+            Uint8Array.from(texto, c => c.charCodeAt(0))
+        );
+    } catch {
+        return texto;
+    }
 }
 
 export const formatarMoedaBR = (valor) => {

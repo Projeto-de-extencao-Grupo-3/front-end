@@ -19,7 +19,8 @@ function Itens({ dados, pagina, carregarOrdem, placa }) {
     const [modalEditarProduto, setModalEditarProduto] = useState(false);
     const [produtoSelecionado, setProdutoSelecionado] = useState(null);
     const { excluirProduto, editarProduto, baixarProduto } = ServicosEItensLogic();
-    const { atualizarQuantidadeEstoque } = AlterarEstoque();
+    const { realizarBaixaEstoqueProduto } = AlterarEstoque();
+    console.log("Dados dos itens:", dados);
 
     const handleExcluir = async () => {
         try {
@@ -42,15 +43,22 @@ function Itens({ dados, pagina, carregarOrdem, placa }) {
         }
     };
 
-    const handleDarBaixa = async (produtoParaBaixa, novaQuantidadeEstoque) => {
+    const handleDarBaixa = async (produtoParaBaixa, quantidade) => {
         try {
-            await atualizarQuantidadeEstoque(produtoParaBaixa.id_produto_estoque, { id: produtoParaBaixa.id_produto_estoque, quantidade_estoque: novaQuantidadeEstoque });
-            await baixarProduto(produtoParaBaixa.id_item_produto);
+            const itemAtualizado = await baixarProduto(
+                produtoParaBaixa.id_item_produto,
+                quantidade,
+                1
+            );
+
+            console.log("Atualizado:", itemAtualizado);
+
             setModalSaida(false);
             setProdutoSelecionado(null);
+
             await carregarOrdem();
         } catch (error) {
-            console.error("Erro ao dar baixa no material:", error);
+            console.error("Erro ao dar baixa:", error);
         }
     };
 
@@ -72,7 +80,7 @@ function Itens({ dados, pagina, carregarOrdem, placa }) {
                 <tbody className="dados">
                     {dados.map((item) => (
                         <tr key={item.id_item_produto} className="config-dados">
-                            <td className="dado codigo">{formatarTexto(item.id_produto_estoque)}</td>
+                            <td className="dado codigo">{item.id_produto_estoque}</td>
                             <td className="dado item">{formatarTexto(item.nome_produto)}</td>
                             <td className="dado">{item.visivel_orcamento_cliente === true ? "Público" : "Privado"}</td>
                             <td className="dado qtd">{item.quantidade}</td>

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 const estadoInicial = {
     quantidade_estoque: 0,
+    quantidade_adicionar: 0, // Novo estado para a quantidade a ser adicionada
 };
 
 function EditarQuantidadeEstoque({ show, handleClose, handleConfirm, itemParaAjustarEstoque }) {
@@ -12,7 +13,8 @@ function EditarQuantidadeEstoque({ show, handleClose, handleConfirm, itemParaAju
             const timer = setTimeout(() => {
                 setForm({
                     ...itemParaAjustarEstoque,
-                    quantidade_estoque: itemParaAjustarEstoque.quantidade_estoque || 0
+                    quantidade_estoque: itemParaAjustarEstoque.quantidade_estoque || 0,
+                    quantidade_adicionar: 0 // Reseta o campo ao abrir o modal
                 });
             }, 0);
 
@@ -27,7 +29,7 @@ function EditarQuantidadeEstoque({ show, handleClose, handleConfirm, itemParaAju
 
     const handleFinalizar = async () => {
         try {
-            await handleConfirm(form.quantidade_estoque);
+            await handleConfirm(form.quantidade_adicionar); 
             handleClose();
         } catch (error) {
             console.error("Erro ao atualizar quantidade:", error);
@@ -59,7 +61,8 @@ function EditarQuantidadeEstoque({ show, handleClose, handleConfirm, itemParaAju
                                 </p>
                             </div>
 
-                            <div className="p-3 border rounded-3 mb-4" style={{ backgroundColor: '#f8f9fa' }}>
+                            {/* Campo 1: Quantidade atual (Somente Leitura) */}
+                            <div className="p-3 border rounded-3 mb-3" style={{ backgroundColor: '#f8f9fa' }}>
                                 <label className="form-label mb-2 text-dark fw-medium">
                                     Quantidade atual em estoque
                                 </label>
@@ -69,10 +72,30 @@ function EditarQuantidadeEstoque({ show, handleClose, handleConfirm, itemParaAju
                                         name="quantidade_estoque"
                                         className="form-control bg-light border-0 fw-bold text-secondary"
                                         value={form.quantidade_estoque}
-                                        onChange={handleChange}
+                                        readOnly // Alterado para leitura apenas
                                         style={{ height: '45px' }}
                                     />
                                     <span className="input-group-text bg-light border-0 fw-bold text-secondary">
+                                        Unidades
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Campo 2: Quantidade que deseja adicionar (Input ativo) */}
+                            <div className="p-3 border rounded-3 mb-4" style={{ backgroundColor: '#f8f9fa' }}>
+                                <label className="form-label mb-2 text-dark fw-medium">
+                                    Quantidade que deseja adicionar
+                                </label>
+                                <div className="input-group">
+                                    <input
+                                        type="number"
+                                        name="quantidade_adicionar"
+                                        className="form-control bg-white border fw-bold text-dark"
+                                        value={form.quantidade_adicionar}
+                                        onChange={handleChange}
+                                        style={{ height: '45px' }}
+                                    />
+                                    <span className="input-group-text bg-white border fw-bold text-secondary">
                                         Unidades
                                     </span>
                                 </div>

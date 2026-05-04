@@ -90,9 +90,9 @@ function Produtos() {
         }
     };
 
-    const realizarBaixaEstoqueProduto = async (id) => {
+    const realizarBaixaEstoqueProduto = async (id, quantidade, tela) => {
         try {
-            const response = await api.patch(`/itens-produtos/baixa-estoque/${id}`);
+            const response = await api.patch(`/itens-produtos/baixa-estoque/${id}?quantidade=${quantidade}&tela=${tela}`);
             const produtoAtualizado = response.data;
             exibirAlertaSucesso("Quantidade atualizada com sucesso!");
             return produtoAtualizado;

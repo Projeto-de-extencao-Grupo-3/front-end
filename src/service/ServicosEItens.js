@@ -138,14 +138,17 @@ function ServicosItens() {
         }
     };
 
-    const baixarProduto = async (idProduto) => {
+    const baixarProduto = async (idItemProduto, quantidade, tela) => {
         try {
-            const _response = await api.patch(`/jornada/${idProduto}/saida-material`);
-            exibirAlertaSucesso("Produto baixado do estoque com sucesso!");
-            return true;
+            const url = quantidade
+                ? `/itens-produtos/baixa-estoque/${idItemProduto}?quantidade=${quantidade}&tela=${tela}`
+                : `/itens-produtos/baixa-estoque/${idItemProduto}`;
+            const response = await api.patch(url);
+
+            exibirAlertaSucesso("Produto baixado com sucesso!");
+            return response.data; 
         } catch (error) {
-            exibirAlertaErro("Erro ao baixar produto do estoque.");
-            console.error("Erro ao baixar produto do estoque:", error);
+            exibirAlertaErro("Erro ao baixar produto.");
             throw error;
         }
     };

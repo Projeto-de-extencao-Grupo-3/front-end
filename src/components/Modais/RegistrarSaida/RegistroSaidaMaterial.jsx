@@ -113,7 +113,7 @@ function RegistroSaidaMaterial({ aberto, aoConfirmar, aoCancelar, produto }) {
                             <span>Quantidade em Estoque:</span>
                             <strong>{qtdEstoque} Unidades</strong>
                         </div>
-                        
+
                         <div className="rsm-info-linha">
                             <span>Quantidade de Saída Efetiva:</span>
                             <strong>{qtdEfetiva} Unidades</strong>
@@ -131,7 +131,7 @@ function RegistroSaidaMaterial({ aberto, aoConfirmar, aoCancelar, produto }) {
                 <div className="rsm-botoes">
                     <button
                         className={`rsm-btn rsm-btn-confirmar ${desabilitarBotao ? "rsm-btn-desabilitado" : ""}`}
-                        onClick={() => !desabilitarBotao && aoConfirmar(produto, resultado, qtdEfetiva)}
+                        onClick={() => !desabilitarBotao && aoConfirmar(produto, qtdEfetiva)}
                         disabled={desabilitarBotao}
                     >
                         {jaBaixado ? "Já Registrado" : "Confirmar"}

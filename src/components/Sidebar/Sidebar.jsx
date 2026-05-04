@@ -2,6 +2,8 @@ import "./Sidebar.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import ZoomButtons from "../ZoomButtons/ZoomButtons";
+import { formatarTexto } from "../../utils/formatarTexto.js";
+
 
 function Sidebar({ ativo }) {
   const navigate = useNavigate();
@@ -125,7 +127,7 @@ function Sidebar({ ativo }) {
             <div><i className='bx bxs-user-circle' style={{ fontSize: "45px" }}></i></div>
             <div className="user-card-texto">
               <strong className="fs-6">{usuario.nome}</strong>
-              <div className="text-muted" style={{ fontSize: "13px" }}>{usuario.cargo}</div>
+              <div className="text-muted" style={{ fontSize: "13px" }}>{ formatarTexto(usuario.cargo) }</div>
             </div>
           </div>
         </div>
