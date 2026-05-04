@@ -216,7 +216,7 @@ function TabelaServicos({ modelo, placa, veiculo }) {
                     className={`${styles['btn-navy']} ${styles['btn-vistorias']} d-flex align-items-center justify-content-center`}
                     onClick={(e) => {
                       e.preventDefault();
-                      navigate('/clientes/veiculos/servico', {
+                      navigate(`/painelControle/imagensAnexadas/${servico.id}`, {
                         state: { modelo: veiculo.modelo, placa: veiculo.placa, veiculo: veiculo.id_veiculo, cliente: veiculo.id_cliente }
                       });
                     }}
