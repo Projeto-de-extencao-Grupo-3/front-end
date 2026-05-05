@@ -636,10 +636,7 @@ function EntradaVeiculo() {
                         <button type="button" className="btn-adicionar-item" onClick={adicionarItemEntrada}>
                             Adicionar novo item
                         </button>
-                        <div className="observacoes-section">
-                            <label>Observações/Itens adicionais</label>
-                            <input name="observacoes" value={formData.observacoes} onChange={handleChange} placeholder="Detalhes extras..." />
-                        </div>
+                        
                     </InformacoesCard>
                 </div>
             </div>

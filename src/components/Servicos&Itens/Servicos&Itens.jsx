@@ -7,6 +7,7 @@ import { formatarDataBR } from "../../utils/formatarTexto.js";
 
 import ModalAdicionarItem from "../ModalAdicionarItem/ModalAdicionarItem";
 import ServicosEItensLogic from "../../service/ServicosEItens.js";
+import { data } from "react-router-dom";
 
 function ServicosEItens({ pagina, ticket, atualizarLista }) {
     const { adicionarServico, adicionarProduto } = ServicosEItensLogic();
@@ -20,63 +21,84 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
     const [modoItem, setModoItem] = useState("adicionar");
     const [itemVisualizar, setItemVisualizar] = useState(null);
 
-    // Calcular progresso do serviço
+    // Calcular progresso do serviço (contagem inclusiva de dias, corrige off-by-one)
     const calcularProgresso = () => {
         if (!ticket.data_entrada_efetiva || !ticket.data_saida_prevista) {
             return { percentual: 0, diasDecorridos: 0, diasRestantes: 0, diasTotais: 0, status: "neutro" };
         }
 
-        const dataEntrada = new Date(ticket.data_entrada_efetiva);
-        const dataSaidaPrevista = new Date(ticket.data_saida_prevista);
+        const msDia = 1000 * 60 * 60 * 24;
+
+        // Parsear strings 'YYYY-MM-DD' como datas locais à meia-noite para evitar deslocamento UTC
+        const parseDateOnlyAsLocal = (dateStr) => {
+            if (!dateStr) return null;
+            if (dateStr instanceof Date) return new Date(dateStr.getFullYear(), dateStr.getMonth(), dateStr.getDate());
+            // Se vier em formato ISO com tempo, usa a data extraída
+            if (dateStr.includes('T')) {
+                const d = new Date(dateStr);
+                return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+            }
+            const parts = dateStr.split('-');
+            if (parts.length >= 3) {
+                const y = Number(parts[0]);
+                const m = Number(parts[1]);
+                const d = Number(parts[2]);
+                return new Date(y, m - 1, d);
+            }
+            // Fallback para construtor de Date (menos preferível)
+            const fallback = new Date(dateStr);
+            return new Date(fallback.getFullYear(), fallback.getMonth(), fallback.getDate());
+        };
+
+        const dataEntrada = parseDateOnlyAsLocal(ticket.data_entrada_efetiva);
+        const dataSaidaPrevista = parseDateOnlyAsLocal(ticket.data_saida_prevista);
         const dataHoje = new Date();
-        const dataSaidaEfetiva = ticket.data_saida_efetiva ? new Date(ticket.data_saida_efetiva) : null;
+        
+        // manter apenas a parte de data de hoje (meia-noite local)
+        const hojeLocal = new Date(dataHoje.getFullYear(), dataHoje.getMonth(), dataHoje.getDate());
+        const dataSaidaEfetiva = ticket.data_saida_efetiva ? parseDateOnlyAsLocal(ticket.data_saida_efetiva) : null;
 
-        // Zerar hora para comparação de datas
-        dataEntrada.setHours(0, 0, 0, 0);
-        dataSaidaPrevista.setHours(0, 0, 0, 0);
-        dataHoje.setHours(0, 0, 0, 0);
-        if (dataSaidaEfetiva) {
-            dataSaidaEfetiva.setHours(0, 0, 0, 0);
-        }
-
-        const diasTotais = Math.floor((dataSaidaPrevista - dataEntrada) / (1000 * 60 * 60 * 24));
+        // Dias totais: diferença em dias + 1 (contagem inclusiva)
+        let diasTotais = Math.floor((dataSaidaPrevista - dataEntrada) / msDia) + 1;
+        if (diasTotais < 1) diasTotais = 1;
 
         // Se tem data_saida_efetiva, usar ela como referência; senão usar hoje
-        const dataReferencia = dataSaidaEfetiva || dataHoje;
-        const diasDecorridos = Math.floor((dataReferencia - dataEntrada) / (1000 * 60 * 60 * 24));
-        const diasRestantes = dataSaidaEfetiva ? 0 : Math.max(0, Math.floor((dataSaidaPrevista - dataHoje) / (1000 * 60 * 60 * 24)));
+        const dataReferencia = dataSaidaEfetiva || hojeLocal;
 
-        let percentual;
-        // Se diasTotais é 0 ou negativo (entrada e saída no mesmo dia), preencher toda a barra
-        if (diasTotais <= 0) {
-            percentual = 100;
-        } else {
-            percentual = (diasDecorridos / diasTotais) * 100;
-            percentual = Math.min(100, Math.max(0, percentual));
+        // Dias decorridos: diferença em dias + 1 (contagem inclusiva)
+        let diasDecorridos = Math.floor((dataReferencia - dataEntrada) / msDia) + 1;
+        if (diasDecorridos < 1) diasDecorridos = 1;
+
+        // Se serviço ainda não finalizado, não mostrar diasRestantes negativos
+        let diasRestantes = 0;
+        if (!dataSaidaEfetiva) {
+            diasRestantes = Math.max(0, diasTotais - diasDecorridos);
         }
+
+        // Percentual baseado na proporção entre diasDecorridos/diasTotais (cap entre 0 e 100)
+        let percentual = Math.round((diasDecorridos / diasTotais) * 100);
+        percentual = Math.min(100, Math.max(0, percentual));
 
         let status = "no_prazo";
 
         // Se tem data de saída efetiva, serviço foi finalizado
         if (dataSaidaEfetiva) {
-            // Se saiu depois do previsto = atrasado
             if (dataSaidaEfetiva > dataSaidaPrevista) {
                 status = "atrasado";
             } else {
                 status = "finalizado";
             }
         } else {
-            // Serviço em produção
-            if (dataHoje > dataSaidaPrevista) {
+            if (hojeLocal > dataSaidaPrevista) {
                 status = "atrasado";
             }
         }
 
         return {
-            percentual: Math.min(100, Math.max(0, percentual)),
-            diasDecorridos: diasDecorridos + 1, // Contar o dia de entrada como 1
+            percentual,
+            diasDecorridos,
             diasRestantes,
-            diasTotais: Math.max(1, diasTotais) + 1, // Contar o dia de entrada como 1
+            diasTotais,
             status
         };
     };

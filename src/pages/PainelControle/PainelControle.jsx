@@ -329,7 +329,7 @@ function PainelControle() {
                                         </button>
                                     )}
 
-                                    {kpiAtiva !== "finalizados" && (
+                                    {kpiAtiva !== "finalizados" && kpiAtiva !== "producao" && (
                                         <ModalCancelarServico 
                                             os={os} 
                                             onSuccess={fetchServicos} 

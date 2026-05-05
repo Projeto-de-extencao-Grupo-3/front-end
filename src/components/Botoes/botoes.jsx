@@ -178,7 +178,7 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
                         fecharModal();
                         if (!ok) return;
 
-                        navigate("/painelControle/aguardandoVaga");
+                        navigate("/painelControle/aguardandoVaga/" + idOrdemServico);
                     }}
                     placa={placa}
                     ordemServicoDados={ordemServicoDados}
@@ -263,13 +263,6 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
 
                         fecharModal();
                         if (!ok) return;
-
-                        const hojeFormatado = new Date().toISOString().split("T")[0];
-                        const dataOk = await definirData({
-                            saida_efetiva: hojeFormatado
-                        });
-
-                        if (!dataOk) return;
 
                         navigate("/painelControle/finalizado/" + idOrdemServico);
                     }}
