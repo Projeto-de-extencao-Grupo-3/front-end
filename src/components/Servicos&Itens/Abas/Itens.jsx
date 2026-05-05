@@ -123,7 +123,7 @@ function Itens({ dados, pagina, carregarOrdem, placa }) {
                                             )}
                                         </>
                                     ) : (
-                                        pagina === "produzir" && (
+                                        pagina === "produzir" || pagina === "analisar1" || pagina === "analisar2" || pagina === "analisar3" ? (
                                             <div
                                                 className="icon"
                                                 style={{ backgroundImage: `url(${iconBox})` }}
@@ -132,7 +132,7 @@ function Itens({ dados, pagina, carregarOrdem, placa }) {
                                                     setModalSaida(true);
                                                 }}
                                             ></div>
-                                        )
+                                        ) : null
                                     )}
                                 </div>
                             </td>

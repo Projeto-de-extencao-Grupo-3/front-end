@@ -183,7 +183,19 @@ function TabelaServicos({ modelo, placa, veiculo }) {
                   {formatarValor(servico.valor)}
                 </span>
 
-                <span
+                <div className="d-flex gap-2 flex-shrink-0">
+                  <a
+                    className={`${styles['btn-navy']} ${styles['btn-vistorias']} d-flex align-items-center justify-content-center`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate(`/painelControle/finalizado/${servico.id}`);
+                    }}
+                  >
+                    Ver Ordem de Serviço
+                  </a>
+                </div>
+
+                {/* <span
                   className={`badge fs-5 p-3 ${(() => {
                     let statusClasses = 'bg-secondary-subtle border border-secondary text-secondary';
 
@@ -210,7 +222,7 @@ function TabelaServicos({ modelo, placa, veiculo }) {
                   }
                 >
                   {servico.status}
-                </span>
+                </span> */}
                 <div className="d-flex gap-2 flex-shrink-0">
                   <a
                     className={`${styles['btn-navy']} ${styles['btn-vistorias']} d-flex align-items-center justify-content-center`}
@@ -221,7 +233,7 @@ function TabelaServicos({ modelo, placa, veiculo }) {
                       });
                     }}
                   >
-                      <i className="bx bx-camera" style={{ marginRight: '0.5rem' }} ></i>
+                    <i className="bx bx-camera" style={{ marginRight: '0.5rem' }} ></i>
                     Ver Vistorias
                   </a>
                 </div>
