@@ -74,6 +74,10 @@ function AnaliseFinanceira() {
             // Solicitação inicial para a fila (RabbitMQ)
             await api.post(`/arquivos/relatorio/mensal?mesReferencia=${parseInt(mesRef)}&anoReferencia=${anoRef}`);
 
+            setTimeout(() => {
+                // exibirAlertaSucesso("Geração do relatório iniciada. Aguardando processamento...");
+            }, 5000);
+
             let tentativas = 0;
             const maxTentativas = 12; 
 
@@ -88,12 +92,12 @@ function AnaliseFinanceira() {
                         // Troca localstack por localhost conforme orientação técnica - FASE DE TESTE, TEM Q MUDAR
                         const downloadUrl = res.data.url.replace("localstack", "localhost");
                         
-                        exibirAlertaSucesso("Relatório gerado com sucesso! O download iniciará em instantes.");
+                        // exibirAlertaSucesso("Relatório gerado com sucesso! O download iniciará em instantes.");
                         
                         setTimeout(() => {
                             window.open(downloadUrl, "_blank");
                             setGerandoRelatorio(false);
-                        }, 1500);
+                        }, 1000);
                     }
                 } catch (error) {
                     if (tentativas >= maxTentativas) {

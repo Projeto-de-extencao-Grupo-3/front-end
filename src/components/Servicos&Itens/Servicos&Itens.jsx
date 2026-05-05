@@ -1,5 +1,5 @@
 import "./Servicos&Itens.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Servicos from "./Abas/Servicos";
 import Itens from "./Abas/Itens";
 import ModalAdicionarServico from "../ModalAdicionarServico/ModalAdicionarServico";
@@ -8,9 +8,12 @@ import { formatarDataBR } from "../../utils/formatarTexto.js";
 import ModalAdicionarItem from "../ModalAdicionarItem/ModalAdicionarItem";
 import ServicosEItensLogic from "../../service/ServicosEItens.js";
 import { data } from "react-router-dom";
+import GerarPdf from "../../service/gerarPdf.js";
+import { exibirAlertaErro, exibirAlertaSucesso } from "../../service/alertas";
 
 function ServicosEItens({ pagina, ticket, atualizarLista }) {
     const { adicionarServico, adicionarProduto } = ServicosEItensLogic();
+    const { gerarOrdemServico, gerarOrcamento, buscarOrcamento, buscarOrdemServico } = GerarPdf();
     const [abaAtiva, setAbaAtiva] = useState("servicos");
 
     const [mostrarModalServico, setMostrarModalServico] = useState(false);
@@ -103,7 +106,106 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
         };
     };
 
-    const progresso = calcularProgresso();
+    // 🔥 NOVOS ESTADOS
+    const [progresso, setProgresso] = useState({
+        percentual: 0,
+        diasDecorridos: 0,
+        diasRestantes: 0,
+        diasTotais: 0,
+        status: "neutro"
+    });
+    const [gerandoPdf, setGerandoPdf] = useState(false);
+
+    // Calcular progresso quando ticket mudar
+    useEffect(() => {
+        const novoProgresso = calcularProgresso();
+        setProgresso(novoProgresso);
+    }, [ticket]);
+
+    const gerarPdfOrdemServicoHandler = async () => {
+        await gerarOrdemServico(ticket.id_ordem_servico);
+
+        let tentativas = 0;
+        const maxTentativas = 10;
+
+        const intervalo = setInterval(async () => {
+            tentativas++;
+
+            try {
+                const res = await buscarOrdemServico(ticket.id_ordem_servico);
+
+                if (res?.url) {
+                    clearInterval(intervalo);
+
+                    const downloadUrl = res.url.replace("localstack", "localhost");
+
+                    setTimeout(() => {
+                        window.open(downloadUrl, "_blank");
+                        setGerandoPdf(false);
+                    }, 1000);
+                }
+            } catch (error) {
+                if (tentativas >= maxTentativas) {
+                    clearInterval(intervalo);
+                    setGerandoPdf(false);
+                    exibirAlertaErro("O PDF está demorando para gerar. Tente novamente.");
+                }
+            }
+        }, 2000);
+    };
+
+    const gerarPdfOrcamentoHandler = async () => {
+        await gerarOrcamento(ticket.id_ordem_servico);
+
+        let tentativas = 0;
+        const maxTentativas = 10;
+
+        const intervalo = setInterval(async () => {
+            tentativas++;
+
+            try {
+                const res = await buscarOrcamento(ticket.id_ordem_servico);
+
+                if (res?.url) {
+                    clearInterval(intervalo);
+
+                    const downloadUrl = res.url.replace("localstack", "localhost");
+
+                    setTimeout(() => {
+                        window.open(downloadUrl, "_blank");
+                        setGerandoPdf(false);
+                    }, 1000);
+                }
+            } catch (error) {
+                if (tentativas >= maxTentativas) {
+                    clearInterval(intervalo);
+                    setGerandoPdf(false);
+                    exibirAlertaErro("O PDF está demorando para gerar. Tente novamente.");
+                }
+            }
+        }, 2000);
+    };
+
+    const handleGerarPdf = async () => {
+        if (!ticket?.id_ordem_servico) {
+            exibirAlertaErro("Ordem de serviço inválida.");
+            return;
+        }
+
+        setGerandoPdf(true);
+
+        try {
+            if (pagina === "produzir" || pagina === "finalizar") {
+                await gerarPdfOrdemServicoHandler();
+            } else {
+                await gerarPdfOrcamentoHandler();
+            }
+        } catch (error) {
+            console.error("Erro ao gerar PDF:", error);
+            setGerandoPdf(false);
+            exibirAlertaErro("Erro ao iniciar geração do PDF.");
+        }
+    };
 
     if (!ticket) {
         return <div className="resumo-container">Carregando...</div>;
@@ -186,8 +288,12 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
                                 </button>
                             )
                         ) : (
-                            <button className="imprimir">
-                                Imprimir
+                            <button
+                                className="imprimir"
+                                onClick={handleGerarPdf}
+                                disabled={gerandoPdf}
+                            >
+                                {gerandoPdf ? "Gerando..." : "Imprimir"}
                             </button>
                         )}
                     </div>
@@ -213,6 +319,7 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
                         placa={ticket.veiculo}
                         pagina={pagina}
                         onVisualizar={(dados) => {
+                            setModoItem("visualizar");
                             setItemVisualizar(dados);
                             setMostrarModalItem(true);
                         }}
@@ -223,11 +330,7 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
 
             <ModalAdicionarServico
                 isOpen={mostrarModalServico}
-                onClose={() => {
-                    setMostrarModalServico(false);
-                    setModoServico("adicionar");
-                    setServicoVisualizar(null);
-                }}
+                onClose={() => setMostrarModalServico(false)}
                 placa={ticket.veiculo}
                 modo={modoServico}
                 servico={servicoVisualizar}
