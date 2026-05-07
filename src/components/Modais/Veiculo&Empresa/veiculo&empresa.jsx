@@ -70,7 +70,7 @@ function VeiculoEEmpresa({ isOpen, onClose, dadosRecebidos }) {
                     <div className="cabecalho-secao">
                         <h4>Meios de Contato</h4>
                     </div>
-                    {dadosRecebidos.cliente.meios_contato.map((contato, index) => (
+                    {dadosRecebidos.cliente.meios_contato.map((contato, _index) => (
                         <div className="linha-dupla">
                             {(contato.nome_contato || contato.departamento_contato) && (
 

@@ -8,7 +8,7 @@ import CalendarIcon from "../../assets/icons/CalendarIcon.png";
 import "./AnaliseFinanceira.css";
 import Loading from "../../components/Loading/Loading";
 // Importe os alertas seguindo o padrão da sua tela de Clientes
-import { exibirAlertaErro, exibirAlertaSucesso } from "../../service/alertas";
+import { exibirAlertaErro, _exibirAlertaSucesso } from "../../service/alertas";
 
 function AnaliseFinanceira() {
     const [financeiro, setFinanceiro] = useState(null);
@@ -99,7 +99,7 @@ function AnaliseFinanceira() {
                             setGerandoRelatorio(false);
                         }, 1000);
                     }
-                } catch (error) {
+                } catch {
                     if (tentativas >= maxTentativas) {
                         clearInterval(verificarArquivo);
                         setGerandoRelatorio(false);

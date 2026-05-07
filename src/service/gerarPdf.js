@@ -1,5 +1,5 @@
 import api from "./api";
-import { exibirAlertaSucesso, exibirAlertaErro } from "./alertas";
+import { _exibirAlertaSucesso, exibirAlertaErro } from "./alertas";
 
 function GerarPdf() {
 

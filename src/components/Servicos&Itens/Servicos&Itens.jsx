@@ -7,9 +7,8 @@ import { formatarDataBR } from "../../utils/formatarTexto.js";
 
 import ModalAdicionarItem from "../ModalAdicionarItem/ModalAdicionarItem";
 import ServicosEItensLogic from "../../service/ServicosEItens.js";
-import { data } from "react-router-dom";
 import GerarPdf from "../../service/gerarPdf.js";
-import { exibirAlertaErro, exibirAlertaSucesso } from "../../service/alertas";
+import { exibirAlertaErro, _exibirAlertaSucesso } from "../../service/alertas";
 
 function ServicosEItens({ pagina, ticket, atualizarLista }) {
     const { adicionarServico, adicionarProduto } = ServicosEItensLogic();
@@ -144,7 +143,7 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
                         setGerandoPdf(false);
                     }, 1000);
                 }
-            } catch (error) {
+            } catch {
                 if (tentativas >= maxTentativas) {
                     clearInterval(intervalo);
                     setGerandoPdf(false);
@@ -176,7 +175,7 @@ function ServicosEItens({ pagina, ticket, atualizarLista }) {
                         setGerandoPdf(false);
                     }, 1000);
                 }
-            } catch (error) {
+            } catch {
                 if (tentativas >= maxTentativas) {
                     clearInterval(intervalo);
                     setGerandoPdf(false);

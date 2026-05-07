@@ -65,7 +65,7 @@ function GestaoFuncionarios() {
     };
 
     useEffect(() => {
-        let isMounted = true;
+        let _isMounted = true;
 
         const fetchData = async () => {
             if (isSearching.trim() !== "") {
@@ -80,7 +80,7 @@ function GestaoFuncionarios() {
         const delayDebounce = setTimeout(fetchData, isSearching ? 500 : 0);
 
         return () => {
-            isMounted = false;
+            _isMounted = false;
             clearTimeout(delayDebounce);
         };
     }, [isSearching, paginaAtual]);;

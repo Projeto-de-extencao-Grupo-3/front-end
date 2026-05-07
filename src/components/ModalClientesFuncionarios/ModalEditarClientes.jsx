@@ -136,7 +136,7 @@ function ModalEditarCliente({
                         estado: endereco.estado || endereco.uf || prev.estado,
                     }));
                 }
-            } catch (error) {
+            } catch {
                 exibirAlertaErro("Erro ao buscar CEP.");
             }
         }

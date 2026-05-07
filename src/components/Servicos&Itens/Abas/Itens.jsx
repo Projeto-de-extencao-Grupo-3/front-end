@@ -19,7 +19,7 @@ function Itens({ dados, pagina, carregarOrdem, placa }) {
     const [modalEditarProduto, setModalEditarProduto] = useState(false);
     const [produtoSelecionado, setProdutoSelecionado] = useState(null);
     const { excluirProduto, editarProduto, baixarProduto } = ServicosEItensLogic();
-    const { realizarBaixaEstoqueProduto } = AlterarEstoque();
+    const { _realizarBaixaEstoqueProduto } = AlterarEstoque();
     console.log("Dados dos itens:", dados);
 
     const handleExcluir = async () => {
