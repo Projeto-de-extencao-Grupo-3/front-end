@@ -1,0 +1,152 @@
+.pwa-status {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background-color: white;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.status-indicator.online {
+  border: 1px solid #10b981;
+  color: #10b981;
+}
+
+.status-indicator.offline {
+  border: 1px solid #ef4444;
+  color: #ef4444;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.status-indicator.online .status-dot {
+  background-color: #10b981;
+}
+
+.status-indicator.offline .status-dot {
+  background-color: #ef4444;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.installed-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background-color: white;
+  border: 1px solid #8b5cf6;
+  border-radius: 20px;
+  color: #8b5cf6;
+}
+
+.app-icon {
+  font-size: 1rem;
+}
+
+.update-notification {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background-color: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 6px;
+  color: #92400e;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.update-btn {
+  padding: 0.4rem 0.8rem;
+  background-color: #f59e0b;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.update-btn:hover {
+  background-color: #d97706;
+}
+
+.pwa-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+
+.action-btn {
+  padding: 0.4rem 0.8rem;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.action-btn:hover {
+  background-color: #2563eb;
+}
+
+.action-btn:active {
+  transform: scale(0.95);
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .pwa-status {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .pwa-actions {
+    width: 100%;
+    margin-left: 0;
+    order: 3;
+  }
+
+  .action-btn {
+    flex: 1;
+  }
+}
