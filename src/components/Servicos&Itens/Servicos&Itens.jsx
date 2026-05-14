@@ -8,7 +8,7 @@ import { formatarDataBR } from "../../utils/formatarTexto.js";
 import ModalAdicionarItem from "../ModalAdicionarItem/ModalAdicionarItem";
 import ServicosEItensLogic from "../../service/ServicosEItens.js";
 import GerarPdf from "../../service/gerarPdf.js";
-import { exibirAlertaErro, _exibirAlertaSucesso } from "../../service/alertas";
+import { exibirAlertaErro, exibirAlertaSucesso } from "../../service/alertas";
 
 function ServicosEItens({ pagina, ticket, atualizarLista }) {
     const { adicionarServico, adicionarProduto } = ServicosEItensLogic();
