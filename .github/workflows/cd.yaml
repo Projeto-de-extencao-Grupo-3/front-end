@@ -3,12 +3,6 @@ name: Frontend - CD Deploy EC2
 on:
   push:
     branches: [ "main" ]
-  workflow_run:
-    workflows: ["Frontend - CI Workflow"] 
-    types:
-      - completed
-    branches:
-      - main  
 
 jobs:
   CD:
