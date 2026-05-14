@@ -6,6 +6,7 @@ function GerarPdf() {
     const gerarOrdemServico = async (idOrcamento) => {
         try {
             await api.post(`/arquivos/ordem_servico/${idOrcamento}`);
+            exibirAlertaSucesso("PDF da ordem de serviço gerado com sucesso.");
         } catch (error) {
             exibirAlertaErro("Erro ao gerar pdf da ordem de serviço.");
             console.error(error);
@@ -16,6 +17,7 @@ function GerarPdf() {
     const gerarOrcamento = async (idOrdemServico) => {
         try {
             await api.post(`/arquivos/orcamento/${idOrdemServico}`);
+            exibirAlertaSucesso("PDF do orçamento gerado com sucesso.");
         } catch (error) {
             exibirAlertaErro("Erro ao gerar pdf da ordem de serviço.");
             console.error(error);
