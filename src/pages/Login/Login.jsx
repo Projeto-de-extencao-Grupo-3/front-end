@@ -100,7 +100,7 @@ function Login() {
               </div>
 
               {/* Lado Direito - Logo */}
-              <div className="col-md-6 login-img d-flex justify-content-center align-items-center bg-light">
+              <div className="col-md-6 login-img d-flex justify-content-center align-items-center">
                 <img src={logo} className="img-fluid w-75" alt="Logo" />
               </div>
 
