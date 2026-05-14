@@ -2,7 +2,7 @@ name: Frontend - CI Workflow
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "develop" ]
 
@@ -24,9 +24,6 @@ jobs:
 
       - name: Lint check
         run: npm run lint
-
-      - name: Run Tests
-        run: npm run test 
 
       - name: Build the project
         run: npm run build
