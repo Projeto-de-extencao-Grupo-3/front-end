@@ -2,9 +2,7 @@ name: Frontend - CD Deploy EC2
 
 on:
   push:
-    branches: [ "develop" ]
-  pull_request:
-    branches: [ "develop" ]
+    branches: [ "main" ]
   workflow_run:
     workflows: ["Frontend - CI Workflow"] 
     types:
