@@ -40,7 +40,11 @@ jobs:
 
       - name: FE - Reiniciar aplicação no servidor (Usando SSH)
         run: |
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.EC2_SSH_KEY }} ubuntu@${{ secrets.REMOTE_HOST_FRONT }}
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2_key
+          chmod 600 ~/.ssh/ec2_key
+
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/ec2_key ubuntu@${{ secrets.REMOTE_HOST_FRONT }} << 'EOF'
           cd /home/gro-track/docker
           sudo bash -c 'docker compose -f frontend.yml down -v && docker compose -f frontend.yml pull && docker compose -f frontend.yml up -d'
-      
+          EOF
