@@ -36,7 +36,7 @@ jobs:
             gabrielpacificooo/grotrack:latest
       
       -  name: Delay para garantir que a imagem esteja disponível no Docker Hub
-         run: sleep 60
+         run: sleep 15
 
       - name: FE - Reiniciar aplicação no servidor (Usando SSH)
         run: |
