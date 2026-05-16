@@ -2,7 +2,7 @@ name: Frontend - CD Deploy EC2
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "develop" ]
 
 jobs:
   CD:

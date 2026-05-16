@@ -58,7 +58,7 @@ function Login() {
 
               {/* Lado Esquerdo - Formulário */}
               <div className="col-md-6 p-4">
-                <h2 className="fw-bold">Bem vindo</h2>
+                <h2 className="fw-bold">Bem vindo CD</h2>
                 <p className="text-muted">Faça seu login para acessar sua página:</p>
 
                 <div className="mt-4">
