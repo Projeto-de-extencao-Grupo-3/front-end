@@ -37,16 +37,29 @@ function ModalAdicionarContatos({ isOpen, onClose, onSaveContatos }) {
     };
 
     const handleFinalizar = async () => {
-        const contatoTemValor = Object.values(contatoAtual).some((valor) => String(valor).trim() !== "");
-        let contatosParaSalvar = contatos;
+        const contatoAtualPreenchido = Object.values(contatoAtual).some((valor) => String(valor).trim() !== "");
 
-        if (contatoTemValor) {
+        if (contatoAtualPreenchido) {
             if (!contatoAtual.telefone?.trim() || !contatoAtual.email?.trim()) {
-                exibirAlertaErro("Preencha Telefone e Email para adicionar o contato.");
+                exibirAlertaErro("Preencha Telefone e Email no formulário antes de finalizar.");
                 return;
             }
 
-            // Evita depender da atualização assíncrona do estado antes do envio final.
+            // valida email @ e .
+            if (!contatoAtual.email.includes("@") || !contatoAtual.email.includes(".")) {
+                exibirAlertaErro("O e-mail informado no formulário é inválido.");
+                return;
+            }
+        }
+
+        if (contatos.length === 0 && !contatoAtualPreenchido) {
+            exibirAlertaErro("Adicione pelo menos um contato antes de finalizar.");
+            return;
+        }
+
+        // Monta o array final
+        let contatosParaSalvar = contatos;
+        if (contatoAtualPreenchido) {
             contatosParaSalvar = [...contatos, { ...contatoAtual }];
         }
 

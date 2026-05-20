@@ -65,7 +65,7 @@ function ModalAdicionar({ isOpen, onClose, onSave }) {
 
                                 <div className="row g-3">
                                     <div className="col-12">
-                                        <label className="form-label mb-1 text-dark fw-normal">Nome</label>
+                                        <label className="form-label mb-1 text-dark fw-normal">Nome*</label>
                                         <input
                                             type="text"
                                             name="nome"
@@ -77,7 +77,7 @@ function ModalAdicionar({ isOpen, onClose, onSave }) {
                                     </div>
 
                                     <div className="col-6">
-                                        <label className="form-label mb-1 text-dark fw-normal">CPF/CNPJ</label>
+                                        <label className="form-label mb-1 text-dark fw-normal">CPF/CNPJ*</label>
                                         <input
                                             type="text"
                                             name="cpf_cnpj"

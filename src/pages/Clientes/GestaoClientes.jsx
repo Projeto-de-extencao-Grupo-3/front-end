@@ -62,6 +62,13 @@ function GestaoClientes() {
     };
 
     const handleAvancarParaEndereco = (dadosCliente) => {
+        const cpfCnpj = dadosCliente.cpf_cnpj || dadosCliente.cpfCnpj || "";
+
+        if (cpfCnpj.length !== 11 && cpfCnpj.length !== 14) {
+            exibirAlertaErro("O tamanho do CPF/CNPJ deve ser 11 ou 14 caracteres numéricos.");
+            return; 
+        }
+
         setDadosClienteTemp(dadosCliente);
         setMostrarModalAdicionar(false);
         setMostrarModalEndereco(true);
@@ -73,41 +80,42 @@ function GestaoClientes() {
         setMostrarModalContatos(true);
     };
 
-    const handleFinalizarCadastroComContatos = async (contatos) => {
-        try {
-            const payloadCadastro = {
-                ...dadosClienteTemp,
-                endereco: dadosEnderecoTemp,
-                contatos: Array.isArray(contatos) ? contatos : [],
-            };
+const handleFinalizarCadastroComContatos = async (contatos) => {
+    try {
+        const payloadCadastro = {
+            ...dadosClienteTemp,
+            endereco: dadosEnderecoTemp,
+            contatos: Array.isArray(contatos) ? contatos : [],
+        };
 
-            await adicionarCliente(payloadCadastro);
+        await adicionarCliente(payloadCadastro);
 
-            setMostrarModalContatos(false);
-            setDadosClienteTemp(null);
-            setDadosEnderecoTemp(null);
-        } catch (error) {
-            console.error("Erro no processo:", error);
-        }
-    };
+        setMostrarModalContatos(false);
+        setDadosClienteTemp(null);
+        setDadosEnderecoTemp(null);
+        exibirAlertaSucesso("Cliente cadastrado com sucesso!");
+    } catch (error) {
+        // Aqui pegamos a mensagem exata do back-end (ex: "CPF já cadastrado")
+        const mensagemErro = obterMensagemErroApi(error, "Erro ao adicionar cliente.");
+        exibirAlertaErro(mensagemErro);
+        console.error("Erro no processo:", error);
+    }
+};
 
     const handleAbrirEdicao = (cliente) => {
         setClienteSelecionado(cliente);
         setModalEditarAberto(true);
     };
-
-    const handleSalvarCliente = async (dadosNovos) => {
-        try {
-            await atualizarCliente(dadosNovos);
-            await sincronizarClienteSelecionado(dadosNovos.id_cliente);
-            exibirAlertaSucesso("Dados do cliente atualizados com sucesso.");
-
-            setModalEditarAberto(false);
-        } catch (error) {
-            console.error("Erro capturado no componente:", error);
-            exibirAlertaErro(obterMensagemErroApi(error, "Não foi possível atualizar os dados do cliente."));
-        }
-    };
+const handleSalvarCliente = async (dadosNovos) => {
+    try {
+        await atualizarCliente(dadosNovos);
+        await sincronizarClienteSelecionado(dadosNovos.id_cliente);
+        exibirAlertaSucesso("Dados do cliente atualizados com sucesso.");
+        setModalEditarAberto(false);
+    } catch (error) {
+        exibirAlertaErro(obterMensagemErroApi(error, "Não foi possível atualizar os dados."));
+    }
+};
 
     const handleSalvarEndereco = async (dadosNovos) => {
         try {

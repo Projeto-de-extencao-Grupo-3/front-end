@@ -16,7 +16,7 @@ function Clientes() {
             return [];
         }
     }
-    
+
     const buscarClientePorPlaca = async (placa) => {
         var response = await api.get(`/clientes/placa/${placa}`)
         return response.data;
@@ -49,14 +49,12 @@ function Clientes() {
             };
 
             console.log("Payload para adicionar cliente:", payload);
-
+            
             const response = await api.post("/clientes", payload);
             await listarClientesPaginados(0, 8);
             exibirAlertaSucesso("Cliente adicionado com sucesso!");
             return response.data;
         } catch (error) {
-            exibirAlertaErro("Erro ao adicionar cliente. Verifique os dados e tente novamente.");
-            console.error("Erro no Back-end:", error.response?.data);
             throw error;
         }
     };
