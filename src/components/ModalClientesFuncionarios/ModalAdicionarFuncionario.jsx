@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import './ModalAdicionar.css';
-import { exibirAlertaErro } from "../../service/alertas"; // Importando o alerta
+import { exibirAlertaErro } from "../../service/alertas";
 
 const estadoInicial = {
     nome: "",
@@ -24,7 +24,27 @@ function ModalAdicionarFuncionario({ isOpen, onClose, onSave, funcionarioParaEdi
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+
+        // Máscara e validação em tempo real para o Telefone
+        if (name === "telefone") {
+            // Remove tudo que não for número (impede letras e símbolos soltos)
+            const apenasNumeros = value.replace(/\D/g, "");
+            let telefoneFormatado = "";
+
+            if (apenasNumeros.length > 0) {
+                if (apenasNumeros.length <= 2) {
+                    // Se digitou só o DDD (1 ou 2 números)
+                    telefoneFormatado = `(${apenasNumeros}`;
+                } else {
+                    // Se já tem mais que o DDD, separa o DDD do resto
+                    telefoneFormatado = `(${apenasNumeros.slice(0, 2)}) ${apenasNumeros.slice(2)}`;
+                }
+            }
+
+            setFormData(prev => ({ ...prev, [name]: telefoneFormatado }));
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        }
     };
 
     const handleCancelar = () => {
@@ -45,14 +65,21 @@ function ModalAdicionarFuncionario({ isOpen, onClose, onSave, funcionarioParaEdi
 
         if (camposVazios.length > 0) {
             exibirAlertaErro(`Preencha os campos obrigatórios: ${camposVazios.join(", ")}.`);
-            return; // Interrompe a execução e não fecha o modal
+            return; 
         }
 
-        // 2. Validação de formato de E-mail
+        // 2. Validação básica para garantir que o telefone tem pelo menos o DDD e um número
+        const telefoneLimpo = formData.telefone.replace(/\D/g, "");
+        if (telefoneLimpo.length <= 2) {
+            exibirAlertaErro("O telefone informado está muito curto. Insira o DDD e o número.");
+            return;
+        }
+
+        // 3. Validação de formato de E-mail
         const email = formData.email || "";
         if (!email.includes("@") || !email.includes(".")) {
-            exibirAlertaErro("O e-mail informado é inválido. Certifique-se de conter ao menos '@' e '.'");
-            return; // Interrompe a execução e não fecha o modal
+            exibirAlertaErro("O e-mail informado é inválido. Certifique-se de conter '@' e '.'.");
+            return;
         }
 
         // Se passar nas validações, tenta salvar
@@ -147,7 +174,7 @@ function ModalAdicionarFuncionario({ isOpen, onClose, onSave, funcionarioParaEdi
                                             value={formData.telefone || ""}
                                             onChange={handleChange}
                                             className="form-control bg-light border-0"
-                                            placeholder="(00) 00000-0000"
+                                            placeholder="(00) 00000000"
                                         />
                                     </div>
 

@@ -6,6 +6,7 @@ import ModalDesativar from "../../components/ModalClientesFuncionarios/ModalDesa
 import TabelaFuncionarios from "../../components/Layout/TabelaFuncionarios.jsx";
 import Funcionarios from "../../service/Funcionarios.js";
 import Loading from "../../components/Loading/Loading.jsx";
+import { exibirAlertaErro, exibirAlertaSucesso } from "../../service/alertas"; // Import dos alertas!
 
 function GestaoFuncionarios() {
     const { funcionarios, loading, listarFuncionariosPaginados, listarFuncionariosPorBuscaDeNome, excluirFuncionario, adicionarFuncionario, atualizarFuncionario } = Funcionarios();
@@ -14,15 +15,32 @@ function GestaoFuncionarios() {
     const [funcionarioParaDesativar, setFuncionarioParaDesativar] = useState(null);
     const [isModalDesativarOpen, setIsModalDesativarOpen] = useState(false);
 
+    const [paginaAtual, setPaginaAtual] = useState(0);
+    const [tamanhoPagina] = useState(8);
+    const [isSearching, setIsSearching] = useState("");
+
+    // FUNÇÃO PARA LER OS ERROS (EX: 409 CONFLITO) DO BACK-END
+    const obterMensagemErroApi = (error, mensagemPadrao) => {
+        const status = error?.response?.status;
+        const payload = error?.response?.data;
+        const mensagemApi =
+            payload?.mensagem ||
+            payload?.message ||
+            payload?.erro ||
+            (typeof payload === "string" ? payload : "");
+
+        if (status === 409) {
+            return mensagemApi || "Conflito de dados: o registro já existe.";
+        }
+
+        return mensagemApi || mensagemPadrao;
+    };
+
     const lidarComEdicao = (funcionario) => {
         console.log("Abrindo modal para editar:", funcionario);
         setFuncionarioParaEditar(funcionario);
         setModalAberto(true);
     };
-
-    const [paginaAtual, setPaginaAtual] = useState(0);
-    const [tamanhoPagina] = useState(8);
-    const [isSearching, setIsSearching] = useState("");
 
     const abrirModalNovo = () => {
         console.log("Abrindo modal para novo");
@@ -30,12 +48,15 @@ function GestaoFuncionarios() {
         setModalAberto(true);
     };
 
+    // AQUI APLICAMOS AS VALIDAÇÕES DE API PARA ADIÇÃO E EDIÇÃO!
     const salvar = async (dados, id) => {
         try {
             if (id) {
                 await atualizarFuncionario(id, dados);
+                exibirAlertaSucesso("Funcionário atualizado com sucesso!");
             } else {
                 await adicionarFuncionario(dados);
+                exibirAlertaSucesso("Funcionário adicionado com sucesso!");
             }
 
             await listarFuncionariosPaginados(paginaAtual, tamanhoPagina);
@@ -43,6 +64,9 @@ function GestaoFuncionarios() {
             setFuncionarioParaEditar(null);
         } catch (error) {
             console.error("Falha ao salvar no banco:", error);
+            // Mostra o alerta vermelho na tela caso dê 409 ou outro erro!
+            const msgErro = obterMensagemErroApi(error, "Não foi possível salvar os dados do funcionário.");
+            exibirAlertaErro(msgErro);
         }
     };
 
@@ -57,10 +81,14 @@ function GestaoFuncionarios() {
 
             await excluirFuncionario(id);
             await listarFuncionariosPaginados(paginaAtual, tamanhoPagina);
+            exibirAlertaSucesso("Funcionário desativado com sucesso!");
+
             setIsModalDesativarOpen(false);
             setFuncionarioParaDesativar(null);
         } catch (error) {
             console.error("Erro ao desativar funcionário:", error);
+            const msgErro = obterMensagemErroApi(error, "Não foi possível desativar o funcionário.");
+            exibirAlertaErro(msgErro);
         }
     };
 
@@ -83,7 +111,7 @@ function GestaoFuncionarios() {
             _isMounted = false;
             clearTimeout(delayDebounce);
         };
-    }, [isSearching, paginaAtual]);;
+    }, [isSearching, paginaAtual]);
 
     return (
         <Layout ativo={"funcionarios"}>
@@ -152,7 +180,6 @@ function GestaoFuncionarios() {
 
                         <button
                             className="btn btn-outline-dark"
-                            // Se a página atual for a última (total - 1), desabilita
                             disabled={paginaAtual >= (funcionarios?.page?.total_pages - 1)}
                             onClick={() => setPaginaAtual(prev => prev + 1)}
                         >
