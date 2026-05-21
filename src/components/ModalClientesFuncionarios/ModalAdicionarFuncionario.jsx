@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import './ModalAdicionar.css';
+import { exibirAlertaErro } from "../../service/alertas"; // Importando o alerta
 
 const estadoInicial = {
     nome: "",
@@ -32,13 +33,36 @@ function ModalAdicionarFuncionario({ isOpen, onClose, onSave, funcionarioParaEdi
     };
 
     const handleFinalizar = async () => {
+        // 1. Validação de campos vazios
+        const camposVazios = [];
+        
+        if (!formData.nome?.trim()) camposVazios.push("Nome Completo");
+        if (!formData.cargo?.trim()) camposVazios.push("Cargo");
+        if (!formData.especialidade?.trim()) camposVazios.push("Especialidade");
+        if (!formData.email?.trim()) camposVazios.push("Email");
+        if (!formData.telefone?.trim()) camposVazios.push("Telefone");
+        if (!formData.senha?.trim()) camposVazios.push("Senha");
+
+        if (camposVazios.length > 0) {
+            exibirAlertaErro(`Preencha os campos obrigatórios: ${camposVazios.join(", ")}.`);
+            return; // Interrompe a execução e não fecha o modal
+        }
+
+        // 2. Validação de formato de E-mail
+        const email = formData.email || "";
+        if (!email.includes("@") || !email.includes(".")) {
+            exibirAlertaErro("O e-mail informado é inválido. Certifique-se de conter ao menos '@' e '.'");
+            return; // Interrompe a execução e não fecha o modal
+        }
+
+        // Se passar nas validações, tenta salvar
         try {
             const id = formData.idFuncionario || formData.id_funcionario;
             await onSave(formData, id);
             handleCancelar();
         } catch (error) {
             console.error("Erro ao salvar:", error);
-            alert("Erro ao salvar funcionário.");
+            exibirAlertaErro("Erro ao salvar funcionário.");
         }
     };
 
@@ -68,7 +92,7 @@ function ModalAdicionarFuncionario({ isOpen, onClose, onSave, funcionarioParaEdi
 
                                 <div className="row g-3">
                                     <div className="col-12">
-                                        <label className="form-label mb-1 text-dark fw-normal">Nome Completo</label>
+                                        <label className="form-label mb-1 text-dark fw-normal">Nome Completo*</label>
                                         <input
                                             type="text"
                                             name="nome"
@@ -80,7 +104,7 @@ function ModalAdicionarFuncionario({ isOpen, onClose, onSave, funcionarioParaEdi
                                     </div>
 
                                     <div className="col-6">
-                                        <label className="form-label mb-1 text-dark fw-normal">Cargo</label>
+                                        <label className="form-label mb-1 text-dark fw-normal">Cargo*</label>
                                         <input
                                             type="text"
                                             name="cargo"
@@ -92,7 +116,7 @@ function ModalAdicionarFuncionario({ isOpen, onClose, onSave, funcionarioParaEdi
                                     </div>
 
                                     <div className="col-6">
-                                        <label className="form-label mb-1 text-dark fw-normal">Especialidade</label>
+                                        <label className="form-label mb-1 text-dark fw-normal">Especialidade*</label>
                                         <input
                                             type="text"
                                             name="especialidade"
@@ -104,7 +128,7 @@ function ModalAdicionarFuncionario({ isOpen, onClose, onSave, funcionarioParaEdi
                                     </div>
 
                                     <div className="col-12">
-                                        <label className="form-label mb-1 text-dark fw-normal">Email</label>
+                                        <label className="form-label mb-1 text-dark fw-normal">Email*</label>
                                         <input
                                             type="email"
                                             name="email"
@@ -116,7 +140,7 @@ function ModalAdicionarFuncionario({ isOpen, onClose, onSave, funcionarioParaEdi
                                     </div>
 
                                     <div className="col-6">
-                                        <label className="form-label mb-1 text-dark fw-normal">Telefone</label>
+                                        <label className="form-label mb-1 text-dark fw-normal">Telefone*</label>
                                         <input
                                             type="text"
                                             name="telefone"
@@ -128,7 +152,7 @@ function ModalAdicionarFuncionario({ isOpen, onClose, onSave, funcionarioParaEdi
                                     </div>
 
                                     <div className="col-6">
-                                        <label className="form-label mb-1 text-dark fw-normal">Senha</label>
+                                        <label className="form-label mb-1 text-dark fw-normal">Senha*</label>
                                         <input
                                             type="password"
                                             name="senha"
