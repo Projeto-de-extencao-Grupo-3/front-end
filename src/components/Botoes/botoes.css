@@ -4,10 +4,12 @@
     flex-direction: column;
     gap: 10px;
     margin-top: 10px;
+    cursor: pointer;
 }
 
 .botao {
     border: none;
+    pointer-events: none; /* evita que o button "roube" o clique */
     color: white;
     height: 100%;
     background-color: transparent;

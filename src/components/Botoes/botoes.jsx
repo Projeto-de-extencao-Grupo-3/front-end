@@ -35,7 +35,6 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
     const fecharModal = () => setModalAtivo(null);
     const [_dataPrevisaSaida, _setDataPrevistaSaida] = useState(ordemServicoDados.data_saida_prevista || "");
 
-    // 🔥 FUNÇÃO SEGURA
     const atualizar = async (dados) => {
         try {
             await atualizarStatus(idOrdemServico, dados);
@@ -60,37 +59,36 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
         <div className="botoes">
 
             {pagina === "analisar1" && (
-                <div className="button container1">
+                <div className="button container1" onClick={() => setModalAtivo("pagamento")}>
                     <div className="icon" style={{ backgroundImage: `url(${iconSifrao})` }} />
-                    <button className="botao" onClick={() => setModalAtivo("pagamento")}>
+                    <button className="botao">
                         Concluir pagamento
                     </button>
                 </div>
             )}
 
             {pagina === "produzir" && (
-                <div className="button container1">
+                <div className="button container1" onClick={() => setModalAtivo("servico")}>
                     <div className="icon" style={{ backgroundImage: `url(${checkIcon})` }} />
-                    <button className="botao" onClick={() => setModalAtivo("servico")}>
+                    <button className="botao">
                         Finalizar serviço
                     </button>
                 </div>
             )}
 
             {pagina === "orcamento" && (
-                <div className="button container3">
+                <div className="button container3" onClick={() => setModalAtivo("finalizarOrcamento")}>
                     <div className="icon" style={{ backgroundImage: `url(${SaveIcon})` }}></div>
-                    <button className="botao" onClick={() => setModalAtivo("finalizarOrcamento")}>
+                    <button className="botao">
                         Finalizar orçamento
                     </button>
                 </div>
             )}
 
             {pagina === "analisar2" && (
-                <div className="button container1">
+                <div className="button container1" onClick={() => setModalAtivo("nota")}>
                     <div className="icon" style={{ backgroundImage: `url(${iconPag})` }} />
-                    <button className="botao" onClick={() => {
-                        setModalAtivo("nota")}}>
+                    <button className="botao">
                         Concluir nota fiscal
                     </button>
                 </div>
@@ -98,16 +96,16 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
 
             {(pagina === "analisar1" || pagina === "analisar2" || pagina === "analisar3") && (
                 <>
-                    <div className="button container2">
+                    <div className="button container2" onClick={() => setModalAtivo("veiculo")}>
                         <div className="icon" style={{ backgroundImage: `url(${iconPag})` }} />
-                        <button className="botao" onClick={() => setModalAtivo("veiculo")}>
+                        <button className="botao">
                             Ver dados do veículo
                         </button>
                     </div>
 
-                    <div className="button container3">
+                    <div className="button container3" onClick={() => setModalAtivo("entrada")}>
                         <div className="icon" style={{ backgroundImage: `url(${iconCheck})` }} />
-                        <button className="botao" onClick={() => setModalAtivo("entrada")}>
+                        <button className="botao">
                             Ver entrada do veículo
                         </button>
                     </div>
@@ -115,50 +113,50 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
             )}
 
             {pagina === "aguardar" && (
-                <div className="button container3">
+                <div className="button container3" onClick={() => setModalAtivo("data")}>
                     <div className="icon" style={{ backgroundImage: `url(${PlayIcon})` }} />
-                    <button className="botao" onClick={() => setModalAtivo("data")}>
+                    <button className="botao">
                         Iniciar produção
                     </button>
                 </div>
             )}
 
             {(pagina === "autorizar" || pagina === "aprovar") && (
-                <div className="button container3">
+                <div className="button container3" onClick={() => setModalAtivo("autorizar")}>
                     <div className="icon" style={{ backgroundImage: `url(${SaveIcon})` }} />
-                    <button className="botao" onClick={() => setModalAtivo("autorizar")}>
+                    <button className="botao">
                         Autorizar orçamento
                     </button>
                 </div>
             )}
 
             {(pagina === "aguardar" || pagina === "aprovar") && (
-                <div className="button container4">
+                <div className="button container4" onClick={() => setModalAtivo("revisar")}>
                     <div className="icon" style={{ backgroundImage: `url(${EditIcon})` }} />
-                    <button className="botao" onClick={() => setModalAtivo("revisar")}>
+                    <button className="botao">
                         Editar orçamento
                     </button>
                 </div>
             )}
 
             {pagina === "produzir" && (
-                <div className="button container4">
+                <div className="button container4" onClick={() => setModalAtivo("reagendar")}>
                     <div className="icon" style={{ backgroundImage: `url(${CalendarIcon})` }} />
-                    <button className="botao" onClick={() => setModalAtivo("reagendar")}>
+                    <button className="botao">
                         Atualizar data de saída
                     </button>
                 </div>
             )}
 
-            <div className="button container4">
-                    <div className="icon" style={{ backgroundImage: `url(${imagemIcon})` }} />
-                <button className="botao" onClick={() => navigate(`/painelControle/imagensAnexadas/${idOrdemServico}`)}>
+            <div className="button container4" onClick={() => navigate(`/painelControle/imagensAnexadas/${idOrdemServico}`)}>
+                <div className="icon" style={{ backgroundImage: `url(${imagemIcon})` }} />
+                <button className="botao">
                     Anexar Vistorias
                 </button>
             </div>
 
-            <div className="button container4">
-                <button className="botao" onClick={() => navigate("/painelControle")}>
+            <div className="button container4" onClick={() => navigate("/painelControle")}>
+                <button className="botao">
                     Voltar para o Painel
                 </button>
             </div>
@@ -318,7 +316,7 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
             )}
 
             {modalAtivo === "veiculo" && (
-                console.log(ordemServicoDados) || 
+                console.log(ordemServicoDados) ||
                 <VeiculoEEmpresa
                     isOpen={true}
                     onClose={fecharModal}
@@ -346,7 +344,6 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
 
                         fecharModal();
                         aoAtualizarData(data);
-
                     }}
                     aoCancelar={fecharModal}
                 />
