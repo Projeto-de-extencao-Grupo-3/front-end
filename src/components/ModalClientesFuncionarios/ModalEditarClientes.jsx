@@ -233,14 +233,23 @@ function ModalEditarCliente({
     const salvarCliente = async () => {
         if (typeof onSave !== "function") return;
 
+        // Validação de campos básicos
+        if (!clienteEditado.nome?.trim()) {
+            exibirAlertaErro("O nome é obrigatório.");
+            return;
+        }
+
+        // Validação de CPF/CNPJ
+        const apenasNumeros = somenteNumeros(clienteEditado.cpf_cnpj);
+        if (apenasNumeros.length !== 11 && apenasNumeros.length !== 14) {
+            exibirAlertaErro("O tamanho do CPF/CNPJ deve ser 11 ou 14 caracteres numéricos.");
+            return;
+        }
+
         const payloadCliente = {
             ...clienteEditado,
             operacao: modoEndereco,
-            id_cliente: clienteEditado.id_cliente,
-            nome: clienteEditado.nome,
-            cpf_cnpj: somenteNumeros(clienteEditado.cpf_cnpj),
-            inscricao_estadual: clienteEditado.inscricao_estadual,
-            tipo_cliente: clienteEditado.tipo_cliente,
+            cpf_cnpj: apenasNumeros,
         };
 
         await onSave(payloadCliente);
@@ -249,9 +258,10 @@ function ModalEditarCliente({
     const salvarEndereco = async () => {
         if (typeof onSaveEndereco !== "function") return;
 
+        // --- VALIDAÇÃO DE CAMPOS ---
         const camposObrigatoriosEndereco = [
             { label: "CEP", value: formEndereco.cep },
-            { label: "Numero", value: formEndereco.numero },
+            { label: "Número", value: formEndereco.numero },
             { label: "Logradouro", value: formEndereco.logradouro },
             { label: "Bairro", value: formEndereco.bairro },
             { label: "Cidade", value: formEndereco.cidade },
@@ -263,8 +273,8 @@ function ModalEditarCliente({
             .map((campo) => campo.label);
 
         if (camposFaltantes.length > 0) {
-            exibirAlertaErro(`Preencha os campos obrigatorios do endereco: ${camposFaltantes.join(", ")}.`);
-            return;
+            exibirAlertaErro(`Preencha os campos obrigatórios do endereço: ${camposFaltantes.join(", ")}.`);
+            return; // Interrompe o salvamento
         }
 
         const operacao = modoEndereco === "novo" ? "novo" : "editar";
@@ -318,6 +328,7 @@ function ModalEditarCliente({
     const salvarContato = async () => {
         if (typeof onSaveContato !== "function") return;
 
+        // --- VALIDAÇÃO DE CAMPOS ---
         const camposObrigatoriosContato = [
             { label: "Telefone", value: formContato.telefone },
             { label: "Email", value: formContato.email },
@@ -328,7 +339,13 @@ function ModalEditarCliente({
             .map((campo) => campo.label);
 
         if (camposFaltantes.length > 0) {
-            exibirAlertaErro(`Preencha os campos obrigatorios do contato: ${camposFaltantes.join(", ")}.`);
+            exibirAlertaErro(`Preencha os campos obrigatórios do contato: ${camposFaltantes.join(", ")}.`);
+            return;
+        }
+
+        // Validação de formato de E-mail
+        if (!formContato.email.includes("@") || !formContato.email.includes(".")) {
+            exibirAlertaErro("O e-mail informado é inválido. Certifique-se de conter '@' e '.'.");
             return;
         }
 

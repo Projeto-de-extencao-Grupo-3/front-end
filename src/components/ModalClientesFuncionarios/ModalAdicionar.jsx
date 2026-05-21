@@ -65,7 +65,7 @@ function ModalAdicionar({ isOpen, onClose, onSave }) {
 
                                 <div className="row g-3">
                                     <div className="col-12">
-                                        <label className="form-label mb-1 text-dark fw-normal">Nome*</label>
+                                        <label className="form-label mb-1 text-dark fw-normal">{formData.tipo_cliente === "PESSOA_JURIDICA" ? "Razão Social" : "Nome"}</label>
                                         <input
                                             type="text"
                                             name="nome"
