@@ -14,7 +14,23 @@ function ModalAdicionarContatos({ isOpen, onClose, onSaveContatos }) {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setContatoAtual((prev) => ({ ...prev, [name]: value }));
+
+        // Máscara para telefone
+        if (name === "telefone") {
+            const apenasNumeros = value.replace(/\D/g, "");
+            let telefoneFormatado = "";
+
+            if (apenasNumeros.length > 0) {
+                if (apenasNumeros.length <= 2) {
+                    telefoneFormatado = `(${apenasNumeros}`;
+                } else {
+                    telefoneFormatado = `(${apenasNumeros.slice(0, 2)}) ${apenasNumeros.slice(2)}`;
+                }
+            }
+            setContatoAtual((prev) => ({ ...prev, [name]: telefoneFormatado }));
+        } else {
+            setContatoAtual((prev) => ({ ...prev, [name]: value }));
+        }
     };
 
     const limparContatoAtual = () => {
@@ -22,30 +38,36 @@ function ModalAdicionarContatos({ isOpen, onClose, onSaveContatos }) {
     };
 
     const adicionarContatoNaLista = () => {
-        if (!contatoAtual.telefone?.trim() || !contatoAtual.email?.trim()) {
+        // Validação: Remove máscara para verificar se foi preenchido
+        const telefoneLimpo = contatoAtual.telefone.replace(/\D/g, "");
+        
+        if (!telefoneLimpo || !contatoAtual.email?.trim()) {
             exibirAlertaErro("Preencha Telefone e Email para adicionar o contato.");
             return false;
         }
 
-        setContatos((prev) => [...prev, { ...contatoAtual }]);
+        // Valida e-mail
+        if (!contatoAtual.email.includes("@") || !contatoAtual.email.includes(".")) {
+            exibirAlertaErro("O e-mail informado é inválido.");
+            return false;
+        }
+
+        setContatos((prev) => [...prev, { ...contatoAtual, telefone: telefoneLimpo }]); // Salva limpo
         limparContatoAtual();
         return true;
-    };
-
-    const removerContato = (index) => {
-        setContatos((prev) => prev.filter((_, i) => i !== index));
     };
 
     const handleFinalizar = async () => {
         const contatoAtualPreenchido = Object.values(contatoAtual).some((valor) => String(valor).trim() !== "");
 
         if (contatoAtualPreenchido) {
-            if (!contatoAtual.telefone?.trim() || !contatoAtual.email?.trim()) {
+            const telefoneLimpo = contatoAtual.telefone.replace(/\D/g, "");
+            
+            if (!telefoneLimpo || !contatoAtual.email?.trim()) {
                 exibirAlertaErro("Preencha Telefone e Email no formulário antes de finalizar.");
                 return;
             }
 
-            // valida email @ e .
             if (!contatoAtual.email.includes("@") || !contatoAtual.email.includes(".")) {
                 exibirAlertaErro("O e-mail informado no formulário é inválido.");
                 return;
@@ -57,10 +79,10 @@ function ModalAdicionarContatos({ isOpen, onClose, onSaveContatos }) {
             return;
         }
 
-        // Monta o array final
         let contatosParaSalvar = contatos;
         if (contatoAtualPreenchido) {
-            contatosParaSalvar = [...contatos, { ...contatoAtual }];
+            const telefoneLimpo = contatoAtual.telefone.replace(/\D/g, "");
+            contatosParaSalvar = [...contatos, { ...contatoAtual, telefone: telefoneLimpo }];
         }
 
         await onSaveContatos(contatosParaSalvar);
