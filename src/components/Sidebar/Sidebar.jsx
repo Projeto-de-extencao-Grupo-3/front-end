@@ -5,6 +5,8 @@ import ZoomButtons from "../ZoomButtons/ZoomButtons";
 import logo from '../../assets/images/logoEscura.svg';
 import { formatarTexto } from "../../utils/formatarTexto.js";
 
+// IMPORTANTE: Ajuste o caminho de importação abaixo conforme a estrutura das suas pastas
+import ModalEditarPerfil from "../ModalEditarPerfil/ModalEditarPerfil"; 
 
 function Sidebar({ ativo }) {
   const navigate = useNavigate();
@@ -15,7 +17,10 @@ function Sidebar({ ativo }) {
   const [sidebarEmHover, setSidebarEmHover] = useState(false);
   const [sidebarMobileAberta, setSidebarMobileAberta] = useState(true);
 
-  const [usuario, _setUsuario] = useState(() => {
+  // Estado para controlar o modal de perfil
+  const [modalAberto, setModalAberto] = useState(false);
+
+  const [usuario, setUsuario] = useState(() => {
     const nomeSalvo = sessionStorage.getItem("NOME_USUARIO");
     const cargoSalvo = sessionStorage.getItem("CARGO_USUARIO");
 
@@ -122,8 +127,11 @@ function Sidebar({ ativo }) {
         {/* CONTROLES DE ZOOM */}
         <ZoomButtons compacta={sidebarCompacta} />
 
-        {/* CARD DO USUARIO */}
-        <div className="user-card p-2 rounded mb-3">
+        <div 
+          className="user-card p-2 rounded mb-3" 
+          onClick={() => setModalAberto(true)} 
+          style={{ cursor: 'pointer' }}
+        >
           <div className="d-flex align-items-center gap-2">
             <div><i className='bx bxs-user-circle' style={{ fontSize: "45px" }}></i></div>
             <div className="user-card-texto">
@@ -139,6 +147,16 @@ function Sidebar({ ativo }) {
           <span className="menu-texto">Sair</span>
         </button>
       </div>
+
+      {/* RENDERIZAÇÃO DO MODAL */}
+      <ModalEditarPerfil 
+        aberto={modalAberto} 
+        onFechar={() => setModalAberto(false)} 
+        usuario={usuario}
+        onSalvar={(dados) => {
+          console.log("Dados do perfil salvos:", dados);
+        }}
+      />
     </>
   );
 }
