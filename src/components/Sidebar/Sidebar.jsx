@@ -4,8 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import ZoomButtons from "../ZoomButtons/ZoomButtons";
 import logo from '../../assets/images/logoEscura.svg';
 import { formatarTexto } from "../../utils/formatarTexto.js";
-
-// IMPORTANTE: Ajuste o caminho de importação abaixo conforme a estrutura das suas pastas
 import ModalEditarPerfil from "../ModalEditarPerfil/ModalEditarPerfil"; 
 
 function Sidebar({ ativo }) {

@@ -77,7 +77,7 @@
   width: 88px;
   height: 88px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #7c6ff7 0%, #4f8ef7 100%);
+  background: linear-gradient(#0C2F52 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -244,7 +244,7 @@
   
 .mep-btn-salvar {
   flex: 1.6;
-  background: #3b82f6;
+  background: #0C2F52;
   border: none;
   border-radius: 10px;
   color: #fff;

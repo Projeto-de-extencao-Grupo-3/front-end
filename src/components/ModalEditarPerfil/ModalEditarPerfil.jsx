@@ -74,9 +74,7 @@ export default function ModalEditarPerfil({ aberto, onFechar, usuario, onSalvar 
                 ? <img src={foto} alt="Foto de perfil" />
                 : <i className="bx bxs-user" />
               }
-              <span className="mep-avatar-badge">
-                <i className="bx bx-upload" style={{ fontSize: 13 }} />
-              </span>
+              
             </div>
             
             {/* Nome e Cargo Exibidos na Tela */}
