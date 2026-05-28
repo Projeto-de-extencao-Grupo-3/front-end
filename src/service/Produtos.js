@@ -56,7 +56,7 @@ function Produtos() {
 
     const listarTipoServicos = async () => {
         try {
-            const response = await api.options("/produtos/tipos_servico");
+            const response = await api.get("/produtos/tipos_servico");
             return response.data;
         } catch (error) {
             exibirAlertaErro("Erro ao buscar tipos de serviços.");

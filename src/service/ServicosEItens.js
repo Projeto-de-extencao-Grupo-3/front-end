@@ -100,7 +100,7 @@ function ServicosItens() {
 
     const listarPartesVeiculo = async () => {
         try {
-            const response = await api.options("/itens-servicos/partes_veiculo");
+            const response = await api.get("/itens-servicos/partes_veiculo");
             return response.data;
         } catch (error) {
             exibirAlertaErro("Erro ao buscar partes do veículo.");
@@ -110,7 +110,7 @@ function ServicosItens() {
 
     const listarTiposPintura = async () => {
         try {
-            const response = await api.options("/itens-servicos/tipos_pintura");
+            const response = await api.get("/itens-servicos/tipos_pintura");
             return response.data;
         } catch (error) {
             exibirAlertaErro("Erro ao buscar tipos de pintura.");
@@ -120,7 +120,7 @@ function ServicosItens() {
 
     const listarTiposServico = async () => {
         try {
-            const response = await api.options("/itens-servicos/tipos_servico");
+            const response = await api.get("/itens-servicos/tipos_servico");
             return response.data;
         } catch (error) {
             exibirAlertaErro("Erro ao buscar tipos de serviço.");
@@ -130,7 +130,7 @@ function ServicosItens() {
 
     const listarLadosVeiculo = async () => {
         try {
-            const response = await api.options("/itens-servicos/lados_veiculo");
+            const response = await api.get("/itens-servicos/lados_veiculo");
             return response.data;
         } catch (error) {
             exibirAlertaErro("Erro ao buscar lados do veículo.");
