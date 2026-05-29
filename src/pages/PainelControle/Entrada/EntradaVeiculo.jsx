@@ -9,7 +9,7 @@ import useEndereco from "../../../service/Endereco";
 import Jornada from "../../../service/Jornada";
 import { buscarVeiculoPorPlaca } from "../../../service/api";
 import Veiculos from "../../../service/Veiculos";
-
+import { exibirAlertaErro } from "../../../service/alertas";
 
 function EntradaVeiculo() {
 
@@ -38,17 +38,11 @@ function EntradaVeiculo() {
         placa
     );
 
-
     const [formData, setFormData] = useState({
-        // Veículo
         marca: "", modelo: "", placa: "",
         prefixo: "", ano_modelo: "",
-
-        // Cliente
         cpf_cnpj: "", nome: "", telefone: "",
         email: "", tipo_cliente: "PESSOA_FISICA",
-
-        // Registro
         dataEntrada: new Date().toISOString().split('T')[0], responsavel: "", cpfResponsavel: "",
         itensEntrada: itensPadrao.map((nome) => ({ nome_item: nome, quantidade_item: 1 })),
         observacoes: ""
@@ -135,7 +129,23 @@ function EntradaVeiculo() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+
+        if (name === "cpfResponsavel") {
+            let cpfLimpo = value.replace(/\D/g, "");
+            
+            if (cpfLimpo.length > 11) {
+                cpfLimpo = cpfLimpo.slice(0, 11);
+            }
+
+            let cpfMascarado = cpfLimpo;
+            cpfMascarado = cpfMascarado.replace(/(\d{3})(\d)/, "$1.$2");
+            cpfMascarado = cpfMascarado.replace(/(\d{3})\.(\d{3})(\d)/, "$1.$2.$3");
+            cpfMascarado = cpfMascarado.replace(/\.(\d{3})(\d{1,2})$/, ".$1-$2");
+
+            setFormData(prev => ({ ...prev, [name]: cpfMascarado }));
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        }
     };
 
     useEffect(() => {
@@ -282,6 +292,38 @@ function EntradaVeiculo() {
     };
 
     const handleFinalizar = async () => {
+        if (
+            !formData.cpf_cnpj?.trim() ||
+            !formData.nome?.trim() ||
+            !formData.placa?.trim() ||
+            !formData.modelo?.trim() ||
+            !formData.marca?.trim() ||
+            !formData.prefixo?.trim() ||
+            !formData.dataEntrada?.trim() ||
+            !formData.responsavel?.trim() ||
+            !formData.cpfResponsavel?.trim()
+        ) {
+            exibirAlertaErro("Por favor, preencha todos os campos obrigatórios (marcados com *).");
+            return;
+        }
+
+        const placaLimpa = formData.placa.replace(/[^a-zA-Z0-9]/g, '');
+        if (placaLimpa.length !== 7) {
+            exibirAlertaErro("A placa deve conter exatamente 7 caracteres (letras e números).");
+            return;
+        }
+
+        if (!formData.ano_modelo || String(formData.ano_modelo).trim() === "") {
+            exibirAlertaErro("O campo Ano/Modelo é obrigatório para realizar o registro.");
+            return;
+        }
+
+        const cpfResponsavelLimpo = formData.cpfResponsavel.replace(/\D/g, '');
+        if (cpfResponsavelLimpo.length !== 11) {
+            exibirAlertaErro("O CPF do responsável deve conter exatamente 11 números.");
+            return;
+        }
+
         try {
             const itensEntradaPayload = formData.itensEntrada
                 .filter((item) => String(item.nome_item || "").trim().length > 0)
@@ -292,7 +334,7 @@ function EntradaVeiculo() {
                 .filter((item) => String(item.nome_item || "").trim().length > 0 && item.quantidade > 0);
 
             if (itensEntradaPayload.length === 0) {
-                alert("Adicione pelo menos um item válido com nome e quantidade maior que zero.");
+                exibirAlertaErro("Adicione pelo menos um item válido com nome e quantidade maior que zero.");
                 return;
             }
 
@@ -300,7 +342,7 @@ function EntradaVeiculo() {
                 dataEntradaPrevista: formData.dataEntrada,
                 dataEntradaEfetiva: formData.dataEntrada,
                 responsavel: formData.responsavel,
-                cpf: formData.cpfResponsavel,
+                cpf: cpfResponsavelLimpo, 
                 observacoes: formData.observacoes,
                 itens_entrada: itensEntradaPayload,
                 fk_oficina: 1
@@ -308,7 +350,7 @@ function EntradaVeiculo() {
 
             const payloadConfirmacaoEntrada = {
                 responsavel: formData.responsavel,
-                cpf: formData.cpfResponsavel,
+                cpf: cpfResponsavelLimpo, 
                 itens_entrada: itensEntradaPayload
             };
 
@@ -335,7 +377,7 @@ function EntradaVeiculo() {
                             prefixo: formData.prefixo,
                             modelo: formData.modelo,
                             nome: formData.nome,
-                            placa: formData.placa
+                            placa: placaLimpa
                         }
                     }
                 });
@@ -351,18 +393,15 @@ function EntradaVeiculo() {
                 ? null
                 : dadosEntradaExistente.idVeiculo;
 
-            // Se tem veículo (seja de agendamento ou seleção), processa entrada do veículo existente
             if (idVeiculoParaEntrada) {
                 let resultadoEntrada;
 
-                // Se é um agendamento (tem ordem de serviço e registro), confirma agendamento
                 if (dadosEntradaExistente.idOrdemServico && dadosEntradaExistente.idRegistroEntrada) {
                     resultadoEntrada = await confirmarEntradaAgendada({
                         fk_registro: dadosEntradaExistente.idRegistroEntrada,
                         entrada: payloadConfirmacaoEntrada
                     });
                 }
-                // Caso contrário, adiciona novo registro de entrada
                 else {
                     resultadoEntrada = await adicionarRegistroEntrada({
                         fk_veiculo: idVeiculoParaEntrada,
@@ -387,14 +426,13 @@ function EntradaVeiculo() {
                             prefixo: formData.prefixo,
                             modelo: formData.modelo,
                             nome: formData.nome,
-                            placa: formData.placa
+                            placa: placaLimpa
                         }
                     }
                 });
                 return;
             }
 
-            // Se não tem veículo existente, cria novo cliente + veículo
             let idClienteParaEntrada = dadosEntradaExistente.idCliente;
             let nomeClienteParaEntrada = formData.nome;
 
@@ -421,20 +459,17 @@ function EntradaVeiculo() {
 
             const resultadoJornada = await adicionarVeiculoRegistroEntradaSemCadastro({
                 veiculo: {
-                    placa: formData.placa,
+                    placa: placaLimpa,
                     marca: formData.marca,
                     modelo: formData.modelo,
                     prefixo: formData.prefixo,
-                    ano_modelo: formData.ano_modelo,
+                    ano_modelo: parseInt(formData.ano_modelo),
                     id_cliente: idClienteParaEntrada
                 },
                 entrada: {
                     ...payloadEntrada
                 }
             });
-
-            console.log("ID do Veículo criado:", resultadoJornada.id_veiculo);
-            console.log("ID do Registro de Entrada:", resultadoJornada.id_registro_entrada);
 
             navigate(`/painelControle/orcamento/${resultadoJornada.id_registro_entrada}`, {
                 state: {
@@ -444,14 +479,21 @@ function EntradaVeiculo() {
                         prefixo: formData.prefixo,
                         modelo: formData.modelo,
                         empresa: nomeClienteParaEntrada,
-                        placa: formData.placa
+                        placa: placaLimpa
                     }
                 }
             });
 
         } catch (error) {
             console.error("Erro no fluxo de entrada:", error);
-            alert("Ocorreu um erro ao salvar os dados.");
+            
+            if (error.response && error.response.status === 400) {
+                exibirAlertaErro("Erro de validação! Verifique se a placa, CPF e o ano foram preenchidos corretamente.");
+            } else if (error.response && error.response.status === 409) {
+                exibirAlertaErro("Conflito de dados: Este veículo ou placa já pode estar registrado.");
+            } else {
+                exibirAlertaErro("Ocorreu um erro inesperado ao salvar os dados. Tente novamente.");
+            }
         }
     };
 
@@ -560,8 +602,8 @@ function EntradaVeiculo() {
                             </div>
                         </div>
                         <div className="input-field">
-                            <label>Ano/Modelo</label>
-                            <input name="ano_modelo" value={formData.ano_modelo} onChange={handleChange} placeholder="Ex: 2020" readOnly={camposBaseBloqueados || veiculoBloqueadoPorSelecao} />
+                            <label>Ano/Modelo*</label>
+                            <input name="ano_modelo" type="number" value={formData.ano_modelo} onChange={handleChange} placeholder="Ex: 2020" readOnly={camposBaseBloqueados || veiculoBloqueadoPorSelecao} />
                         </div>
                     </InformacoesCard>
 
@@ -599,6 +641,7 @@ function EntradaVeiculo() {
                                 value={formData.cpfResponsavel}
                                 onChange={handleChange}
                                 placeholder="Ex: 123.456.789-00"
+                                maxLength="14"
                                 disabled={preencherComDadosCliente && formData.tipo_cliente === "PESSOA_FISICA"}
                             />
                         </div>
