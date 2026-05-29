@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import "./ModalNovoItem.css";
 import Produtos from "../../service/Produtos";
+import { exibirAlertaErro } from "../../service/alertas";
 
 const estadoInicial = {
     nome: "",
@@ -67,8 +68,23 @@ function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
     };
 
     const handleFinalizar = async () => {
-        try {
+        // --- VALIDAÇÃO DE CAMPOS OBRIGATÓRIOS ---
+        const camposVazios = [];
 
+        if (!form.nome?.trim()) camposVazios.push("Nome");
+        if (!form.fornecedorNf?.trim()) camposVazios.push("Fornecedor");
+        if (!form.tipoServico?.trim()) camposVazios.push("Tipo de Serviço");
+        if (!String(form.precoVenda || "").trim()) camposVazios.push("Preço de Venda");
+        if (!String(form.precoCompra || "").trim()) camposVazios.push("Preço de Compra");
+        if (!String(form.quantidadeMinima || "").trim()) camposVazios.push("Quantidade no estoque");
+
+        if (camposVazios.length > 0) {
+            exibirAlertaErro(`Preencha os campos obrigatórios: ${camposVazios.join(", ")}.`);
+            return; // Interrompe aqui, não fecha o modal
+        }
+        // ----------------------------------------
+
+        try {
             const dadosParaEnviar = {
                 nome: form.nome,
                 fornecedor_nf: form.fornecedorNf,
@@ -116,7 +132,7 @@ function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
                                 Preencha os campos abaixo
                             </p>
 
-                            <label className="form-label fw-semibold">Nome</label>
+                            <label className="form-label fw-semibold">Nome*</label>
                             <input
                                 type="text"
                                 className="form-control input-padrao mb-3"
@@ -126,7 +142,7 @@ function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
                                 placeholder="Ex: Tinta-Azul-Fiat"
                             />
 
-                            <label className="form-label fw-semibold">Fornecedor</label>
+                            <label className="form-label fw-semibold">Fornecedor*</label>
                             <input
                                 type="text"
                                 className="form-control input-padrao mb-3"
@@ -135,7 +151,7 @@ function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
                                 onChange={handleChange}
                                 placeholder="Ex: Tubarão Tintas"
                             />
-                            <label className="form-label fw-semibold">Tipo de Serviço</label>
+                            <label className="form-label fw-semibold">Tipo de Serviço*</label>
                             <select
                                 className="form-select mb-4"
                                 name="tipoServico"
@@ -182,7 +198,7 @@ function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
                             <div className="row mb-3">
                                 <div className="col">
                                     <label className="form-label fw-semibold">
-                                        Preço de Venda (Un.)
+                                        Preço de Venda (Un.) *
                                     </label>
                                     <div className="input-group">
                                         <span className="input-group-text">R$</span>
@@ -199,7 +215,7 @@ function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
 
                                 <div className="col">
                                     <label className="form-label fw-semibold">
-                                        Preço de Compra (Un.)
+                                        Preço de Compra (Un.) *
                                     </label>
                                     <div className="input-group">
                                         <span className="input-group-text">R$</span>
@@ -216,7 +232,7 @@ function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
                             </div>
 
                             <label className="form-label fw-semibold">
-                                Quantidade no estoque
+                                Quantidade no estoque *
                             </label>
                             <div className="input-group mb-4">
                                 <span className="input-group-text">Un.</span>
@@ -256,5 +272,3 @@ function ModalNovoItem({ isOpen, onClose, onSave, produtosParaEditar }) {
 }
 
 export default ModalNovoItem;
-
-

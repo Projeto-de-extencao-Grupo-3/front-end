@@ -56,14 +56,6 @@ function ModalEntradaVeiculo({ isOpen, onClose }) {
                             {/* etapa 1 - opcoes de entrada */}
                             {etapa === "opcoes" && (
                                 <>
-                                    <input
-                                        type="file"
-                                        ref={fileInputRef}
-                                        onChange={handleArquivoSelecionado}
-                                        style={{ display: 'none' }}
-                                        accept="image/*"
-                                    />
-
                                     <button className="botao-principal w-100 botao-opcao mb-3" onClick={handleVeiculoCadastrado} >
                                         <i className='bx bx-camera me-2'></i>
                                         Carro já é cadastrado
@@ -98,8 +90,8 @@ function ModalEntradaVeiculo({ isOpen, onClose }) {
                                             onChange={handleArquivoSelecionado}
                                             style={{ display: 'none' }}
                                             accept="image/*"
+                                            capture="environment" /* permite foto da camera */
                                         />
-
                                         <button className="botao-principal w-100 botao-opcao mb-3" onClick={handleUploadImag} >
                                             <div className="foto-caixa d-flex flex-column 
                                                 align-items-center justify-content-center">

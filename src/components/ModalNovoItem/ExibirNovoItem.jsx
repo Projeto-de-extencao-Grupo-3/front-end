@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { exibirAlertaErro } from "../../service/alertas";
+import Produtos from "../../service/Produtos";
 
 const estadoInicial = {
     nome: "",
@@ -11,7 +13,10 @@ const estadoInicial = {
 
 function ExibirNovoItem({ isOpen, onClose, dadosDoProduto, onUpdate }) {
     const [form, setForm] = useState(estadoInicial);
+    const [tiposServico, setTiposServico] = useState([]);
+    const produtosService = Produtos();
 
+    // Carrega os dados do produto para edição
     useEffect(() => {
         if (isOpen && dadosDoProduto) {
             const timer = setTimeout(() => {
@@ -21,9 +26,26 @@ function ExibirNovoItem({ isOpen, onClose, dadosDoProduto, onUpdate }) {
                 });
             }, 0);
 
-            return () => clearTimeout(timer); 
+            return () => clearTimeout(timer);
         }
     }, [isOpen, dadosDoProduto]);
+
+    // Busca a lista de tipos de serviço do Back-end
+    useEffect(() => {
+        const carregarTiposServico = async () => {
+            try {
+                const tipos = await produtosService.listarTipoServicos();
+                setTiposServico(Array.isArray(tipos) ? tipos : []);
+            } catch (error) {
+                console.error("Erro ao carregar tipos de serviço:", error);
+                setTiposServico([]);
+            }
+        };
+
+        if (isOpen) {
+            carregarTiposServico();
+        }
+    }, [isOpen]);
 
     const handleChange = (e) => {
         const { name, value, type } = e.target;
@@ -32,13 +54,28 @@ function ExibirNovoItem({ isOpen, onClose, dadosDoProduto, onUpdate }) {
     };
 
     const handleFinalizar = async () => {
+        // --- VALIDAÇÃO DE CAMPOS OBRIGATÓRIOS ---
+        const camposVazios = [];
+
+        if (!form.nome?.trim()) camposVazios.push("Item");
+        if (!form.tipo_servico?.trim()) camposVazios.push("Tipo de Serviço");
+        if (!form.fornecedor_nf?.trim()) camposVazios.push("Fornecedor");
+        if (!String(form.preco_venda || "").trim()) camposVazios.push("Preço de Venda");
+        if (!String(form.preco_compra || "").trim()) camposVazios.push("Preço de Compra");
+
+        if (camposVazios.length > 0) {
+            exibirAlertaErro(`Preencha os campos obrigatórios: ${camposVazios.join(", ")}.`);
+            return; // Interrompe aqui e não fecha o modal
+        }
+        // ----------------------------------------
+
         try {
             const id = form.id_peca || form.id;
             await onUpdate(form, id);
             onClose();
         } catch (error) {
             console.error("Erro ao atualizar:", error);
-            alert("Erro ao atualizar o item.");
+            exibirAlertaErro("Erro ao atualizar o item."); 
         }
     };
 
@@ -67,11 +104,11 @@ function ExibirNovoItem({ isOpen, onClose, dadosDoProduto, onUpdate }) {
 
                                 <div className="row g-3">
                                     <div className="col-12">
-                                        <label className="form-label mb-1 text-dark">Item</label>
+                                        <label className="form-label mb-1 text-dark">Item*</label>
                                         <input
                                             type="text"
                                             name="nome"
-                                            value={form.nome}
+                                            value={form.nome || ""}
                                             onChange={handleChange}
                                             className="form-control bg-light border-0"
                                             placeholder="Ex: Tinta-Azul-Fiat"
@@ -79,23 +116,26 @@ function ExibirNovoItem({ isOpen, onClose, dadosDoProduto, onUpdate }) {
                                     </div>
 
                                     <div className="col-12">
-                                        <label className="form-label mb-1 text-dark">Tipo de Serviço</label>
-                                        <input
-                                            type="text"
+                                        <label className="form-label mb-1 text-dark">Tipo de Serviço*</label>
+                                        <select
+                                            className="form-select bg-light border-0"
                                             name="tipo_servico"
-                                            value={form.tipo_servico}
+                                            value={form.tipo_servico || ""}
                                             onChange={handleChange}
-                                            className="form-control bg-light border-0"
-                                            placeholder="Ex: FUNILARIA"
-                                        />
+                                        >
+                                            <option value="" disabled>Selecione um serviço...</option>
+                                            {tiposServico.map((tipo) => (
+                                                <option key={tipo} value={tipo}>{tipo}</option>
+                                            ))}
+                                        </select>
                                     </div>
 
                                     <div className="col-12">
-                                        <label className="form-label mb-1 text-dark">Fornecedor</label>
+                                        <label className="form-label mb-1 text-dark">Fornecedor*</label>
                                         <input
                                             type="text"
                                             name="fornecedor_nf"
-                                            value={form.fornecedor_nf}
+                                            value={form.fornecedor_nf || ""}
                                             onChange={handleChange}
                                             className="form-control bg-light border-0"
                                             placeholder="Ex: Tubarão Tintas"
@@ -133,13 +173,13 @@ function ExibirNovoItem({ isOpen, onClose, dadosDoProduto, onUpdate }) {
                                     </div>
 
                                     <div className="col-6 mt-4">
-                                        <label className="form-label mb-1 text-dark">Preço de Venda (Un.)</label>
+                                        <label className="form-label mb-1 text-dark">Preço de Venda (Un.) *</label>
                                         <div className="input-group">
                                             <span className="input-group-text bg-light border-0 fw-bold text-muted">R$</span>
                                             <input
                                                 type="number"
                                                 name="preco_venda"
-                                                value={form.preco_venda}
+                                                value={form.preco_venda || ""}
                                                 onChange={handleChange}
                                                 className="form-control bg-light border-0 ps-0"
                                             />
@@ -147,13 +187,13 @@ function ExibirNovoItem({ isOpen, onClose, dadosDoProduto, onUpdate }) {
                                     </div>
 
                                     <div className="col-6 mt-4">
-                                        <label className="form-label mb-1 text-dark">Preço de Compra (Un.)</label>
+                                        <label className="form-label mb-1 text-dark">Preço de Compra (Un.) *</label>
                                         <div className="input-group">
                                             <span className="input-group-text bg-light border-0 fw-bold text-muted">R$</span>
                                             <input
                                                 type="number"
                                                 name="preco_compra"
-                                                value={form.preco_compra}
+                                                value={form.preco_compra || ""}
                                                 onChange={handleChange}
                                                 className="form-control bg-light border-0 ps-0"
                                             />
