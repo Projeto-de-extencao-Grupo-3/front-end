@@ -4,6 +4,7 @@ import "./ModalAdicionarServico.css";
 import { formatarTexto, formatarMoedaBR } from "../../utils/formatarTexto.js";
 import { useParams } from "react-router-dom";
 import ServicosItens from "../../service/ServicosEItens.js";
+import { exibirAlertaErro } from "../../service/alertas";
 
 function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", servico, onSave, salvarNaOrdem }) {
     const [aba, setAba] = useState("FUNILARIA");
@@ -169,6 +170,32 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
     };
 
     const handleFinalizar = async () => {
+        const camposVazios = [];
+
+        if (!formData.parte_veiculo?.trim()) camposVazios.push("Parte do Veículo");
+        if (!formData.lado_veiculo?.trim()) camposVazios.push("Lado do Veículo");
+
+        if (tipoAba === "OUTROS") {
+            if (!formData.tipo_servico?.trim()) camposVazios.push("Serviço");
+            if (!formData.especificacao_servico?.trim()) camposVazios.push("Descrição");
+        }
+
+        if (tipoAba === "PINTURA") {
+            if (!formData.tipo_pintura || formData.tipo_pintura === "NAO_APLICAVEL") {
+                camposVazios.push("Tipo de Pintura");
+            }
+            if (!formData.cor?.trim()) {
+                camposVazios.push("Cor da Pintura");
+            }
+        }
+
+        if (!String(formData.preco_cobrado || "").trim()) camposVazios.push("Preço (R$)");
+
+        if (camposVazios.length > 0) {
+            exibirAlertaErro(`Preencha os campos obrigatórios: ${camposVazios.join(", ")}.`);
+            return;
+        }
+
         try {
             const dados = {
                 ...formData,
@@ -182,6 +209,7 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
             onClose();
         } catch (error) {
             console.error("Erro ao salvar:", error);
+            exibirAlertaErro("Ocorreu um erro ao tentar salvar o serviço.");
         }
     };
 
@@ -235,7 +263,7 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                 <div className="row g-3">
                                     {tipoAba === "OUTROS" && (
                                         <div className="col-12">
-                                            <label>Serviço*</label>
+                                            <label>Serviço *</label>
                                             <input
                                                 name="tipo_servico"
                                                 className="form-control"
@@ -284,7 +312,7 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                     </div>
 
                                     <div className="col-12">
-                                        <label>Descrição *</label>
+                                        <label>Descrição {tipoAba === "OUTROS" ? "*" : ""}</label>
                                         <textarea
                                             name="especificacao_servico"
                                             className="form-control"
@@ -326,6 +354,7 @@ function ModalAdicionarServico({ isOpen, onClose, placa, modo = "adicionar", ser
                                     <div className="col-12">
                                         <label>Preço (R$) *</label>
                                         <input
+                                            type="number"
                                             name="preco_cobrado"
                                             className="form-control"
                                             value={formData.preco_cobrado}

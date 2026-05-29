@@ -3,6 +3,7 @@ import OrdemServicoCard from "../ServicoCard/OrdemServicoCard";
 import "./ModalAdicionarServico.css";
 import { formatarTexto } from "../../utils/formatarTexto.js";
 import { useParams } from "react-router-dom";
+import { exibirAlertaErro } from "../../service/alertas"; // Importando o alerta
 
 function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
     const [formData, setFormData] = useState({
@@ -38,7 +39,7 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
 
         return () => clearTimeout(timer);
 
-    }, [isOpen, servico, formatarTexto]);
+    }, [isOpen, servico]);
 
     if (!isOpen) return null;
 
@@ -48,6 +49,33 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
     };
 
     const handleSalvar = async () => {
+        // --- VALIDAÇÃO DE CAMPOS OBRIGATÓRIOS ---
+        const camposVazios = [];
+
+        if (!formData.parte_veiculo?.trim()) camposVazios.push("Parte do Veículo");
+        if (!formData.lado_veiculo?.trim()) camposVazios.push("Lado do Veículo");
+        
+        if (formData.tipo_servico === "OUTROS" && !formData.especificacao_servico?.trim()) {
+            camposVazios.push("Descrição");
+        }
+
+        if (formData.tipo_servico === "PINTURA") {
+            if (!formData.tipo_pintura || formData.tipo_pintura === "NAO_APLICAVEL") {
+                camposVazios.push("Tipo de Pintura");
+            }
+            if (!formData.cor?.trim()) {
+                camposVazios.push("Cor da Pintura");
+            }
+        }
+
+        if (!String(formData.preco_cobrado || "").trim()) camposVazios.push("Preço Cobrado");
+
+        if (camposVazios.length > 0) {
+            exibirAlertaErro(`Preencha os campos obrigatórios: ${camposVazios.join(", ")}.`);
+            return;
+        }
+        // ----------------------------------------
+
         try {
             const dadosParaSalvar = {
                 ...formData,
@@ -57,6 +85,7 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
             onClose();
         } catch (error) {
             console.error("Erro ao atualizar serviço:", error);
+            exibirAlertaErro("Ocorreu um erro ao atualizar o serviço.");
         }
     };
 
@@ -98,6 +127,7 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
                                             value={formData.parte_veiculo}
                                             onChange={handleChange}
                                         >
+                                            <option value="" disabled>Selecione a parte</option>
                                             <option value="PARACHOQUE">PARACHOQUE</option>
                                             <option value="GRADE">GRADE</option>
                                             <option value="CAPO">CAPO</option>
@@ -121,6 +151,7 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
                                             value={formData.lado_veiculo}
                                             onChange={handleChange}
                                         >
+                                            <option value="" disabled>Selecione o lado</option>
                                             <option value="DIANTEIRO">DIANTEIRO</option>
                                             <option value="TRASEIRO">TRASEIRO</option>
                                             <option value="COMPLETO">COMPLETO</option>
@@ -175,6 +206,7 @@ function ModalEditarServico({ isOpen, onClose, placa, servico, onUpdate }) {
                                     <div className="col-12">
                                         <label>Preço Cobrado *</label>
                                         <input
+                                            type="number"
                                             name="preco_cobrado"
                                             className="form-control"
                                             value={formData.preco_cobrado}
