@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import './ModalEntradaVeiculo.css';
 import { useNavigate } from "react-router-dom";
 import ReconhecimentoPlaca from "../../service/ReconhecimentoPlaca";
+import heic2any from "heic2any";
 
 function ModalEntradaVeiculo({ isOpen, onClose }) {
     const { send_to_gateway } = ReconhecimentoPlaca();
@@ -19,10 +20,57 @@ function ModalEntradaVeiculo({ isOpen, onClose }) {
 
     const handleArquivoSelecionado = async (e) => {
         const arquivo = e.target.files[0];
-        if (arquivo) {
-            console.log("Arquivo selecionado:", arquivo.name);
-            await send_to_gateway(arquivo);
+        if (!arquivo) return;
+
+        let arquivoFinal = arquivo;
+
+        const tipo = arquivo.type.toLowerCase();
+        const nome = arquivo.name.toLowerCase();
+        const isHeic = tipo === "image/heic" || tipo === "image/heif" || nome.endsWith(".heic") || nome.endsWith(".heif");
+        const isJpeg = tipo === "image/jpeg" || tipo === "image/jpg" || nome.endsWith(".jpg") || nome.endsWith(".jpeg");
+
+        try {
+            if (isHeic) {
+                // HEIC/HEIF (iPhone padrão) → converte para JPEG via heic2any
+                const blobConvertido = await heic2any({
+                    blob: arquivo,
+                    toType: "image/jpeg",
+                    quality: 0.92,
+                });
+
+                const blob = Array.isArray(blobConvertido) ? blobConvertido[0] : blobConvertido;
+                const nomeSemExtensao = arquivo.name.replace(/\.[^/.]+$/, "");
+                arquivoFinal = new File([blob], `${nomeSemExtensao}.jpg`, { type: "image/jpeg" });
+
+            } else if (isJpeg) {
+                // JPEG com EXIF de rotação (Android e iPhone em modo compatível)
+                // Usa Canvas para normalizar orientação e re-exportar limpo
+                const blobUrl = URL.createObjectURL(arquivo);
+                const blob = await new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.onerror = () => { URL.revokeObjectURL(blobUrl); reject(new Error("Falha ao carregar imagem")); };
+                    img.onload = () => {
+                        URL.revokeObjectURL(blobUrl);
+                        const canvas = document.createElement("canvas");
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        canvas.getContext("2d").drawImage(img, 0, 0);
+                        canvas.toBlob(resolve, "image/jpeg", 0.92);
+                    };
+                    img.src = blobUrl;
+                });
+
+                const nomeSemExtensao = arquivo.name.replace(/\.[^/.]+$/, "");
+                arquivoFinal = new File([blob], `${nomeSemExtensao}.jpg`, { type: "image/jpeg" });
+            }
+            // outros formatos (PNG, WebP) são enviados direto sem conversão
+
+        } catch (erro) {
+            console.warn("[Modal] Conversão falhou, enviando arquivo original:", erro.message);
+            arquivoFinal = arquivo;
         }
+
+        await send_to_gateway(arquivoFinal);
     };
 
     const handleCancelar = () => {
@@ -90,7 +138,7 @@ function ModalEntradaVeiculo({ isOpen, onClose }) {
                                             onChange={handleArquivoSelecionado}
                                             style={{ display: 'none' }}
                                             accept="image/*"
-                                            capture="environment" /* permite foto da camera */
+                                            capture="environment"
                                         />
                                         <button className="botao-principal w-100 botao-opcao mb-3" onClick={handleUploadImag} >
                                             <div className="foto-caixa d-flex flex-column 
