@@ -9,6 +9,7 @@ import ModalConfirmacao from "../Modais/Confirmacoes/confirmacoes.jsx";
 import EntradaVeiculo from "../Modais/EntradaDeVeiculo/EntradaVeiculo.jsx";
 import ReagendamentoServico from "../Modais/ReagendamentoData/ReagendamentoServico.jsx";
 import BotoesLogic from "../../service/Botoes.js";
+import { exibirAlertaSucesso, exibirAlertaErro } from "../../service/alertas";
 
 // ICONES
 import iconCheck from "../../assets/icons/check icon.png";
@@ -35,9 +36,9 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
     const fecharModal = () => setModalAtivo(null);
     const [_dataPrevisaSaida, _setDataPrevistaSaida] = useState(ordemServicoDados.data_saida_prevista || "");
 
-    const atualizar = async (dados) => {
+    const atualizar = async (dados, mostrarAlerta = true) => {
         try {
-            await atualizarStatus(idOrdemServico, dados);
+            await atualizarStatus(idOrdemServico, dados, mostrarAlerta);
             return true;
         } catch (e) {
             console.error("Erro ao atualizar status:", e);
@@ -232,14 +233,18 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
                 <ModalConfirmacao
                     aberto
                     aoConfirmar={async () => {
-                        var response = await api.patch(`/jornada/${idOrdemServico}/definir-pagamento-realizado`);
+                        try {
+                            var response = await api.patch(`/jornada/${idOrdemServico}/definir-pagamento-realizado`);
 
-                        if (response.status !== 200) {
-                            alert("Erro ao atualizar pagamento. Tente novamente.");
-                            return;
+                            if (response.status !== 200) {
+                                exibirAlertaErro("Erro ao atualizar pagamento. Tente novamente.");
+                                return;
+                            }
+                            fecharModal();
+                            exibirAlertaSucesso("Pagamento concluído com sucesso!");
+                        } catch (error) {
+                            exibirAlertaErro("Erro ao atualizar pagamento. Tente novamente.");
                         }
-                        fecharModal();
-                        navigate("/analiseFinanceira/pgtorealizado/" + idOrdemServico);
                     }}
                     aoCancelar={fecharModal}
                     icone={iconConfirmPgmt}
@@ -254,15 +259,18 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
                 <ModalConfirmacao
                     aberto
                     aoConfirmar={async () => {
+                        // Passando false aqui, o alerta de sucesso não vai pular na tela
                         const ok = await atualizar({
                             status: "FINALIZADO",
                             tipoJornada: "AGENDAMENTO"
-                        });
+                        }, false);
 
-                        fecharModal();
-                        if (!ok) return;
+                        if (!ok) {
+                            fecharModal();
+                            return;
+                        }
 
-                        navigate("/painelControle/finalizado/" + idOrdemServico);
+                        setModalAtivo("pagamentoPosServico");
                     }}
                     aoCancelar={fecharModal}
                     icone={iconConcluido}
@@ -271,21 +279,57 @@ function Botoes({ pagina, placa, ordemServicoDados, idOrdemServico, aoAtualizarD
                 />
             )}
 
+            {modalAtivo === "pagamentoPosServico" && (
+                <ModalConfirmacao
+                    aberto
+                    aoConfirmar={async () => {
+                        try {
+                            var response = await api.patch(`/jornada/${idOrdemServico}/definir-pagamento-realizado`);
+
+                            if (response.status !== 200) {
+                                exibirAlertaErro("Erro ao concluir o pagamento. Tente novamente.");
+                                return;
+                            }
+                            fecharModal();
+                            exibirAlertaSucesso("Serviço e pagamento concluídos com sucesso!");
+                            navigate("/painelControle/finalizado/" + idOrdemServico);
+                        } catch (error) {
+                            exibirAlertaErro("Erro ao concluir o pagamento. Tente novamente.");
+                        }
+                    }}
+                    aoCancelar={() => {
+                        fecharModal();
+                        exibirAlertaSucesso("Serviço concluído com sucesso!");
+                        navigate("/painelControle/finalizado/" + idOrdemServico);
+                    }}
+                    icone={iconConfirmPgmt}
+                    titulo="Confirmação de Pagamento"
+                    descricao="O pagamento deste serviço já foi concluído?"
+                    textoBotaoConfirmar="Sim, foi pago"
+                    textoBotaoCancelar="Não, ainda não"
+                />
+            )}
+
             {modalAtivo === "nota" && (
                 <ModalConfirmacao
                     aberto
                     aoConfirmar={async () => {
-                        var response = await api.patch(`/jornada/${idOrdemServico}/definir-nota-fiscal-realizada`);
+                        try {
+                            var response = await api.patch(`/jornada/${idOrdemServico}/definir-nota-fiscal-realizada`);
 
-                        console.log(response);
+                            console.log(response);
 
-                        if (response.status !== 200) {
-                            alert("Erro ao atualizar nota fiscal. Tente novamente.");
-                            return;
+                            if (response.status !== 200) {
+                                exibirAlertaErro("Erro ao atualizar nota fiscal. Tente novamente.");
+                                return;
+                            }
+
+                            fecharModal();
+                            exibirAlertaSucesso("Nota fiscal concluída com sucesso!");
+                            navigate("/analiseFinanceira/nfgerada/" + idOrdemServico);
+                        } catch (error) {
+                            exibirAlertaErro("Erro ao atualizar nota fiscal. Tente novamente.");
                         }
-
-                        fecharModal();
-                        navigate("/analiseFinanceira/nfgerada/" + idOrdemServico);
                     }}
                     aoCancelar={fecharModal}
                     icone={iconPagGreen}

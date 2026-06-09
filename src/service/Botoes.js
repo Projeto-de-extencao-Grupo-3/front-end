@@ -1,7 +1,6 @@
 import api from "./api";
 import { exibirAlertaSucesso, exibirAlertaErro } from './alertas';
 
-
 function Botoes() {
     const definirDataPrevista = async (idOrdem, infosAgendamento) => {
         try {
@@ -15,11 +14,15 @@ function Botoes() {
         }
     };
 
-    const atualizarStatus = async (idOrdem, novoStatus) => {
+    // Adicionado o parâmetro mostrarAlerta
+    const atualizarStatus = async (idOrdem, novoStatus, mostrarAlerta = true) => {
         try {
             const response = await api.patch(`/jornada/${idOrdem}/atualizar-status`,  novoStatus );
 
-            exibirAlertaSucesso("Status atualizado com sucesso!");
+            // Só exibe se mostrarAlerta for true
+            if (mostrarAlerta) {
+                exibirAlertaSucesso("Status atualizado com sucesso!");
+            }
             return response.data;
         } catch (error) {
             exibirAlertaErro("Erro ao atualizar status da ordem de serviço.");
