@@ -5,9 +5,17 @@ server {
     root /usr/share/nginx/html;
     index index.html;
 
+    # Frontend React/Vite (Boa prática: deixar o '/' no topo)
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
     # Remove o /api e encaminha pro backend
     location /api/ {
-        proxy_pass http://10.0.0.4:8080/;  # ← barra necessária aqui
+        # O rewrite remove o '/api' da URL antes de enviar para a variável
+        rewrite ^/api/(.*)$ /$1 break;
+
+        proxy_pass ${BACKEND_URL};  
 
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -16,10 +24,5 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_cache_bypass $http_upgrade;
-    }
-
-    # Frontend React/Vite
-    location / {
-        try_files $uri $uri/ /index.html;
     }
 }
